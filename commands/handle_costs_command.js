@@ -1,9 +1,8 @@
 import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
-import { getBorderCharacters } from 'table';
+import { table as renderTable, getBorderCharacters } from 'table';
 import { getChainTransactions } from 'ln-accounting';
 import { getRebalancePayments } from 'ln-sync';
-import { table as renderTable } from 'table';
 import { returnResult } from 'asyncjs-util';
 
 import { checkAccess } from './../authentication/index.js';
@@ -11,11 +10,9 @@ import { formatTokens } from './../interface/index.js';
 
 const border = getBorderCharacters('void');
 const dayMs = 1000 * 60 * 60 * 24;
-const flatten = arr => [].concat(...arr);
 const formatReport = (from, n) => `⚡️ Spent on ${from}\n\n\`\`\`${n}\`\`\``;
 const formatReports = reports => reports.join('\n');
 const header = ['', 'Day', 'Week'];
-const {isArray} = Array;
 const {now} = Date;
 const paidAmount = tokens => formatTokens({tokens, none: '-'}).display;
 const sumOf = arr => arr.reduce((sum, n) => sum + n, BigInt(Number()));

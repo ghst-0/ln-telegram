@@ -1,10 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import { chanInfoResult } from './../fixtures/index.js';
-import { getInfoResponse } from './../fixtures/index.js';
-import { nodeInfoResult } from './../fixtures/index.js';
-import { versionInfo } from './../fixtures/index.js';
+import { chanInfoResult, getInfoResponse, nodeInfoResult, versionInfo } from './../fixtures/index.js';
 import { notifyOfForwards } from './../../index.js';
 
 const makeArgs = overrides => {

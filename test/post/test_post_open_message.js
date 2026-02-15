@@ -1,10 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import { chanInfoResponse } from './../fixtures/index.js';
-import { listChannelsResponse } from './../fixtures/index.js';
-import { getNodeInfoResponse } from './../fixtures/index.js';
-import { pendingChannelsResponse } from './../fixtures/index.js';
+import { chanInfoResponse, listChannelsResponse, getNodeInfoResponse, pendingChannelsResponse } from './../fixtures/index.js';
 import postOpenMessage from './../../post/post_open_message.js';
 
 const pubKey = '000000000000000000000000000000000000000000000000000000000000000000';

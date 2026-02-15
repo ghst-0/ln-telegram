@@ -1,14 +1,10 @@
 import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
-import { findKey } from 'ln-sync';
-import { getChannel } from 'ln-service';
-import { getChannels } from 'ln-service';
-import { getLiquidity } from 'ln-sync';
-import { getNodeAlias } from 'ln-sync';
+import { findKey, getLiquidity, getNodeAlias } from 'ln-sync';
+import { getChannel, getChannels } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
 import { checkAccess } from './../authentication/index.js';
-import { icons } from './../interface/index.js';
 import interaction from './../interaction.json' with { type: 'json' };
 import { liquiditySummary } from './../messages/index.js';
 
@@ -16,7 +12,6 @@ const defaultAlias = '';
 const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};
 const {max} = Math;
-const noLiquidityMessage = `${icons.liquidity} No channel liquidity`;
 const uniq = arr => Array.from(new Set(arr));
 
 /** Check peer liquidity

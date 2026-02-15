@@ -1,6 +1,5 @@
 import asyncAuto from 'async/auto.js';
-import { getBorderCharacters } from 'table';
-import { table as renderTable } from 'table';
+import { table as renderTable, getBorderCharacters } from 'table';
 import { returnResult } from 'asyncjs-util';
 
 import { checkAccess } from './../authentication/index.js';

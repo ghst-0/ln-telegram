@@ -1,8 +1,6 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
-import interaction from './../interaction.json' with { type: 'json' };
-
 const {isArray} = Array;
 
 /** Decode the command text

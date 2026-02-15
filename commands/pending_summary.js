@@ -1,7 +1,6 @@
 import { DateTime } from 'luxon';
 
-import { formatTokens } from './../interface/index.js';
-import { icons } from './../interface/index.js';
+import { formatTokens, icons } from './../interface/index.js';
 
 const asRelative = n => n.toRelative({locale: 'en'});
 const blocksAsEpoch = blocks => Date.now() + blocks * 1000 * 60 * 10;

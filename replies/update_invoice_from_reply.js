@@ -1,21 +1,15 @@
 import asyncAuto from 'async/auto.js';
 import asyncReflect from 'async/reflect.js';
-import { createInvoice } from 'ln-service';
 import { parsePaymentRequest } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { callbackCommands } from './../interface/index.js';
+import { callbackCommands, getAmountAsTokens } from './../interface/index.js';
 import { checkAccess } from './../authentication/index.js';
-import { createInvoiceMessage } from './../messages/index.js';
-import { editQuestions } from './../interface/index.js';
 import { failureMessage } from './../messages/index.js';
-import { getAmountAsTokens } from './../interface/index.js';
 import invoiceActionType from './invoice_action_type.js';
 import { postCreatedInvoice } from './../post/index.js';
 
 const {isArray} = Array;
-const {isInteger} = Number;
-const isNumber = n => !isNaN(n);
 const split = n => n.split('\n');
 
 /** Update the details of a created invoice from reply input

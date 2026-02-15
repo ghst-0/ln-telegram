@@ -2,15 +2,13 @@ import asyncAuto from 'async/auto.js';
 import asyncDetect from 'async/detect.js';
 import asyncMap from 'async/map.js';
 import { balancedOpenRequest } from 'paid-services';
-import { getChannel } from 'ln-service';
+import { getChannel, subscribeToPastPayment } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
-import { subscribeToPastPayment } from 'ln-service';
 
 import getBalancedOpenMessage from './get_balanced_open_message.js';
 import getRebalanceMessage from './get_rebalance_message.js';
 import getReceivedMessage from './get_received_message.js';
-import { icons } from './../interface/index.js';
 
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;

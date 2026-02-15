@@ -1,8 +1,7 @@
 import asyncAuto from 'async/auto.js';
 import asyncDetect from 'async/detect.js';
 import asyncReflect from 'async/reflect.js';
-import { cancelHodlInvoice } from 'ln-service';
-import { getInvoice } from 'ln-service';
+import { cancelHodlInvoice, getInvoice } from 'ln-service';
 import { decodeTrade } from 'paid-services';
 import { returnResult } from 'asyncjs-util';
 

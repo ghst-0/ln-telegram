@@ -1,7 +1,6 @@
 import { InlineKeyboard } from 'grammy';
 
-import { callbackCommands } from './../interface/index.js';
-import { labels } from './../interface/index.js';
+import { callbackCommands, labels } from './../interface/index.js';
 
 const nodeLabel = named => `Node: ${named}`;
 const shortId = key => key.slice(0, 46);

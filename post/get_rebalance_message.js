@@ -2,10 +2,8 @@ import asyncAuto from 'async/auto.js';
 import { getChannels } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
-import { subscribeToPastPayment } from 'ln-service';
 
-import { formatTokens } from './../interface/index.js';
-import { icons } from './../interface/index.js';
+import { formatTokens, icons } from './../interface/index.js';
 
 const asPercent = (fee, tokens) => (fee / tokens * 100).toFixed(2);
 const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed();
@@ -13,7 +11,6 @@ const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const mtokensAsTokens = n => Number(n) / 1e3;
 const niceName = node => node.alias || (node.id || '').substring(0, 8);
-const sanitize = n => (n || '').replace(/_/g, '\\_').replace(/[*~`]/g, '');
 
 /** Get a rebalance message
 

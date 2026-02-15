@@ -2,9 +2,7 @@ import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
 import asyncReflect from 'async/reflect.js';
 import { cancelHodlInvoice } from 'ln-service';
-import { createAnchoredTrade } from 'paid-services';
-import { decodeTrade } from 'paid-services';
-import { getAnchoredTrade } from 'paid-services';
+import { createAnchoredTrade, decodeTrade, getAnchoredTrade } from 'paid-services';
 import { returnResult } from 'asyncjs-util';
 
 import { callbackCommands } from './../interface/index.js';

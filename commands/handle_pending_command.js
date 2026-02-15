@@ -1,21 +1,16 @@
 import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
-import { getChannels } from 'ln-service';
-import { getHeight } from 'ln-service';
+import { getChannels, getHeight, getPendingChannels } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
-import { getPendingChannels } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
 import { checkAccess } from './../authentication/index.js';
 import pendingPayments from './pending_payments.js';
 import pendingSummary from './pending_summary.js';
 
-const blocksAsEpoch = blocks => Date.now() + blocks * 1000 * 60 * 10;
-const flatten = arr => [].concat(...arr);
 const {isArray} = Array;
 const join = lines => lines.join('\n').trim();
 const markup = {parse_mode: 'MarkdownV2'};
-const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
 const uniq = arr => Array.from(new Set(arr));
 
 /** Handle pending command

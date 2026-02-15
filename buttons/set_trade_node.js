@@ -1,14 +1,9 @@
 import asyncAuto from 'async/auto.js';
-import { InlineKeyboard } from 'grammy';
 import { returnResult } from 'asyncjs-util';
 
-import { callbackCommands } from './../interface/index.js';
-import { labels } from './../interface/index.js';
 import { tradeEditButtons } from './../messages/index.js';
 
 const {isArray} = Array;
-const nodeLabel = named => `Node: ${named}`;
-const switchNode = id => `${callbackCommands.moveInvoiceNode}${id}`;
 
 /** User pressed a set trade node button
 

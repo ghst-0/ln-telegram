@@ -3,11 +3,8 @@ import asyncDetect from 'async/detect.js';
 import asyncFilter from 'async/filter.js';
 import asyncMap from 'async/map.js';
 import asyncUntil from 'async/until.js';
-import { getBorderCharacters } from 'table';
-import { getInvoices } from 'ln-service';
-import { getPayment } from 'ln-service';
-import { table as renderTable } from 'table';
-import { getForwards } from 'ln-service';
+import { table as renderTable, getBorderCharacters } from 'table';
+import { getInvoices, getPayment, getForwards } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
 import { checkAccess } from './../authentication/index.js';

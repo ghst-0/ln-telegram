@@ -1,7 +1,5 @@
 import replyActionType from './reply_action_type.js';
 
-const split = n => n.split('\n');
-
 /** Determine if a message is a contextual reply that requires a reply action
 
   {

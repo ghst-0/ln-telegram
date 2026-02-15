@@ -1,11 +1,9 @@
 import asyncAuto from 'async/auto.js';
-import { getIdentity } from 'ln-service';
+import { getIdentity, verifyBytesSignature } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
-import { verifyBytesSignature } from 'ln-service';
 
-import { formatTokens } from './../interface/index.js';
-import { icons } from './../interface/index.js';
+import { formatTokens, icons } from './../interface/index.js';
 
 const bufFromHex = hex => Buffer.from(hex, 'hex');
 const dash = ' - ';
@@ -19,7 +17,6 @@ const {isArray} = Array;
 const maxAnswer = BigInt(80518);
 const messageType = '34349334';
 const minAnswer = BigInt(80509);
-const newLine = '\n';
 const short = n => n.slice(0, 32);
 const signatureType = '34349337';
 const sort = (a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0);

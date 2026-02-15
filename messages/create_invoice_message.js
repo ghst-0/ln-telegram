@@ -1,10 +1,7 @@
 import { InlineKeyboard } from 'grammy';
 import { parsePaymentRequest } from 'ln-service';
 
-import { callbackCommands } from './../interface/index.js';
-import { formatTokens } from './../interface/index.js';
-import { labels } from './../interface/index.js';
-import { titles } from './../interface/index.js';
+import { callbackCommands, formatTokens, labels, titles } from './../interface/index.js';
 
 const {cancelInvoice} = callbackCommands;
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');

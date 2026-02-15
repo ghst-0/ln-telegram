@@ -2,16 +2,12 @@ import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
 import asyncReflect from 'async/reflect.js';
 import { cancelHodlInvoice } from 'ln-service';
-import { createAnchoredTrade } from 'paid-services';
+import { createAnchoredTrade, decodeTrade, getAnchoredTrade } from 'paid-services';
 import { DateTime } from 'luxon';
-import { decodeTrade } from 'paid-services';
-import { getAnchoredTrade } from 'paid-services';
 import { returnResult } from 'asyncjs-util';
 
 import { callbackCommands } from './../interface/index.js';
 import { checkAccess } from './../authentication/index.js';
-import { createTradeMessage } from './../messages/index.js';
-import { editQuestions } from './../interface/index.js';
 import { failureMessage } from './../messages/index.js';
 import { postCreatedTrade } from './../post/index.js';
 import tradeActionType from './trade_action_type.js';

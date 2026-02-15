@@ -1,9 +1,6 @@
 import test from 'node:test';
 import { deepEqual } from 'node:assert/strict';
-
-import { getNode } from 'lightning';
-import { setupChannel } from 'ln-docker-daemons';
-import { spawnLightningCluster } from 'ln-docker-daemons';
+import { setupChannel, spawnLightningCluster } from 'ln-docker-daemons';
 
 import { handleBalanceCommand } from './../../index.js';
 

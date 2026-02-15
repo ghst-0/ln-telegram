@@ -3,18 +3,13 @@ import asyncMap from 'async/map.js';
 import asyncReflect from 'async/reflect.js';
 import { DateTime } from 'luxon';
 import { decodeChanId } from 'bolt07';
-import { findKey } from 'ln-sync';
-import { getBorderCharacters } from 'table';
-import { getHeight } from 'ln-service';
-import { getNode } from 'ln-service';
-import { getNodeAlias } from 'ln-sync';
-import { parsePaymentRequest } from 'ln-service';
-import { table as renderTable } from 'table';
+import { findKey, getNodeAlias } from 'ln-sync';
+import { table as renderTable, getBorderCharacters } from 'table';
+import { getHeight, getNode, parsePaymentRequest } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
 import { checkAccess } from './../authentication/index.js';
-import { formatTokens } from './../interface/index.js';
-import { icons } from './../interface/index.js';
+import { formatTokens, icons } from './../interface/index.js';
 import { makeRemoveButton } from './../buttons/index.js';
 
 const {isArray} = Array;
@@ -41,11 +36,8 @@ const noQueryMsg = 'Missing graph query, try `/graph (public key/peer alias)`';
 const none = ' ';
 const notFoundCode = 404;
 const notFoundMsg = query => `\`${query}\` not found\\\. Wrong public key?`;
-const replyMarkdownV1 = reply => n => reply(n, {parse_mode: 'Markdown'});
-const sanitize = n => (n || '').replace(/_/g, '\\_').replace(/[*~`]/g, '');
 const shortKey = key => key.substring(0, 16);
 const socketHost = n => n.split(':').slice(0, -1).join(':');
-const sumOf = arr => arr.reduce((sum, n) => sum + n, 0);
 const torV3Match = /[a-z2-7]{56}.onion/i;
 const uniq = arr => Array.from(new Set(arr));
 

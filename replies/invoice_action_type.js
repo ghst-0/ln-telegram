@@ -1,12 +1,9 @@
 import { parsePaymentRequest } from 'ln-service';
 
-import { callbackCommands } from './../interface/index.js';
-import { editQuestions } from './../interface/index.js';
-import { titles } from './../interface/index.js';
+import { callbackCommands, editQuestions, titles } from './../interface/index.js';
 
 const expectedSpacer = '';
 const hasInvoicePrefix = n => n.startsWith(titles.createdInvoicePrefix);
-const invoiceQuestions = editQuestions.invoice.map(n => editQuestions[n]);
 const split = n => n.split('\n');
 
 /** Is the message a reply to a created invoice

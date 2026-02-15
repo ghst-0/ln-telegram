@@ -1,8 +1,7 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import { chanInfoResponse } from './../fixtures/index.js';
-import { getNodeInfoResponse } from './../fixtures/index.js';
+import { chanInfoResponse, getNodeInfoResponse } from './../fixtures/index.js';
 import { postClosingMessage } from './../../post/index.js';
 
 const pubKey = '000000000000000000000000000000000000000000000000000000000000000000';

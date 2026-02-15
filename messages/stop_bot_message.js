@@ -1,8 +1,6 @@
 import { InlineKeyboard } from 'grammy';
 
-import { callbackCommands } from './../interface/index.js';
-import { icons } from './../interface/index.js';
-import { labels } from './../interface/index.js';
+import { callbackCommands, icons, labels } from './../interface/index.js';
 
 const {removeMessage} = callbackCommands;
 const {terminateBot} = callbackCommands;

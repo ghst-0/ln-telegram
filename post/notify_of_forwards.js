@@ -2,12 +2,10 @@ import asyncAuto from 'async/auto.js';
 import asyncMap from 'async/map.js';
 import { getChannel } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
-import { getWalletInfo } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
 import consolidateForwards from './consolidate_forwards.js';
-import { formatTokens } from './../interface/index.js';
-import { icons } from './../interface/index.js';
+import { formatTokens, icons } from './../interface/index.js';
 
 const asPercent = (fee, tokens) => (fee / tokens * 100).toFixed(2);
 const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed();

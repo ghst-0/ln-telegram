@@ -9,7 +9,6 @@ import { checkAccess } from './../authentication/index.js';
 const date = () => new Date().toISOString().substring(0, 10);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
-const replyMarkdownV1 = reply => n => reply(n, {parse_mode: 'Markdown'});
 
 /** Execute backup command
 

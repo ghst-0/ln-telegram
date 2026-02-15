@@ -1,9 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { listChannelsResponse } from './../fixtures/index.js';
-import { getInfoResponse } from './../fixtures/index.js';
-import { getNodeInfoResponse } from './../fixtures/index.js';
+import { getInfoResponse, getNodeInfoResponse } from './../fixtures/index.js';
 import getReceivedMessage from './../../post/get_received_message.js';
 
 const getInfoRes = () => JSON.parse(JSON.stringify(getInfoResponse));

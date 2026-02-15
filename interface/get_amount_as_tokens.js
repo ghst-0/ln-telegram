@@ -6,15 +6,12 @@ import { returnResult } from 'asyncjs-util';
 
 const defaultFiatRateProvider = 'coingecko';
 const defaultTokens = 0;
-const fiatTokens = n =>  Number(n.split('*')[0]);
-const fiatRate = n => Math.round(n/100).toFixed(2);
 const hasFiat = n => !!n && /(eur|usd)/gim.test(n);
 const {isInteger} = Number;
 const isNumber = n => !isNaN(n);
 const networks = {btc: 'BTC', btcregtest: 'BTC', btctestnet: 'BTC'};
 const rateAsTokens = rate => 1e10 / rate;
 const symbols = ['EUR', 'USD'];
-const tokensAsBigTokens = n => Math.round(n * 1e8);
 
 /** Get the tokens value for an amount string
 

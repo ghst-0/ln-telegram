@@ -1,8 +1,7 @@
 import { encodeTrade } from 'paid-services';
 import { DateTime } from 'luxon';
 
-import { formatTokens } from './../interface/index.js';
-import { titles } from './../interface/index.js';
+import { formatTokens, titles } from './../interface/index.js';
 import tradeEditButtons from './trade_edit_buttons.js';
 
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');

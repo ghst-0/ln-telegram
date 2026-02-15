@@ -10,7 +10,6 @@ const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const join = arr => arr.join('\n');
 const markup = {parse_mode: 'MarkdownV2'};
-const replyMarkdownV1 = reply => n => reply(n, {parse_mode: 'Markdown'});
 
 /** Get node info
 

@@ -9,7 +9,7 @@ import { getAmountAsTokens } from './../../interface/index.js';
 test(`Get an amount as tokens`, async () => {
   const {kill, nodes} = await spawnLightningCluster({});
 
-  const [{generate, id, lnd}] = nodes;
+  const [{lnd}] = nodes;
 
   // An invalid amount will fail to parse
   try {
