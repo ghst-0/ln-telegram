@@ -28,77 +28,79 @@ const textJoiner = '\n';
     text: <Posted Channel Open Message String>
   }
 */
-export default (args, cbk) => {
+function postOpenMessage(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (args.capacity === undefined) {
-          return cbk([400, 'ExpectedCapacityToPostChannelOpenMessage']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (args.capacity === undefined) {
+            return cbk([400, 'ExpectedCapacityToPostChannelOpenMessage']);
+          }
 
-        if (!args.from) {
-          return cbk([400, 'ExpectedFromNameToPostChannelOpenMessage']);
-        }
+          if (!args.from) {
+            return cbk([400, 'ExpectedFromNameToPostChannelOpenMessage']);
+          }
 
-        if (!args.id) {
-          return cbk([400, 'ExpectedTelegramUserIdToPostChannelOpenMessage']);
-        }
+          if (!args.id) {
+            return cbk([400, 'ExpectedTelegramUserIdToPostChannelOpenMessage']);
+          }
 
-        if (args.is_private === undefined) {
-          return cbk([400, 'ExpectedPrivateStatusToPostChannelOpenMessage']);
-        }
+          if (args.is_private === undefined) {
+            return cbk([400, 'ExpectedPrivateStatusToPostChannelOpenMessage']);
+          }
 
-        if (!args.lnd) {
-          return cbk([400, 'ExpectedLndToPostChannelOpenMessage']);
-        }
+          if (!args.lnd) {
+            return cbk([400, 'ExpectedLndToPostChannelOpenMessage']);
+          }
 
-        if (!args.partner_public_key) {
-          return cbk([400, 'ExpectedPartnerPublicKeyToPostChanOpenMessage']);
-        }
+          if (!args.partner_public_key) {
+            return cbk([400, 'ExpectedPartnerPublicKeyToPostChanOpenMessage']);
+          }
 
-        if (!args.send) {
-          return cbk([400, 'ExpectedSendFunctionToPostChanOpenMessage']);
-        }
+          if (!args.send) {
+            return cbk([400, 'ExpectedSendFunctionToPostChanOpenMessage']);
+          }
 
-        return cbk();
-      },
-
-      // Get peer liquidity rundown
-      getLiquidity: ['validate', ({}, cbk) => {
-        return getPeerLiquidity({
-          lnd: args.lnd,
-          public_key: args.partner_public_key,
+          return cbk();
         },
-        cbk);
-      }],
 
-      // Message text
-      message: ['getLiquidity', ({getLiquidity}, cbk) => {
-        const action = args.is_partner_initiated ? 'Accepted' : 'Opened';
-        const capacity = displayAmount(args.capacity);
-        const channel = args.is_private ? 'private channel' : 'channel';
-        const direction = !!args.is_partner_initiated ? 'from' : 'to';
-        const moniker = `${getLiquidity.alias} ${args.partner_public_key}`;
+        // Get peer liquidity rundown
+        getLiquidity: ['validate', ({}, cbk) => {
+          return getPeerLiquidity({
+              lnd: args.lnd,
+              public_key: args.partner_public_key
+            },
+            cbk);
+        }],
 
-        const event = `${action} new ${capacity} ${channel}`;
+        // Message text
+        message: ['getLiquidity', ({ getLiquidity }, cbk) => {
+          const action = args.is_partner_initiated ? 'Accepted' : 'Opened';
+          const capacity = displayAmount(args.capacity);
+          const channel = args.is_private ? 'private channel' : 'channel';
+          const direction = !!args.is_partner_initiated ? 'from' : 'to';
+          const moniker = `${ getLiquidity.alias } ${ args.partner_public_key }`;
 
-        const details = [
-          `${event} ${direction} ${moniker}.`,
-          `Inbound liquidity now: ${displayAmount(getLiquidity.inbound)}.`,
-          `Outbound liquidity now: ${displayAmount(getLiquidity.outbound)}.`,
-        ];
+          const event = `${ action } new ${ capacity } ${ channel }`;
 
-        const text = [`🌹 ${details.join(detailsJoiner)}`, args.from];
+          const details = [
+            `${ event } ${ direction } ${ moniker }.`,
+            `Inbound liquidity now: ${ displayAmount(getLiquidity.inbound) }.`,
+            `Outbound liquidity now: ${ displayAmount(getLiquidity.outbound) }.`
+          ];
 
-        return cbk(null, {text: escape(text.join(textJoiner))});
-      }],
+          const text = [`🌹 ${ details.join(detailsJoiner) }`, args.from];
 
-      // Send channel open message
-      send: ['message', async ({message}) => {
-        return await args.send(args.id, message.text, markup);
-      }],
-    },
-    returnResult({reject, resolve, of: 'message'}, cbk));
+          return cbk(null, { text: escape(text.join(textJoiner)) });
+        }],
+
+        // Send channel open message
+        send: ['message', async ({ message }) => {
+          return await args.send(args.id, message.text, markup);
+        }]
+      },
+      returnResult({ reject, resolve, of: 'message' }, cbk));
   });
-};
+}
+
+export default postOpenMessage;

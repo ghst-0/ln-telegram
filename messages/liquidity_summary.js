@@ -39,11 +39,11 @@ const shortId = key => key.substring(0, 8);
     message: <Message Text String>
   }
 */
-export default ({alias, inbound, nodes, outbound, peer}) => {
+function liquiditySummary({ alias, inbound, nodes, outbound, peer }) {
   const [, otherNode] = nodes;
 
   const header = !!peer ? peerTitle(escape(alias), shortId(peer)) : head;
-  const icon = !otherNode ? `${icons.liquidity} ` : '';
+  const icon = !otherNode ? `${ icons.liquidity } ` : '';
 
   const table = nodes
     .filter(node => {
@@ -57,23 +57,25 @@ export default ({alias, inbound, nodes, outbound, peer}) => {
       const named = escape(node.from).trim();
       const remote = inbound.find(n => n.public_key === node.public_key);
 
-      const from = !otherNode ? noFrom : `_${icons.liquidity} ${named}_:\n`;
+      const from = !otherNode ? noFrom : `_${ icons.liquidity } ${ named }_:\n`;
 
       const rows = [
         [
           'Inbound',
           formatLiquidity(remote.balance),
-          formatFee(remote.fee_rate),
+          formatFee(remote.fee_rate)
         ],
         [
           'Outbound',
           formatLiquidity(local.balance),
-          formatFee(local.fee_rate),
-        ],
+          formatFee(local.fee_rate)
+        ]
       ];
 
-      return formatReport(from, renderTable(rows, {border, singleLine: true}));
+      return formatReport(from, renderTable(rows, { border, singleLine: true }));
     });
 
-  return {message: `${icon}${header}${table.join('')}`};
-};
+  return { message: `${ icon }${ header }${ table.join('') }` };
+}
+
+export default liquiditySummary;

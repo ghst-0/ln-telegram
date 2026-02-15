@@ -38,141 +38,142 @@ const weekMs = 1000 * 60 * 60 * 24 * 7;
     working: <Working Function>
   }
 */
-export default ({from, id, nodes, reply, request, working}, cbk) => {
+function handleCostsCommand({ from, id, nodes, reply, request, working }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!from) {
-          return cbk([400, 'ExpectedFromUserIdNumberForCostsCommand']);
-        }
-
-        if (!reply) {
-          return cbk([400, 'ExpectedReplyFunctionForCostsCommand']);
-        }
-
-        if (!request) {
-          return cbk([400, 'ExpectedRequestFunctionForCostsCommand']);
-        }
-
-        if (!working) {
-          return cbk([400, 'ExpectedWorkingFunctionForCostsCommand']);
-        }
-
-        return cbk();
-      },
-
-      // Authenticate the command caller is authorized to this command
-      checkAccess: ['validate', ({}, cbk) => checkAccess({from, id}, cbk)],
-
-      // Get rebalance payments
-      getRebalances: ['checkAccess', ({}, cbk) => {
-        const after = new Date(now() - weekMs).toISOString();
-        const dayStart = new Date(now() - dayMs).toISOString();
-        const lnds = nodes.map(n => n.lnd);
-
-        return getRebalancePayments({after, lnds}, (err, res) => {
-          if (!!err) {
-            return cbk(err);
+        // Check arguments
+        validate: cbk => {
+          if (!from) {
+            return cbk([400, 'ExpectedFromUserIdNumberForCostsCommand']);
           }
 
-          return asyncMap(nodes, (node, cbk) => {
-            const key = node.public_key;
+          if (!reply) {
+            return cbk([400, 'ExpectedReplyFunctionForCostsCommand']);
+          }
 
-            const payments = res.payments.filter(n => n.destination === key);
+          if (!request) {
+            return cbk([400, 'ExpectedRequestFunctionForCostsCommand']);
+          }
 
-            const day = payments.filter(n => n.confirmed_at > dayStart);
+          if (!working) {
+            return cbk([400, 'ExpectedWorkingFunctionForCostsCommand']);
+          }
 
-            return cbk(null, {
-              day: sumOf(day.map(n => BigInt(n.fee_mtokens))),
-              public_key: node.public_key,
-              week: sumOf(payments.map(n => BigInt(n.fee_mtokens))),
-            });
-          },
-          cbk);
-        });
-      }],
+          return cbk();
+        },
 
-      // Get chain transactions
-      getTransactions: ['checkAccess', ({}, cbk) => {
-        working();
+        // Authenticate the command caller is authorized to this command
+        checkAccess: ['validate', ({}, cbk) => checkAccess({ from, id }, cbk)],
 
-        const after = new Date(now() - weekMs).toISOString();
-        const dayStart = new Date(now() - dayMs).toISOString();
+        // Get rebalance payments
+        getRebalances: ['checkAccess', ({}, cbk) => {
+          const after = new Date(now() - weekMs).toISOString();
+          const dayStart = new Date(now() - dayMs).toISOString();
+          const lnds = nodes.map(n => n.lnd);
 
-        return asyncMap(nodes, (node, cbk) => {
-          const {lnd} = node;
-
-          return getChainTransactions({after, lnd, request}, (err, res) => {
+          return getRebalancePayments({ after, lnds }, (err, res) => {
             if (!!err) {
               return cbk(err);
             }
 
-            const transactions = res.transactions
-              .filter(n => !!n.fee)
-              .filter(n => !!n.is_confirmed)
-              .filter(n => n.created_at >= after);
+            return asyncMap(nodes, (node, cbk) => {
+                const key = node.public_key;
 
-            const day = transactions.filter(n => n.created_at >= dayStart);
+                const payments = res.payments.filter(n => n.destination === key);
 
-            return cbk(null, {
-              day: Number(sumOf(day.map(n => BigInt(n.fee)))),
-              public_key: node.public_key,
-              week: Number(sumOf(transactions.map(n => BigInt(n.fee)))),
-            })
+                const day = payments.filter(n => n.confirmed_at > dayStart);
+
+                return cbk(null, {
+                  day: sumOf(day.map(n => BigInt(n.fee_mtokens))),
+                  public_key: node.public_key,
+                  week: sumOf(payments.map(n => BigInt(n.fee_mtokens)))
+                });
+              },
+              cbk);
           });
-        },
-        cbk);
-      }],
+        }],
 
-      // Determine the reply to send to Telegram
-      response: [
-        'getRebalances',
-        'getTransactions',
-        ({getRebalances, getTransactions}, cbk) =>
-      {
-        const reports = getTransactions.map(node => {
-          const key = node.public_key;
+        // Get chain transactions
+        getTransactions: ['checkAccess', ({}, cbk) => {
+          working();
 
-          const {from} = nodes.find(n => n.public_key === key);
-          const paid = getRebalances.find(n => n.public_key === key);
+          const after = new Date(now() - weekMs).toISOString();
+          const dayStart = new Date(now() - dayMs).toISOString();
 
-          // Exit early when there were no costs in the week
-          if (!node.week && !paid.week) {
-            return formatReport(from, '- No fees paid in the past week');
-          }
+          return asyncMap(nodes, (node, cbk) => {
+              const { lnd } = node;
 
-          const rows = [
-            [
-              'Rebalances',
-              paidAmount(tokFromMtok(paid.day)),
-              paidAmount(tokFromMtok(paid.week)),
-            ],
-            [
-              'Chain Fees',
-              paidAmount(node.day),
-              paidAmount(node.week),
-            ],
-          ];
+              return getChainTransactions({ after, lnd, request }, (err, res) => {
+                if (!!err) {
+                  return cbk(err);
+                }
 
-          const chart = renderTable([header].concat(rows), {
-            border,
-            singleLine: true,
-          });
+                const transactions = res.transactions
+                  .filter(n => !!n.fee)
+                  .filter(n => !!n.is_confirmed)
+                  .filter(n => n.created_at >= after);
 
-          return formatReport(from, chart);
-        });
+                const day = transactions.filter(n => n.created_at >= dayStart);
 
-        return cbk(null, formatReports(reports));
-      }],
+                return cbk(null, {
+                  day: Number(sumOf(day.map(n => BigInt(n.fee)))),
+                  public_key: node.public_key,
+                  week: Number(sumOf(transactions.map(n => BigInt(n.fee))))
+                })
+              });
+            },
+            cbk);
+        }],
 
-      // Send response to telegram
-      reply: ['response', ({response}, cbk) => {
-        reply(response);
+        // Determine the reply to send to Telegram
+        response: [
+          'getRebalances',
+          'getTransactions',
+          ({ getRebalances, getTransactions }, cbk) => {
+            const reports = getTransactions.map(node => {
+              const key = node.public_key;
 
-        return cbk();
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+              const { from } = nodes.find(n => n.public_key === key);
+              const paid = getRebalances.find(n => n.public_key === key);
+
+              // Exit early when there were no costs in the week
+              if (!node.week && !paid.week) {
+                return formatReport(from, '- No fees paid in the past week');
+              }
+
+              const rows = [
+                [
+                  'Rebalances',
+                  paidAmount(tokFromMtok(paid.day)),
+                  paidAmount(tokFromMtok(paid.week))
+                ],
+                [
+                  'Chain Fees',
+                  paidAmount(node.day),
+                  paidAmount(node.week)
+                ]
+              ];
+
+              const chart = renderTable([header].concat(rows), {
+                border,
+                singleLine: true
+              });
+
+              return formatReport(from, chart);
+            });
+
+            return cbk(null, formatReports(reports));
+          }],
+
+        // Send response to telegram
+        reply: ['response', ({ response }, cbk) => {
+          reply(response);
+
+          return cbk();
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default handleCostsCommand;

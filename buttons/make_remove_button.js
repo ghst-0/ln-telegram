@@ -12,6 +12,8 @@ const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
     markup: <Reply Markup Object>
   }
 */
-export default ({}) => {
-  return {markup: removeMessageKeyboard(makeKeyboard())};
-};
+function makeRemoveButton({}) {
+  return { markup: removeMessageKeyboard(makeKeyboard()) };
+}
+
+export default makeRemoveButton;

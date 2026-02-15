@@ -22,21 +22,23 @@ const parseMode = 'Markdown';
     message: <Failure Message String>
   }
 */
-export default args => {
+function failureMessage(args) {
   const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
 
   const actions = {
     parse_mode: parseMode,
-    reply_markup: removeMessageKeyboard(makeKeyboard()),
+    reply_markup: removeMessageKeyboard(makeKeyboard())
   };
 
   if (!!args.is_fractional_amount) {
-    return {actions, message: invalidInt};
+    return { actions, message: invalidInt };
   }
 
   if (!!args.is_invalid_amount) {
-    return {actions, message: invalidNumber};
+    return { actions, message: invalidNumber };
   }
 
-  return {actions, message: genericError};
-};
+  return { actions, message: genericError };
+}
+
+export default failureMessage;

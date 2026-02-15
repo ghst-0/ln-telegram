@@ -12,10 +12,12 @@ import interaction from './../interaction.json' with { type: 'json' };
     reply: <Reply Function>
   }
 */
-export default ({from, id, reply}) => {
+function handleConnectCommand({ from, id, reply }) {
   if (!!id) {
     return reply(interaction.bot_is_connected);
   }
 
-  return reply(`🤖 Connection code is: \`${from}\``);
-};
+  return reply(`🤖 Connection code is: \`${ from }\``);
+}
+
+export default handleConnectCommand;

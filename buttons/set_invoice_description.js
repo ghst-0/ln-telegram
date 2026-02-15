@@ -28,93 +28,95 @@ const split = n => n.split('\n');
 
   @returns via cbk or Promise
 */
-export default ({ctx, nodes}, cbk) => {
+function setInvoiceDescription({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!ctx) {
-          return cbk([400, 'ExpectedTelegramContextToSetInvoiceDescription']);
-        }
-
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfNodesToSetInvoiceDescription']);
-        }
-
-        return cbk();
-      },
-
-      // Pull out the invoice payment request
-      invoice: ['validate', asyncReflect(({}, cbk) => {
-        const [title, request] = split(ctx.update.callback_query.message.text);
-
-        if (!title) {
-          return cbk([400, 'ExpectedInvoiceTitleOnInvoiceMessage']);
-        }
-
-        if (!request) {
-          return cbk([400, 'ExpectedPaymentRequestOnInvoiceMessage']);
-        }
-
-        try {
-          parsePaymentRequest({request});
-        } catch (err) {
-          return cbk([400, 'ExpectedValidPaymentRequestToSetInvoiceMemo']);
-        }
-
-        const {destination} = parsePaymentRequest({request});
-
-        if (!nodes.find(n => n.public_key === destination)) {
-          return cbk([400, 'MissingNodeToUpdateInvoiceDescriptionFor']);
-        }
-
-        return cbk(null, {request, title});
-      })],
-
-      // Stop the loading message
-      respond: ['validate', async ({}) => await ctx.answerCallbackQuery()],
-
-      // Post a failure to create a reply
-      failure: ['invoice', async ({invoice}) => {
-        if (!invoice.error) {
-          return;
-        }
-
-        const [, msg] = invoice.error;
-
-        return await ctx.reply(parseFailure(msg), failureMessage({}).actions);
-      }],
-
-      // Post the edit description message
-      post: ['invoice', async ({invoice}) => {
-        // Exit early when there is no invoice message
-        if (!invoice.value) {
-          return;
-        }
-
-        // Post the edit invoice description message
-        await ctx.reply(
-          join([
-            escape(invoice.value.title),
-            code(escape(invoice.value.request)),
-            spacer,
-            italic(escape(editQuestions.editInvoiceDescription)),
-          ]),
-          {
-            parse_mode: parseMode,
-            reply_markup: {
-              force_reply: true,
-              input_field_placeholder: inputFieldPlaceholder,
-            },
+        // Check arguments
+        validate: cbk => {
+          if (!ctx) {
+            return cbk([400, 'ExpectedTelegramContextToSetInvoiceDescription']);
           }
-        );
-      }],
 
-      // Remove the referenced message
-      remove: ['invoice', async ({invoice}) => {
-        return !!invoice.error ? null : await ctx.deleteMessage();
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedArrayOfNodesToSetInvoiceDescription']);
+          }
+
+          return cbk();
+        },
+
+        // Pull out the invoice payment request
+        invoice: ['validate', asyncReflect(({}, cbk) => {
+          const [title, request] = split(ctx.update.callback_query.message.text);
+
+          if (!title) {
+            return cbk([400, 'ExpectedInvoiceTitleOnInvoiceMessage']);
+          }
+
+          if (!request) {
+            return cbk([400, 'ExpectedPaymentRequestOnInvoiceMessage']);
+          }
+
+          try {
+            parsePaymentRequest({ request });
+          } catch (err) {
+            return cbk([400, 'ExpectedValidPaymentRequestToSetInvoiceMemo']);
+          }
+
+          const { destination } = parsePaymentRequest({ request });
+
+          if (!nodes.find(n => n.public_key === destination)) {
+            return cbk([400, 'MissingNodeToUpdateInvoiceDescriptionFor']);
+          }
+
+          return cbk(null, { request, title });
+        })],
+
+        // Stop the loading message
+        respond: ['validate', async ({}) => await ctx.answerCallbackQuery()],
+
+        // Post a failure to create a reply
+        failure: ['invoice', async ({ invoice }) => {
+          if (!invoice.error) {
+            return;
+          }
+
+          const [, msg] = invoice.error;
+
+          return await ctx.reply(parseFailure(msg), failureMessage({}).actions);
+        }],
+
+        // Post the edit description message
+        post: ['invoice', async ({ invoice }) => {
+          // Exit early when there is no invoice message
+          if (!invoice.value) {
+            return;
+          }
+
+          // Post the edit invoice description message
+          await ctx.reply(
+            join([
+              escape(invoice.value.title),
+              code(escape(invoice.value.request)),
+              spacer,
+              italic(escape(editQuestions.editInvoiceDescription))
+            ]),
+            {
+              parse_mode: parseMode,
+              reply_markup: {
+                force_reply: true,
+                input_field_placeholder: inputFieldPlaceholder
+              }
+            }
+          );
+        }],
+
+        // Remove the referenced message
+        remove: ['invoice', async ({ invoice }) => {
+          return !!invoice.error ? null : await ctx.deleteMessage();
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default setInvoiceDescription;

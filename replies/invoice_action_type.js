@@ -20,7 +20,7 @@ const split = n => n.split('\n');
     [type]: <Invoice Action Type String>
   }
 */
-export default ({nodes, text}) => {
+function invoiceActionType({ nodes, text }) {
   // Invoice messages have a specific structure
   if (!text || !hasInvoicePrefix(text)) {
     return {};
@@ -38,12 +38,12 @@ export default ({nodes, text}) => {
 
   // The second line of an invoice should be a payment request
   try {
-    parsePaymentRequest({request});
+    parsePaymentRequest({ request });
   } catch (err) {
     return {};
   }
 
-  const {destination} = parsePaymentRequest({request});
+  const { destination } = parsePaymentRequest({ request });
 
   // The invoice destination must match a node
   if (!nodes.find(n => n.public_key === destination)) {
@@ -51,13 +51,15 @@ export default ({nodes, text}) => {
   }
 
   switch (question) {
-  case editQuestions.editInvoiceDescription:
-    return {type: callbackCommands.setInvoiceDescription};
+    case editQuestions.editInvoiceDescription:
+      return { type: callbackCommands.setInvoiceDescription };
 
-  case editQuestions.editInvoiceTokens:
-    return {type: callbackCommands.setInvoiceTokens};
+    case editQuestions.editInvoiceTokens:
+      return { type: callbackCommands.setInvoiceTokens };
 
-  default:
-    return {};
+    default:
+      return {};
   }
-};
+}
+
+export default invoiceActionType;

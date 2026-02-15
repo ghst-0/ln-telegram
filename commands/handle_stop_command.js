@@ -15,32 +15,34 @@ import { stopBotMessage } from './../messages/index.js';
 
   @returns via cbk or Promise
 */
-export default ({from, id, reply}, cbk) => {
+function handleStopCommand({ from, id, reply }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!from) {
-          return cbk([400, 'ExpectedFromUserIdToExecuteStopCommand']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!from) {
+            return cbk([400, 'ExpectedFromUserIdToExecuteStopCommand']);
+          }
 
-        if (!reply) {
-          return cbk([400, 'ExpectedReplyFunctionToExecuteStopCommand']);
-        }
+          if (!reply) {
+            return cbk([400, 'ExpectedReplyFunctionToExecuteStopCommand']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Confirm the connected user issued the command
+        checkAccess: ['validate', ({}, cbk) => checkAccess({ from, id }, cbk)],
+
+        // Notify the chat that the bot would stop
+        notify: ['checkAccess', async ({}) => {
+          const { markup, mode, text } = stopBotMessage({});
+
+          return await reply(text, { parse_mode: mode, reply_markup: markup });
+        }]
       },
-
-      // Confirm the connected user issued the command
-      checkAccess: ['validate', ({}, cbk) => checkAccess({from, id}, cbk)],
-
-      // Notify the chat that the bot would stop
-      notify: ['checkAccess', async ({}) => {
-        const {markup, mode, text} = stopBotMessage({});
-
-        return await reply(text, {parse_mode: mode, reply_markup: markup});
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default handleStopCommand;

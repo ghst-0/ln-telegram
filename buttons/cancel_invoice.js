@@ -9,24 +9,26 @@ import { returnResult } from 'asyncjs-util';
 
   @returns via cbk or Promise
 */
-export default ({ctx}, cbk) => {
+function cancelInvoice({ ctx }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!ctx) {
-          return cbk([400, 'ExpectedTelegramContextToHandleCancelInvoice']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!ctx) {
+            return cbk([400, 'ExpectedTelegramContextToHandleCancelInvoice']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Remove the referenced invoice message
+        remove: ['validate', async ({}) => await ctx.deleteMessage()],
+
+        // Stop the loading message
+        respond: ['validate', async ({}) => await ctx.answerCallbackQuery()]
       },
-
-      // Remove the referenced invoice message
-      remove: ['validate', async ({}) => await ctx.deleteMessage()],
-
-      // Stop the loading message
-      respond: ['validate', async ({}) => await ctx.answerCallbackQuery()],
-    },
-    returnResult({reject, resolve}, cbk));
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default cancelInvoice;

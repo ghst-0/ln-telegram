@@ -35,324 +35,322 @@ const pathfindTimeoutMs = 1000 * 60;
     tokens: <Spent Tokens Number>
   }
 */
-export default ({budget, from, id, nodes, reply, text}, cbk) => {
+function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!budget) {
-          return cbk([400, 'ExpectedTokensLimitForPayCommand']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!budget) {
+            return cbk([400, 'ExpectedTokensLimitForPayCommand']);
+          }
 
-        if (!from) {
-          return cbk([400, 'ExpectedCommandFromUserIdNumberToPayCommand']);
-        }
+          if (!from) {
+            return cbk([400, 'ExpectedCommandFromUserIdNumberToPayCommand']);
+          }
 
-        if (!isArray(nodes) || !nodes.length) {
-          return cbk([400, 'ExpectedNodesForPayCommand']);
-        }
+          if (!isArray(nodes) || !nodes.length) {
+            return cbk([400, 'ExpectedNodesForPayCommand']);
+          }
 
-        if (!reply) {
-          return cbk([400, 'ExpectedReplyFunctionForPayCommand']);
-        }
+          if (!reply) {
+            return cbk([400, 'ExpectedReplyFunctionForPayCommand']);
+          }
 
-        if (!text) {
-          return cbk([400, 'ExpectedOriginalCommandTextForPayCommand']);
-        }
+          if (!text) {
+            return cbk([400, 'ExpectedOriginalCommandTextForPayCommand']);
+          }
 
-        return cbk();
-      },
+          return cbk();
+        },
 
-      // Check access
-      checkAccess: ['validate', ({}, cbk) => checkAccess({from, id}, cbk)],
+        // Check access
+        checkAccess: ['validate', ({}, cbk) => checkAccess({ from, id }, cbk)],
 
-      // Decode the command
-      decodeCommand: ['validate', ({}, cbk) => {
-        const help = {
-          select_node_text: interaction.select_node_for_payment,
-          syntax_example_text: interaction.pay_syntax,
-        };
+        // Decode the command
+        decodeCommand: ['validate', ({}, cbk) => {
+          const help = {
+            select_node_text: interaction.select_node_for_payment,
+            syntax_example_text: interaction.pay_syntax
+          };
 
-        return decodeCommand({help, nodes, reply, text}, cbk);
-      }],
+          return decodeCommand({ help, nodes, reply, text }, cbk);
+        }],
 
-      // Decode payment request
-      decodeRequest: ['decodeCommand', ({decodeCommand}, cbk) => {
-        const {lnd} = decodeCommand;
-        const [request] = decodeCommand.params;
-
-        try {
-          const decoded = parsePaymentRequest({request});
-
-          return cbk(null, {
-            cltv_delta: decoded.cltv_delta,
-            destination: decoded.destination,
-            id: decoded.id,
-            mtokens: decoded.mtokens,
-            payment: decoded.payment,
-            routes: decoded.routes,
-            tokens: decoded.tokens,
-          });
-        } catch (err) {
-          return cbk([400, 'FailedToDecodePaymentRequest', {err}]);
-        }
-      }],
-
-      // Check the amount and set max tokens budget
-      maxTokens: [
-        'decodeCommand',
-        'decodeRequest',
-        ({decodeCommand, decodeRequest}, cbk) =>
-      {
-        const multiplier = defaultMaxTokensMultiplier;
-        const [, paymentLimit] = decodeCommand.params;
-        const {tokens} = decodeRequest;
-
-        const paymentBudget = paymentLimit || ceil(tokens * multiplier);
-
-        if (!isNumber(paymentBudget)) {
-          return cbk([400, 'ExpectedNumericValueForPaymentLimit']);
-        }
-
-        if (tokens > Number(paymentBudget)) {
-          return cbk([400, 'PaymentRequestExceedsAmountAllowedForPayment']);
-        }
-
-        if (tokens > budget) {
-          return cbk([400, 'PaymentRequestExceedsPaymentLimit']);
-        }
-
-        return cbk(null, min(Number(paymentBudget), budget));
-      }],
-
-      // Status update
-      postStatus: ['decodeRequest', 'maxTokens', async ({decodeRequest}) => {
-        return await reply(`${icons.bot} Paying ${decodeRequest.tokens}...`);
-      }],
-
-      // Execute a probe
-      probe: [
-        'decodeCommand',
-        'decodeRequest',
-        'maxTokens',
-        'postStatus',
-        ({decodeCommand, decodeRequest, maxTokens}, cbk) =>
-      {
-        const mtokens = decodeRequest.mtokens;
-        let probeTimeout;
-
-        const sub = subscribeToProbeForRoute({
-          cltv_delta: decodeRequest.cltv_delta + cltvDeltaBuffer,
-          destination: decodeRequest.destination,
-          lnd: decodeCommand.lnd,
-          mtokens: decodeRequest.mtokens,
-          path_timeout_ms: pathTimeoutMs,
-          payment: decodeRequest.payment,
-          routes: decodeRequest.routes,
-          total_mtokens: !!decodeRequest.payment ? mtokens : undefined,
-        });
-
-        const finished = (err, res) => {
-          clearTimeout(probeTimeout);
-
-          sub.removeAllListeners();
-
-          // Switch and return the final result
-
-          return cbk(err, res);
-        };
-
-        probeTimeout = setTimeout(
-          () => finished([503, 'FindPathTimeout']),
-          pathfindTimeoutMs
-        );
-
-        // Finish without success
-        sub.once('end', () => finished([503, 'FailedToFindPathToPay']));
-
-        // Finish with error
-        sub.on('error', err => finished(err));
-
-        // Log failures encountered while trying to find a route
-        sub.on('routing_failure', async fail => {
-          const at = `at ${fail.channel || fail.public_key}`;
-          const source = fail.route.hops[fail.index - [fail].length];
-
-          let fromName = !source ? null : source.public_key;
+        // Decode payment request
+        decodeRequest: ['decodeCommand', ({ decodeCommand }, cbk) => {
+          const { lnd } = decodeCommand;
+          const [request] = decodeCommand.params;
 
           try {
-            const node = await getNode({
-              lnd,
-              is_omitting_channels: true,
-              public_key: source.public_key,
+            const decoded = parsePaymentRequest({ request });
+
+            return cbk(null, {
+              cltv_delta: decoded.cltv_delta,
+              destination: decoded.destination,
+              id: decoded.id,
+              mtokens: decoded.mtokens,
+              payment: decoded.payment,
+              routes: decoded.routes,
+              tokens: decoded.tokens
+            });
+          } catch (err) {
+            return cbk([400, 'FailedToDecodePaymentRequest', { err }]);
+          }
+        }],
+
+        // Check the amount and set max tokens budget
+        maxTokens: [
+          'decodeCommand',
+          'decodeRequest',
+          ({ decodeCommand, decodeRequest }, cbk) => {
+            const multiplier = defaultMaxTokensMultiplier;
+            const [, paymentLimit] = decodeCommand.params;
+            const { tokens } = decodeRequest;
+
+            const paymentBudget = paymentLimit || ceil(tokens * multiplier);
+
+            if (!isNumber(paymentBudget)) {
+              return cbk([400, 'ExpectedNumericValueForPaymentLimit']);
+            }
+
+            if (tokens > Number(paymentBudget)) {
+              return cbk([400, 'PaymentRequestExceedsAmountAllowedForPayment']);
+            }
+
+            if (tokens > budget) {
+              return cbk([400, 'PaymentRequestExceedsPaymentLimit']);
+            }
+
+            return cbk(null, min(Number(paymentBudget), budget));
+          }],
+
+        // Status update
+        postStatus: ['decodeRequest', 'maxTokens', async ({ decodeRequest }) => {
+          return await reply(`${ icons.bot } Paying ${ decodeRequest.tokens }...`);
+        }],
+
+        // Execute a probe
+        probe: [
+          'decodeCommand',
+          'decodeRequest',
+          'maxTokens',
+          'postStatus',
+          ({ decodeCommand, decodeRequest, maxTokens }, cbk) => {
+            const mtokens = decodeRequest.mtokens;
+            let probeTimeout;
+
+            const sub = subscribeToProbeForRoute({
+              cltv_delta: decodeRequest.cltv_delta + cltvDeltaBuffer,
+              destination: decodeRequest.destination,
+              lnd: decodeCommand.lnd,
+              mtokens: decodeRequest.mtokens,
+              path_timeout_ms: pathTimeoutMs,
+              payment: decodeRequest.payment,
+              routes: decodeRequest.routes,
+              total_mtokens: !!decodeRequest.payment ? mtokens : undefined
             });
 
-            fromName = node.alias;
-          } catch (err) {}
+            const finished = (err, res) => {
+              clearTimeout(probeTimeout);
 
-          const from = !source ? '' : `from ${fromName}`;
+              sub.removeAllListeners();
 
-          const text = `${fail.reason} ${at} ${from}`;
+              // Switch and return the final result
 
-          return reply(text);
-        });
+              return cbk(err, res);
+            };
 
-        // Finish with successful probe
-        sub.on('probe_success', ({route}) => {
-          const {tokens} = route;
+            probeTimeout = setTimeout(
+              () => finished([503, 'FindPathTimeout']),
+              pathfindTimeoutMs
+            );
 
-          // Finish with error when there is a fee limit exceeded
-          if (tokens > maxTokens) {
-            return finished([400, 'PaymentLimitLow', {needed_limit: tokens}]);
+            // Finish without success
+            sub.once('end', () => finished([503, 'FailedToFindPathToPay']));
+
+            // Finish with error
+            sub.on('error', err => finished(err));
+
+            // Log failures encountered while trying to find a route
+            sub.on('routing_failure', async fail => {
+              const at = `at ${ fail.channel || fail.public_key }`;
+              const source = fail.route.hops[fail.index - [fail].length];
+
+              let fromName = !source ? null : source.public_key;
+
+              try {
+                const node = await getNode({
+                  lnd,
+                  is_omitting_channels: true,
+                  public_key: source.public_key
+                });
+
+                fromName = node.alias;
+              } catch (err) {
+              }
+
+              const from = !source ? '' : `from ${ fromName }`;
+
+              const text = `${ fail.reason } ${ at } ${ from }`;
+
+              return reply(text);
+            });
+
+            // Finish with successful probe
+            sub.on('probe_success', ({ route }) => {
+              const { tokens } = route;
+
+              // Finish with error when there is a fee limit exceeded
+              if (tokens > maxTokens) {
+                return finished([400, 'PaymentLimitLow', { needed_limit: tokens }]);
+              }
+
+              return finished(null, { route });
+            });
+
+            return;
+          }],
+
+        // Pay the request
+        pay: [
+          'decodeCommand',
+          'decodeRequest',
+          'probe',
+          ({ decodeCommand, decodeRequest, probe }, cbk) => {
+            return payViaRoutes({
+                id: decodeRequest.id,
+                lnd: decodeCommand.lnd,
+                routes: [probe.route]
+              },
+              err => {
+                // Ignore payment errors
+                return cbk();
+              });
+          }],
+
+        // Get the status of the payment
+        getPayment: [
+          'decodeCommand',
+          'decodeRequest',
+          'pay',
+          ({ decodeCommand, decodeRequest }, cbk) => {
+            return getPayment({
+                id: decodeRequest.id,
+                lnd: decodeCommand.lnd
+              },
+              (err, res) => {
+                if (!!err) {
+                  return cbk(err);
+                }
+
+                // Exit with error when the payment was rejected
+                if (!!res.failed && !!res.is_invalid_payment) {
+                  return cbk([503, 'PaymentRejectedByDestination']);
+                }
+
+                // Exit with error when the payment failed for reason
+                if (!!res.is_failed) {
+                  return cbk([503, 'PaymentFailedToSend']);
+                }
+
+                // Exit with error when the payment is in limbo
+                if (!!res.is_pending) {
+                  const text = interaction.payment_is_stuck;
+
+                  reply(text);
+
+                  return cbk([503, 'PaymentStuckInPendingState']);
+                }
+
+                // Exit with error when the payment is in a weird state
+                if (!res.payment || !res.payment.mtokens) {
+                  return cbk([503, 'UnexpectedStateOfPayment']);
+                }
+
+                return cbk(null, {
+                  fee: mtokensToTokens(res.payment.fee_mtokens),
+                  hops: res.payment.hops,
+                  tokens: mtokensToTokens(res.payment.mtokens)
+                });
+              });
+          }],
+
+        // Post success
+        success: [
+          'decodeRequest',
+          'getPayment',
+          async ({ decodeRequest, getPayment }) => {
+            await reply(`Sent ${ decodeRequest.tokens }! Fee: ${ getPayment.fee }.`);
+          }]
+      },
+      (err, res) => {
+        if (!!isArray(err)) {
+          const [code, message, context] = err;
+
+          // Setting text means that the payment definitively failed
+          let text;
+
+          // Set the text if there is a known failure and rollback tokens is ok
+          switch (message) {
+            case 'ExpectedNumericValueForPaymentLimit':
+              text = `Missing payment limit amount\n${ interaction.pay_syntax }`;
+              break;
+
+            case 'FailedToDecodePaymentRequest':
+              text = 'Could not decode payment request, is it pasted correctly?';
+              break;
+
+            case 'FailedToFindPathToPay':
+              text = 'No route to payment destination, create a new channel?';
+              break;
+
+            case 'FindPathTimeout':
+              text = 'Could not find route to destination. Try again?';
+              break;
+
+            case 'PaymentFailedToSend':
+              text = 'Payment failed to send. Try again?';
+              break;
+
+            case 'PaymentLimitLow':
+              text = `Higher payment limit needed: ${ context.needed_limit }`;
+              break;
+
+            case 'PaymentRejectedByDestination':
+              text = 'The receiver rejected the payment. Try again?';
+              break;
+
+            case 'PaymentRequestExceedsAmountAllowedForPayment':
+              text = 'Payment amount higher than limit specified.';
+              break;
+
+            case 'PaymentRequestExceedsPaymentLimit':
+              text = 'Payment amount higher than budget. Try a lower amount?';
+              break;
+
+            case 'UnknownNodeToUseForCommand':
+              text = `Specify node to pay with...`;
+              break;
+
+            default:
+              break;
           }
 
-          return finished(null, {route});
-        });
-
-        return;
-      }],
-
-      // Pay the request
-      pay: [
-        'decodeCommand',
-        'decodeRequest',
-        'probe',
-        ({decodeCommand, decodeRequest, probe}, cbk) =>
-      {
-        return payViaRoutes({
-          id: decodeRequest.id,
-          lnd: decodeCommand.lnd,
-          routes: [probe.route],
-        },
-        err => {
-          // Ignore payment errors
-          return cbk();
-        });
-      }],
-
-      // Get the status of the payment
-      getPayment: [
-        'decodeCommand',
-        'decodeRequest',
-        'pay',
-        ({decodeCommand, decodeRequest}, cbk) =>
-      {
-        return getPayment({
-          id: decodeRequest.id,
-          lnd: decodeCommand.lnd,
-        },
-        (err, res) => {
-          if (!!err) {
-            return cbk(err);
+          // Report unanticipated errors
+          if (!text) {
+            return returnResult({ reject, resolve, of: 'getPayment' }, cbk)(err);
           }
 
-          // Exit with error when the payment was rejected
-          if (!!res.failed && !!res.is_invalid_payment) {
-            return cbk([503, 'PaymentRejectedByDestination']);
-          }
+          reply(text);
 
-          // Exit with error when the payment failed for reason
-          if (!!res.is_failed) {
-            return cbk([503, 'PaymentFailedToSend']);
-          }
-
-          // Exit with error when the payment is in limbo
-          if (!!res.is_pending) {
-            const text = interaction.payment_is_stuck;
-
-            reply(text);
-
-            return cbk([503, 'PaymentStuckInPendingState']);
-          }
-
-          // Exit with error when the payment is in a weird state
-          if (!res.payment || !res.payment.mtokens) {
-            return cbk([503, 'UnexpectedStateOfPayment']);
-          }
-
-          return cbk(null, {
-            fee: mtokensToTokens(res.payment.fee_mtokens),
-            hops: res.payment.hops,
-            tokens: mtokensToTokens(res.payment.mtokens),
+          return returnResult({ reject, resolve, of: 'getPayment' }, cbk)(null, {
+            getPayment: { tokens: 0 }
           });
-        });
-      }],
-
-      // Post success
-      success: [
-        'decodeRequest',
-        'getPayment',
-        async ({decodeRequest, getPayment}) =>
-      {
-        await reply(`Sent ${decodeRequest.tokens}! Fee: ${getPayment.fee}.`);
-      }],
-    },
-    (err, res) => {
-      if (!!isArray(err)) {
-        const [code, message, context] = err;
-
-        // Setting text means that the payment definitively failed
-        let text;
-
-        // Set the text if there is a known failure and rollback tokens is ok
-        switch (message) {
-        case 'ExpectedNumericValueForPaymentLimit':
-          text = `Missing payment limit amount\n${interaction.pay_syntax}`;
-          break;
-
-        case 'FailedToDecodePaymentRequest':
-          text = 'Could not decode payment request, is it pasted correctly?';
-          break;
-
-        case 'FailedToFindPathToPay':
-          text = 'No route to payment destination, create a new channel?';
-          break;
-
-        case 'FindPathTimeout':
-          text = 'Could not find route to destination. Try again?';
-          break;
-
-        case 'PaymentFailedToSend':
-          text = 'Payment failed to send. Try again?';
-          break;
-
-        case 'PaymentLimitLow':
-          text = `Higher payment limit needed: ${context.needed_limit}`;
-          break;
-
-        case 'PaymentRejectedByDestination':
-          text = 'The receiver rejected the payment. Try again?';
-          break;
-
-        case 'PaymentRequestExceedsAmountAllowedForPayment':
-          text = 'Payment amount higher than limit specified.';
-          break;
-
-        case 'PaymentRequestExceedsPaymentLimit':
-          text = 'Payment amount higher than budget. Try a lower amount?';
-          break;
-
-        case 'UnknownNodeToUseForCommand':
-          text = `Specify node to pay with...`;
-          break;
-
-        default:
-          break;
         }
 
-        // Report unanticipated errors
-        if (!text) {
-          return returnResult({reject, resolve, of: 'getPayment'}, cbk)(err);
-        }
-
-        reply(text);
-
-        return returnResult({reject, resolve, of: 'getPayment'}, cbk)(null, {
-          getPayment: {tokens: 0},
-        });
-      }
-
-      return returnResult({reject, resolve, of: 'getPayment'}, cbk)(err, res);
-    });
+        return returnResult({ reject, resolve, of: 'getPayment' }, cbk)(err, res);
+      });
   });
-};
+}
+
+export default handlePayCommand;

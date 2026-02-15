@@ -29,145 +29,147 @@ const split = n => n.split('\n');
 
   @returns via cbk or Promise
 */
-export default ({command, ctx, nodes}, cbk) => {
+function askToUpdateTrade({ command, ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!command) {
-          return cbk([400, 'ExpectedButtonCommandToUpdateTradeDetails']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!command) {
+            return cbk([400, 'ExpectedButtonCommandToUpdateTradeDetails']);
+          }
 
-        if (!ctx) {
-          return cbk([400, 'ExpectedTelegramContextToUpdateTradeDetails']);
-        }
+          if (!ctx) {
+            return cbk([400, 'ExpectedTelegramContextToUpdateTradeDetails']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfNodesToUpdateTradeDetails']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedArrayOfNodesToUpdateTradeDetails']);
+          }
 
-        return cbk();
-      },
-
-      // Derive the labels to put for the command
-      ui: ['validate', ({}, cbk) => {
-        switch (command) {
-        // Update the trade description
-        case callbackCommands.setTradeDescription:
-          return cbk(null, {
-            placeholder: editQuestions.placeholderTradeDescription,
-            question: editQuestions.editTradeDescription,
-          });
-
-        // Update the trade expires_at
-        case callbackCommands.setTradeExpiresAt:
-          return cbk(null, {
-            placeholder: editQuestions.placeholderTradeExpiresAt,
-            question: editQuestions.editTradeExpiresAt,
-          });
-
-        default:
-          return cbk([400, 'ExpectedKnownCommandToUpdateOpenTradeDetails']);
-        }
-      }],
-
-      // Stop the loading message
-      respond: ['ui', async ({}) => await ctx.answerCallbackQuery()],
-
-      // Pull out the trade id and context labels
-      trade: ['ui', asyncReflect(({}, cbk) => {
-        const [title, trade] = split(ctx.update.callback_query.message.text);
-
-        if (!title) {
-          return cbk([400, 'ExpectedTradeTitleOnTradeMessage']);
-        }
-
-        if (!trade) {
-          return cbk([400, 'ExpectedEncodedTradeOnTradeMessage']);
-        }
-
-        try {
-          decodeTrade({trade});
-        } catch (err) {
-          return cbk([400, 'ExpectedValidTradeToUpdateTradeDetails']);
-        }
-
-        const {connect} = decodeTrade({trade});
-
-        if (!connect) {
-          return cbk([400, 'ExpectedOpenTradeToUpdateTradeDetails']);
-        }
-
-        const {id} = connect;
-
-        if (!id) {
-          return cbk([400, 'ExpectedTradeIdToUpdateTradeDetails']);
-        }
-
-        // Make sure the trade is present on a node
-        return asyncMap(nodes, ({lnd}, cbk) => {
-          return getAnchoredTrade({lnd, id}, cbk);
+          return cbk();
         },
-        (err, res) => {
-          if (!!err) {
-            return cbk(err);
+
+        // Derive the labels to put for the command
+        ui: ['validate', ({}, cbk) => {
+          switch (command) {
+            // Update the trade description
+            case callbackCommands.setTradeDescription:
+              return cbk(null, {
+                placeholder: editQuestions.placeholderTradeDescription,
+                question: editQuestions.editTradeDescription
+              });
+
+            // Update the trade expires_at
+            case callbackCommands.setTradeExpiresAt:
+              return cbk(null, {
+                placeholder: editQuestions.placeholderTradeExpiresAt,
+                question: editQuestions.editTradeExpiresAt
+              });
+
+            default:
+              return cbk([400, 'ExpectedKnownCommandToUpdateOpenTradeDetails']);
+          }
+        }],
+
+        // Stop the loading message
+        respond: ['ui', async ({}) => await ctx.answerCallbackQuery()],
+
+        // Pull out the trade id and context labels
+        trade: ['ui', asyncReflect(({}, cbk) => {
+          const [title, trade] = split(ctx.update.callback_query.message.text);
+
+          if (!title) {
+            return cbk([400, 'ExpectedTradeTitleOnTradeMessage']);
           }
 
-          const [found] = res.map(n => n.trade).filter(n => !!n);
-
-          if (!found) {
-            return cbk([404, 'FailedToFindRelatedAnchoredTrade']);
+          if (!trade) {
+            return cbk([400, 'ExpectedEncodedTradeOnTradeMessage']);
           }
 
-          return cbk(null, {id, title, encoded: trade});
-        });
-      })],
+          try {
+            decodeTrade({ trade });
+          } catch (err) {
+            return cbk([400, 'ExpectedValidTradeToUpdateTradeDetails']);
+          }
 
-      // Post the edit trade message
-      post: ['trade', 'ui', async ({trade, ui}) => {
-        // Exit early when there is no trade
-        if (!trade.value) {
-          return;
-        }
+          const { connect } = decodeTrade({ trade });
+
+          if (!connect) {
+            return cbk([400, 'ExpectedOpenTradeToUpdateTradeDetails']);
+          }
+
+          const { id } = connect;
+
+          if (!id) {
+            return cbk([400, 'ExpectedTradeIdToUpdateTradeDetails']);
+          }
+
+          // Make sure the trade is present on a node
+          return asyncMap(nodes, ({ lnd }, cbk) => {
+              return getAnchoredTrade({ lnd, id }, cbk);
+            },
+            (err, res) => {
+              if (!!err) {
+                return cbk(err);
+              }
+
+              const [found] = res.map(n => n.trade).filter(n => !!n);
+
+              if (!found) {
+                return cbk([404, 'FailedToFindRelatedAnchoredTrade']);
+              }
+
+              return cbk(null, { id, title, encoded: trade });
+            });
+        })],
 
         // Post the edit trade message
-        return await ctx.reply(
-          join([
-            escape(trade.value.title),
-            code(trade.value.encoded),
-            spacer,
-            italic(escape(ui.question)),
-          ]),
-          {
-            parse_mode: parseMode,
-            reply_markup: {
-              force_reply: true,
-              input_field_placeholder: ui.placeholder,
-            },
+        post: ['trade', 'ui', async ({ trade, ui }) => {
+          // Exit early when there is no trade
+          if (!trade.value) {
+            return;
           }
-        );
-      }],
 
-      // Post a failure to create a reply
-      failure: ['trade', async ({trade}) => {
-        if (!trade.error) {
-          return;
-        }
+          // Post the edit trade message
+          return await ctx.reply(
+            join([
+              escape(trade.value.title),
+              code(trade.value.encoded),
+              spacer,
+              italic(escape(ui.question))
+            ]),
+            {
+              parse_mode: parseMode,
+              reply_markup: {
+                force_reply: true,
+                input_field_placeholder: ui.placeholder
+              }
+            }
+          );
+        }],
 
-        const [, message] = trade.error;
+        // Post a failure to create a reply
+        failure: ['trade', async ({ trade }) => {
+          if (!trade.error) {
+            return;
+          }
 
-        return await ctx.reply(failure(message), failureMessage({}).actions);
-      }],
+          const [, message] = trade.error;
 
-      // Remove the referenced message
-      remove: ['trade', async ({trade}) => {
-        if (!!trade.error) {
-          return;
-        }
+          return await ctx.reply(failure(message), failureMessage({}).actions);
+        }],
 
-        return await ctx.deleteMessage();
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+        // Remove the referenced message
+        remove: ['trade', async ({ trade }) => {
+          if (!!trade.error) {
+            return;
+          }
+
+          return await ctx.deleteMessage();
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default askToUpdateTrade;

@@ -27,67 +27,69 @@ const markup = {parse_mode: 'MarkdownV2'};
     working: <Working Function>
   }
 */
-export default (args, cbk) => {
+function handleBalanceCommand(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!args.from) {
-          return cbk([400, 'ExpectedFromUserIdNumberForBalanceCommand']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!args.from) {
+            return cbk([400, 'ExpectedFromUserIdNumberForBalanceCommand']);
+          }
 
-        if (!args.id) {
-          return cbk([400, 'ExpectedConnectedIdNumberForBalanceCommand']);
-        }
+          if (!args.id) {
+            return cbk([400, 'ExpectedConnectedIdNumberForBalanceCommand']);
+          }
 
-        if (!isArray(args.nodes)) {
-          return cbk([400, 'ExpectedListOfConnectedNodesForBalanceCommand']);
-        }
+          if (!isArray(args.nodes)) {
+            return cbk([400, 'ExpectedListOfConnectedNodesForBalanceCommand']);
+          }
 
-        if (!args.reply) {
-          return cbk([400, 'ExpectedReplyFunctionForFundsCommand']);
-        }
+          if (!args.reply) {
+            return cbk([400, 'ExpectedReplyFunctionForFundsCommand']);
+          }
 
-        if (!args.working) {
-          return cbk([400, 'ExpectedWorkingFunctionForFundsCommand']);
-        }
+          if (!args.working) {
+            return cbk([400, 'ExpectedWorkingFunctionForFundsCommand']);
+          }
 
-        return cbk();
-      },
-
-      // Authenticate the command caller is authorized to this command
-      checkAccess: ['validate', ({}, cbk) => {
-        return checkAccess({from: args.from, id: args.id}, cbk);
-      }],
-
-      // Notify of record lookup time
-      working: ['checkAccess', async ({}) => {
-        try {
-          return await args.working();
-        } catch (err) {
-          // Ignore errors notifying working
-          return;
-        }
-      }],
-
-      // Fetch balance information
-      getBalances: ['checkAccess', ({}, cbk) => {
-        return asyncMap(args.nodes, (node, cbk) => {
-          return getNodeFunds({is_confirmed: true, lnd: node.lnd}, cbk);
+          return cbk();
         },
-        cbk);
-      }],
 
-      // Put together funds report
-      message: ['getBalances', async ({getBalances}, cbk) => {
-        const {message} = fundsSummary({
-          balances: getBalances,
-          nodes: args.nodes,
-        });
+        // Authenticate the command caller is authorized to this command
+        checkAccess: ['validate', ({}, cbk) => {
+          return checkAccess({ from: args.from, id: args.id }, cbk);
+        }],
 
-        return await args.reply(message, markup);
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+        // Notify of record lookup time
+        working: ['checkAccess', async ({}) => {
+          try {
+            return await args.working();
+          } catch (err) {
+            // Ignore errors notifying working
+            return;
+          }
+        }],
+
+        // Fetch balance information
+        getBalances: ['checkAccess', ({}, cbk) => {
+          return asyncMap(args.nodes, (node, cbk) => {
+              return getNodeFunds({ is_confirmed: true, lnd: node.lnd }, cbk);
+            },
+            cbk);
+        }],
+
+        // Put together funds report
+        message: ['getBalances', async ({ getBalances }, cbk) => {
+          const { message } = fundsSummary({
+            balances: getBalances,
+            nodes: args.nodes
+          });
+
+          return await args.reply(message, markup);
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default handleBalanceCommand;

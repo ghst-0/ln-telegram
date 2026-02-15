@@ -19,13 +19,15 @@ const mode = 'MarkdownV2';
     text: <Message Text String>
   }
 */
-export default args => {
+function stopBotMessage(args) {
   const markup = new InlineKeyboard();
 
   markup.text(stopBotCancelButtonLabel, terminateBot);
   markup.text(stopBotConfirmButtonLabel, removeMessage);
 
-  const text = `${icons.bot} Are you sure that you want to stop the bot?`;
+  const text = `${ icons.bot } Are you sure that you want to stop the bot?`;
 
-  return {markup, mode, text};
-};
+  return { markup, mode, text };
+}
+
+export default stopBotMessage;

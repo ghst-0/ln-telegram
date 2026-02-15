@@ -21,38 +21,40 @@ const markup = {parse_mode: 'MarkdownV2'};
 
   @returns via cbk or Promise
 */
-export default ({id, nodes, send}, cbk) => {
+function postNodesOnline({ id, nodes, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!id) {
-          return cbk([400, 'ExpectedConnectedUserIdToPostOnlineNotification']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!id) {
+            return cbk([400, 'ExpectedConnectedUserIdToPostOnlineNotification']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedNodesToPostOnlineNotification']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedNodesToPostOnlineNotification']);
+          }
 
-        if (!send) {
-          return cbk([400, 'ExpectedSendFunctionToPostOnlineNotification']);
-        }
+          if (!send) {
+            return cbk([400, 'ExpectedSendFunctionToPostOnlineNotification']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Message to send
+        message: ['validate', ({}, cbk) => {
+          const names = nodes.map(node => (node.alias || node.id).trim());
+
+          const text = `${ icons.bot } Connected to ${ commaJoin(names) }`;
+
+          return cbk(null, `_${ escape(text) }_`);
+        }],
+
+        // Send the connected message
+        send: ['message', async ({ message }) => await send(id, message, markup)]
       },
-
-      // Message to send
-      message: ['validate', ({}, cbk) => {
-        const names = nodes.map(node => (node.alias || node.id).trim());
-
-        const text = `${icons.bot} Connected to ${commaJoin(names)}`;
-
-        return cbk(null, `_${escape(text)}_`);
-      }],
-
-      // Send the connected message
-      send: ['message', async ({message}) => await send(id, message, markup)],
-    },
-    returnResult({reject, resolve, of: 'message'}, cbk));
+      returnResult({ reject, resolve, of: 'message' }, cbk));
   });
-};
+}
+
+export default postNodesOnline;

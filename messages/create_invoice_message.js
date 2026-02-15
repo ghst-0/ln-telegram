@@ -29,10 +29,10 @@ const {setInvoiceTokens} = callbackCommands;
     text: <Message Text String>
   }
 */
-export default ({from, request}) => {
+function createInvoiceMessage({ from, request }) {
   const markup = new InlineKeyboard();
 
-  const {description, tokens} = parsePaymentRequest({request});
+  const { description, tokens } = parsePaymentRequest({ request });
 
   markup.text(invoiceMessageDescriptionButtonLabel, setInvoiceDescription);
   markup.text(invoiceMessageSetTokensButtonLabel, setInvoiceTokens);
@@ -43,16 +43,18 @@ export default ({from, request}) => {
 
   markup.text(invoiceMessageCancelButtonLabel, cancelInvoice);
 
-  const memo = !description ? '' : `“${description}”`;
+  const memo = !description ? '' : `“${ description }”`;
 
   const title = escape(titles.createdInvoicePrefix);
-  const amount = escape(formatTokens({tokens}).display);
+  const amount = escape(formatTokens({ tokens }).display);
 
   const text = join([
-    `${title}${amount} ${escape(memo)}`,
-    `\`${escape(request)}\``,
-    `${escape(from || '')}`,
+    `${ title }${ amount } ${ escape(memo) }`,
+    `\`${ escape(request) }\``,
+    `${ escape(from || '') }`
   ]);
 
-  return {markup, mode, text};
-};
+  return { markup, mode, text };
+}
+
+export default createInvoiceMessage;

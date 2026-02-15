@@ -39,7 +39,7 @@ const flatten = arr => [].concat(...arr);
     }]
   }
 */
-export default ({channels}) => {
+function pendingPayments({ channels }) {
   // Collect all the outbound type HTLCs
   const sending = flatten(channels.map(channel => {
     return (channel.pending_payments || [])
@@ -48,7 +48,7 @@ export default ({channels}) => {
         out_channel: channel.id,
         out_peer: channel.partner_public_key,
         timeout: payment.timeout,
-        tokens: payment.tokens,
+        tokens: payment.tokens
       }));
   }));
 
@@ -66,7 +66,7 @@ export default ({channels}) => {
         is_outgoing: payment.is_outgoing,
         payment: payment.payment,
         timeout: payment.timeout,
-        tokens: payment.tokens,
+        tokens: payment.tokens
       }));
   }));
 
@@ -91,9 +91,11 @@ export default ({channels}) => {
       out_peer: outboundChannel.partner_public_key,
       payment: htlc.id,
       timeout: inboundPayment.timeout,
-      tokens: htlc.tokens,
+      tokens: htlc.tokens
     };
   });
 
-  return {forwarding, sending};
-};
+  return { forwarding, sending };
+}
+
+export default pendingPayments;

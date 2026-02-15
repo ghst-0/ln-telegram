@@ -23,22 +23,24 @@ const mtokensAsTokens = n => Number(n) / 1e3;
     }]
   }
 */
-export default ({forwards}) => {
+function consolidateForwards({ forwards }) {
   const unique = forwards.reduce((sum, forward) => {
-    const fee = mtokensAsTokens(forward.fee_mtokens);
-    const tokens = mtokensAsTokens(forward.mtokens);
-    const pair = keyForPair(forward);
+      const fee = mtokensAsTokens(forward.fee_mtokens);
+      const tokens = mtokensAsTokens(forward.mtokens);
+      const pair = keyForPair(forward);
 
-    sum[pair] = sum[pair] || {};
+      sum[pair] = sum[pair] || {};
 
-    sum[pair].fee = (sum[pair].fee || Number()) + fee;
-    sum[pair].incoming_channel = forward.incoming_channel;
-    sum[pair].outgoing_channel = forward.outgoing_channel;
-    sum[pair].tokens = (sum[pair].tokens || Number()) + tokens;
+      sum[pair].fee = (sum[pair].fee || Number()) + fee;
+      sum[pair].incoming_channel = forward.incoming_channel;
+      sum[pair].outgoing_channel = forward.outgoing_channel;
+      sum[pair].tokens = (sum[pair].tokens || Number()) + tokens;
 
-    return sum;
-  },
-  {});
+      return sum;
+    },
+    {});
 
-  return {forwards: keys(unique).map(key => unique[key])};
-};
+  return { forwards: keys(unique).map(key => unique[key]) };
+}
+
+export default consolidateForwards;

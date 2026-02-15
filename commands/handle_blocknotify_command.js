@@ -24,63 +24,65 @@ const network = 'btc';
 
   @returns via cbk or Promise
 */
-export default ({from, id, reply, request}, cbk) => {
+function handleBlocknotifyCommand({ from, id, reply, request }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!from) {
-          return cbk([400, 'ExpectedFromUserIdToHandleBlockNotifyCommand']);
-        }
-
-        if (!reply) {
-          return cbk([400, 'ExpectedReplyFunctionToHandleBlockNotifyCommand']);
-        }
-
-        if (!request) {
-          return cbk([400, 'ExpectedRequestFunctionToHandleBlocknotifyCmd']);
-        }
-
-        return cbk();
-      },
-
-      // Confirm the connected user issued the command
-      checkAccess: ['validate', ({}, cbk) => checkAccess({from, id}, cbk)],
-
-      // Wait for block
-      wait: ['checkAccess', ({}, cbk) => {
-        let currentHeight;
-        const sub = subscribeToBlocks({delay, network, request});
-
-        sub.on('block', ({height}) => {
-          const heightMessage = `Chain height is now ${height}`;
-
-          // Exit early when there is no current height
-          if (!currentHeight) {
-            currentHeight = height;
-
-            return reply(join([
-              interaction.requesting_block_notification,
-              heightMessage,
-            ]));
+        // Check arguments
+        validate: cbk => {
+          if (!from) {
+            return cbk([400, 'ExpectedFromUserIdToHandleBlockNotifyCommand']);
           }
 
-          reply(join([interaction.block_notification, heightMessage]));
+          if (!reply) {
+            return cbk([400, 'ExpectedReplyFunctionToHandleBlockNotifyCommand']);
+          }
 
-          sub.removeAllListeners();
+          if (!request) {
+            return cbk([400, 'ExpectedRequestFunctionToHandleBlocknotifyCmd']);
+          }
 
           return cbk();
-        });
+        },
 
-        sub.on('error', err => {
-          sub.removeAllListeners();
+        // Confirm the connected user issued the command
+        checkAccess: ['validate', ({}, cbk) => checkAccess({ from, id }, cbk)],
 
-          return cbk([503, 'UnexpectedErrorGettingBlock', {err}]);
-        });
+        // Wait for block
+        wait: ['checkAccess', ({}, cbk) => {
+          let currentHeight;
+          const sub = subscribeToBlocks({ delay, network, request });
 
-        return;
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+          sub.on('block', ({ height }) => {
+            const heightMessage = `Chain height is now ${ height }`;
+
+            // Exit early when there is no current height
+            if (!currentHeight) {
+              currentHeight = height;
+
+              return reply(join([
+                interaction.requesting_block_notification,
+                heightMessage
+              ]));
+            }
+
+            reply(join([interaction.block_notification, heightMessage]));
+
+            sub.removeAllListeners();
+
+            return cbk();
+          });
+
+          sub.on('error', err => {
+            sub.removeAllListeners();
+
+            return cbk([503, 'UnexpectedErrorGettingBlock', { err }]);
+          });
+
+          return;
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default handleBlocknotifyCommand;

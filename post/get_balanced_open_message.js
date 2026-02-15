@@ -24,46 +24,48 @@ const join = arr => arr.join('\n');
     message: <Message String>
   }
 */
-export default ({capacity, from, lnd, rate}, cbk) => {
+function getBalancedOpenMessage({ capacity, from, lnd, rate }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!capacity) {
-          return cbk([400, 'ExpectedBalancedProposalCapacityToGetMessage']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!capacity) {
+            return cbk([400, 'ExpectedBalancedProposalCapacityToGetMessage']);
+          }
 
-        if (!from) {
-          return cbk([400, 'ExpectedProposalFromPublicKeyToGetMessage']);
-        }
+          if (!from) {
+            return cbk([400, 'ExpectedProposalFromPublicKeyToGetMessage']);
+          }
 
-        if (!lnd) {
-          return cbk([400, 'ExpectedLndToGetBalancedOpenMessage']);
-        }
+          if (!lnd) {
+            return cbk([400, 'ExpectedLndToGetBalancedOpenMessage']);
+          }
 
-        if (!rate) {
-          return cbk([400, 'ExpectedFeeRateToGetBalancedOpenMessage']);
-        }
+          if (!rate) {
+            return cbk([400, 'ExpectedFeeRateToGetBalancedOpenMessage']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Get node alias
+        getAlias: ['validate', ({}, cbk) => getNodeAlias({ lnd, id: from }, cbk)],
+
+        // Message to post
+        message: ['getAlias', ({ getAlias }, cbk) => {
+          const proposal = `${ formatCapacity(capacity) } balanced channel open`;
+
+          const elements = [
+            escape(`Received a ${ proposal } proposal from ${ fromName(getAlias) }`),
+            `\`${ from }\``,
+            `Proposed chain fee rate: ${ rate }/vbyte`
+          ];
+
+          return cbk(null, { icon: icons.balanced_open, message: join(elements) });
+        }]
       },
-
-      // Get node alias
-      getAlias: ['validate', ({}, cbk) => getNodeAlias({lnd, id: from}, cbk)],
-
-      // Message to post
-      message: ['getAlias', ({getAlias}, cbk) => {
-        const proposal = `${formatCapacity(capacity)} balanced channel open`;
-
-        const elements = [
-          escape(`Received a ${proposal} proposal from ${fromName(getAlias)}`),
-          `\`${from}\``,
-          `Proposed chain fee rate: ${rate}/vbyte`,
-        ];
-
-        return cbk(null, {icon: icons.balanced_open, message: join(elements)});
-      }],
-    },
-    returnResult({reject, resolve, of: 'message'}, cbk));
+      returnResult({ reject, resolve, of: 'message' }, cbk));
   });
-};
+}
+
+export default getBalancedOpenMessage;

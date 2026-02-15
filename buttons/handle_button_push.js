@@ -34,106 +34,108 @@ const {isArray} = Array;
 
   @returns via cbk or Promise
 */
-export default ({bot, ctx, id, nodes}, cbk) => {
+function handleButtonPush({ bot, ctx, id, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!bot) {
-          return cbk([400, 'ExpectedTelegramBotToHandleButtonPushEvent']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!bot) {
+            return cbk([400, 'ExpectedTelegramBotToHandleButtonPushEvent']);
+          }
 
-        if (!ctx) {
-          return cbk([400, 'ExpectedTelegramContextToHandleButtonPushEvent']);
-        }
+          if (!ctx) {
+            return cbk([400, 'ExpectedTelegramContextToHandleButtonPushEvent']);
+          }
 
-        if (!id) {
-          return cbk([400, 'ExpectedConnectedUserIdToHandleButtonPushEvent']);
-        }
+          if (!id) {
+            return cbk([400, 'ExpectedConnectedUserIdToHandleButtonPushEvent']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfNodesToHandleButtonPushEvent']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedArrayOfNodesToHandleButtonPushEvent']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Confirm access authorization
+        checkAccess: ['validate', ({}, cbk) => {
+          return checkAccess({ id, from: ctx.update.callback_query.from.id }, cbk);
+        }],
+
+        // Find button command type
+        type: ['checkAccess', ({}, cbk) => {
+          const { data } = ctx.update.callback_query;
+
+          // Moving invoice has the button name as a prefix
+          if (data.startsWith(callbackCommands.moveInvoiceNode)) {
+            return cbk(null, callbackCommands.moveInvoiceNode);
+          }
+
+          // Moving a trade has the button name as a prefix
+          if (data.startsWith(callbackCommands.moveTradeNode)) {
+            return cbk(null, callbackCommands.moveTradeNode);
+          }
+
+          return cbk(null, data);
+        }],
+
+        // Perform button action based on type
+        action: ['type', ({ type }, cbk) => {
+          switch (type) {
+            // Pressed to remove a created invoice
+            case callbackCommands.cancelInvoice:
+              return cancelInvoice({ ctx }, cbk);
+
+            // Pressed to remove a created trade
+            case callbackCommands.cancelTrade:
+              return cancelTrade({ ctx, nodes }, cbk);
+
+            // Pressed to move an invoice to a specific saved node
+            case callbackCommands.moveInvoiceNode:
+              return moveInvoiceNode({ ctx, nodes }, cbk);
+
+            // Pressed to move a trade to a specific saved node
+            case callbackCommands.moveTradeNode:
+              return moveTradeNode({ ctx, nodes }, cbk);
+
+            // Pressed to remove a generic message
+            case callbackCommands.removeMessage:
+              return removeMessage({ ctx }, cbk);
+
+            // Pressed to set a created invoice description
+            case callbackCommands.setInvoiceDescription:
+              return setInvoiceDescription({ ctx, nodes }, cbk);
+
+            // Pressed to set the node of an invoice
+            case callbackCommands.setInvoiceNode:
+              return setInvoiceNode({ ctx, nodes }, cbk);
+
+            // Pressed to set the invoiced amount
+            case callbackCommands.setInvoiceTokens:
+              return setInvoiceTokens({ ctx, nodes }, cbk);
+
+            // Pressed to update a created trade
+            case callbackCommands.setTradeDescription:
+            case callbackCommands.setTradeExpiresAt:
+              return askToUpdateTrade({ ctx, nodes, command: type }, cbk);
+
+            // Pressed to move a trade to a specific saved node
+            case callbackCommands.setTradeNode:
+              return setTradeNode({ ctx, nodes }, cbk);
+
+            // Pressed to terminate the bot
+            case callbackCommands.terminateBot:
+              return terminateBot({ bot, ctx, exit }, cbk);
+
+            // Pressed something unknown
+            default:
+              return warnUnknownButton({ ctx }, cbk);
+          }
+        }]
       },
-
-      // Confirm access authorization
-      checkAccess: ['validate', ({}, cbk) => {
-        return checkAccess({id, from: ctx.update.callback_query.from.id}, cbk);
-      }],
-
-      // Find button command type
-      type: ['checkAccess', ({}, cbk) => {
-        const {data} = ctx.update.callback_query;
-
-        // Moving invoice has the button name as a prefix
-        if (data.startsWith(callbackCommands.moveInvoiceNode)) {
-          return cbk(null, callbackCommands.moveInvoiceNode);
-        }
-
-        // Moving a trade has the button name as a prefix
-        if (data.startsWith(callbackCommands.moveTradeNode)) {
-          return cbk(null, callbackCommands.moveTradeNode);
-        }
-
-        return cbk(null, data);
-      }],
-
-      // Perform button action based on type
-      action: ['type', ({type}, cbk) => {
-        switch (type) {
-        // Pressed to remove a created invoice
-        case callbackCommands.cancelInvoice:
-          return cancelInvoice({ctx}, cbk);
-
-        // Pressed to remove a created trade
-        case callbackCommands.cancelTrade:
-          return cancelTrade({ctx, nodes}, cbk);
-
-        // Pressed to move an invoice to a specific saved node
-        case callbackCommands.moveInvoiceNode:
-          return moveInvoiceNode({ctx, nodes}, cbk);
-
-        // Pressed to move a trade to a specific saved node
-        case callbackCommands.moveTradeNode:
-          return moveTradeNode({ctx, nodes}, cbk);
-
-        // Pressed to remove a generic message
-        case callbackCommands.removeMessage:
-          return removeMessage({ctx}, cbk);
-
-        // Pressed to set a created invoice description
-        case callbackCommands.setInvoiceDescription:
-          return setInvoiceDescription({ctx, nodes}, cbk);
-
-        // Pressed to set the node of an invoice
-        case callbackCommands.setInvoiceNode:
-          return setInvoiceNode({ctx, nodes}, cbk);
-
-        // Pressed to set the invoiced amount
-        case callbackCommands.setInvoiceTokens:
-          return setInvoiceTokens({ctx, nodes}, cbk);
-
-        // Pressed to update a created trade
-        case callbackCommands.setTradeDescription:
-        case callbackCommands.setTradeExpiresAt:
-          return askToUpdateTrade({ctx, nodes, command: type}, cbk);
-
-        // Pressed to move a trade to a specific saved node
-        case callbackCommands.setTradeNode:
-          return setTradeNode({ctx, nodes}, cbk);
-
-        // Pressed to terminate the bot
-        case callbackCommands.terminateBot:
-          return terminateBot({bot, ctx, exit}, cbk);
-
-        // Pressed something unknown
-        default:
-          return warnUnknownButton({ctx}, cbk);
-        }
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default handleButtonPush;

@@ -15,14 +15,16 @@ import tradeActionType from './trade_action_type.js';
     [type]: <Type String>
   }
 */
-export default ({nodes, text}) => {
-  if (!!invoiceActionType({nodes, text}).type) {
-    return {type: invoiceActionType({nodes, text}).type};
+function replyActionType({ nodes, text }) {
+  if (!!invoiceActionType({ nodes, text }).type) {
+    return { type: invoiceActionType({ nodes, text }).type };
   }
 
-  if (!!tradeActionType({nodes, text}).type) {
-    return {type: tradeActionType({nodes, text}).type};
+  if (!!tradeActionType({ nodes, text }).type) {
+    return { type: tradeActionType({ nodes, text }).type };
   }
 
   return {};
-};
+}
+
+export default replyActionType;

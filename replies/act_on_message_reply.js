@@ -23,75 +23,77 @@ const {isArray} = Array;
 
   @returns via cbk or Promise
 */
-export default ({api, ctx, id, nodes, request}, cbk) => {
+function actOnMessageReply({ api, ctx, id, nodes, request }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!api) {
-          return cbk([400, 'ExpectedTelegramApiToActOnMessageReply']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!api) {
+            return cbk([400, 'ExpectedTelegramApiToActOnMessageReply']);
+          }
 
-        if (!ctx) {
-          return cbk([400, 'ExpectedTelegramContextToActOnMessageReply']);
-        }
+          if (!ctx) {
+            return cbk([400, 'ExpectedTelegramContextToActOnMessageReply']);
+          }
 
-        if (!id) {
-          return cbk([400, 'ExpectedConnectedUserIdToActOnMessageReply']);
-        }
+          if (!id) {
+            return cbk([400, 'ExpectedConnectedUserIdToActOnMessageReply']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfNodesToActOnMessageReply']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedArrayOfNodesToActOnMessageReply']);
+          }
 
-        if (!request) {
-          return cbk([400, 'ExpectedRequestFunctionToActOnMessageReply']);
-        }
+          if (!request) {
+            return cbk([400, 'ExpectedRequestFunctionToActOnMessageReply']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Determine action type
+        type: ['validate', ({}, cbk) => {
+          if (!ctx || !ctx.update || !ctx.update.message) {
+            return cbk();
+          }
+
+          if (!ctx.update.message.reply_to_message) {
+            return cbk();
+          }
+
+          const { text } = ctx.update.message.reply_to_message;
+
+          // Reply action messages must fit a specific type
+          if (!text) {
+            return cbk();
+          }
+
+          return cbk(null, replyActionType({ nodes, text }).type);
+        }],
+
+        // Execute update
+        update: ['type', ({ type }, cbk) => {
+          // Exit early when the action type is unknown
+          if (!type) {
+            return cbk();
+          }
+
+          switch (type) {
+            case callbackCommands.setInvoiceDescription:
+            case callbackCommands.setInvoiceTokens:
+              return updateInvoiceFromReply({ api, ctx, id, nodes, request }, cbk);
+
+            case callbackCommands.setTradeDescription:
+            case callbackCommands.setTradeExpiresAt:
+              return updateTradeFromReply({ api, ctx, id, nodes }, cbk);
+
+            default:
+              return cbk();
+          }
+        }]
       },
-
-      // Determine action type
-      type: ['validate', ({}, cbk) => {
-        if (!ctx || !ctx.update || !ctx.update.message) {
-          return cbk();
-        }
-
-        if (!ctx.update.message.reply_to_message) {
-          return cbk();
-        }
-
-        const {text} = ctx.update.message.reply_to_message;
-
-        // Reply action messages must fit a specific type
-        if (!text) {
-          return cbk();
-        }
-
-        return cbk(null, replyActionType({nodes, text}).type);
-      }],
-
-      // Execute update
-      update: ['type', ({type}, cbk) => {
-        // Exit early when the action type is unknown
-        if (!type) {
-          return cbk();
-        }
-
-        switch (type) {
-        case callbackCommands.setInvoiceDescription:
-        case callbackCommands.setInvoiceTokens:
-          return updateInvoiceFromReply({api, ctx, id, nodes, request}, cbk);
-
-        case callbackCommands.setTradeDescription:
-        case callbackCommands.setTradeExpiresAt:
-          return updateTradeFromReply({api, ctx, id, nodes}, cbk);
-
-        default:
-          return cbk();
-        }
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default actOnMessageReply;

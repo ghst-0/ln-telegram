@@ -12,7 +12,7 @@ import replyActionType from './reply_action_type.js';
   @returns
   <Message is a Reply to Message Action Bool>
 */
-export default ({ctx, nodes}) => {
+function isMessageReplyAction({ ctx, nodes }) {
   if (!ctx || !ctx.update || !ctx.update.message) {
     return false;
   }
@@ -21,12 +21,14 @@ export default ({ctx, nodes}) => {
     return false;
   }
 
-  const {text} = ctx.update.message.reply_to_message;
+  const { text } = ctx.update.message.reply_to_message;
 
   // Reply action messages must fit a specific type
-  if (!text || !replyActionType({nodes, text}).type) {
+  if (!text || !replyActionType({ nodes, text }).type) {
     return false;
   }
 
   return true;
-};
+}
+
+export default isMessageReplyAction;

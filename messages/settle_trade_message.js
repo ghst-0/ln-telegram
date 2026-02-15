@@ -22,15 +22,17 @@ const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
     text: <Message Text String>
   }
 */
-export default args => {
-  const memo = !args.description ? '' : `“${escape(args.description)}”`;
-  const to = `${escape(args.alias)} \`${args.to}\``.trim();
+function settleTradeMessage(args) {
+  const memo = !args.description ? '' : `“${ escape(args.description) }”`;
+  const to = `${ escape(args.alias) } \`${ args.to }\``.trim();
 
   const text = join([
-    `😎 Sold: ${escape(formatTokens({tokens: args.tokens}).display)} ${memo}`,
-    `to ${to}`,
-    `${escape(args.from || '')}`,
+    `😎 Sold: ${ escape(formatTokens({ tokens: args.tokens }).display) } ${ memo }`,
+    `to ${ to }`,
+    `${ escape(args.from || '') }`
   ]);
 
-  return {markup, mode, text};
-};
+  return { markup, mode, text };
+}
+
+export default settleTradeMessage;

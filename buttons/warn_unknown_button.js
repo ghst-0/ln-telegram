@@ -13,26 +13,28 @@ const message = '🤖 Unexpected button pushed. This button may no longer be sup
 
   @returns via cbk or Promise
 */
-export default ({ctx}, cbk) => {
+function warnUnknownButton({ ctx }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!ctx) {
-          return cbk([400, 'ExpectedTelegramContextToHandleUnknownButton']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!ctx) {
+            return cbk([400, 'ExpectedTelegramContextToHandleUnknownButton']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Post a failure message
+        failure: ['validate', async ({}) => {
+          return await ctx.reply(message, failureMessage({}).actions);
+        }],
+
+        // Stop the loading message
+        respond: ['validate', async ({}) => await ctx.answerCallbackQuery()]
       },
-
-      // Post a failure message
-      failure: ['validate', async ({}) => {
-        return await ctx.reply(message, failureMessage({}).actions);
-      }],
-
-      // Stop the loading message
-      respond: ['validate', async ({}) => await ctx.answerCallbackQuery()],
-    },
-    returnResult({reject, resolve}, cbk));
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default warnUnknownButton;

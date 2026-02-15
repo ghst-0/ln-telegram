@@ -16,20 +16,22 @@ const tokensAsBigUnit = tokens => (tokens / 1e8).toFixed(8);
     display: <Formtted Tokens String>
   }
 */
-export default ({none, tokens}) => {
+function formatTokens({ none, tokens }) {
   if (isString(none) && !tokens) {
-    return {display: none};
+    return { display: none };
   }
 
   // Exit early for tokens environment displays the value with no leading zero
   if (process.env.PREFERRED_TOKENS_TYPE === fullTokensType) {
-    return {display: tokens.toLocaleString()};
+    return { display: tokens.toLocaleString() };
   }
 
   // Exit early for tokens environment displaying a rounded, non-leading zero
   if (process.env.PREFERRED_TOKENS_TYPE === roundedTokensType) {
-    return {display: round(tokens).toLocaleString()};
+    return { display: round(tokens).toLocaleString() };
   }
 
-  return {display: tokensAsBigUnit(tokens)};
-};
+  return { display: tokensAsBigUnit(tokens) };
+}
+
+export default formatTokens;

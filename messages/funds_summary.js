@@ -32,7 +32,7 @@ const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
     message: <Message Text String>
   }
 */
-export default ({balances, nodes}) => {
+function fundsSummary({ balances, nodes }) {
   const [, otherNode] = nodes;
 
   const total = sumOf(nodes.map((_, i) => {
@@ -41,11 +41,11 @@ export default ({balances, nodes}) => {
       balances[i].offchain_balance,
       balances[i].offchain_pending,
       balances[i].onchain_confirmed,
-      balances[i].onchain_pending,
+      balances[i].onchain_pending
     ]);
   }));
 
-  const overallTotal = escape(formatTokens({tokens: total}).display);
+  const overallTotal = escape(formatTokens({ tokens: total }).display);
 
   const table = nodes
     .map((node, i) => {
@@ -54,52 +54,54 @@ export default ({balances, nodes}) => {
         balances[i].offchain_balance,
         balances[i].offchain_pending,
         balances[i].onchain_confirmed,
-        balances[i].onchain_pending,
+        balances[i].onchain_pending
       ]);
 
       const displayTotal = escape(formatCoins(total));
-      const icon = !!otherNode ? `${icons.funds} ` : '';
+      const icon = !!otherNode ? `${ icons.funds } ` : '';
 
-      const from = `_${icon}${escape(node.from)}_: ${displayTotal}\n`;
+      const from = `_${ icon }${ escape(node.from) }_: ${ displayTotal }\n`;
 
       // Exit early when there are no individual balances
       if (!total) {
-        const zeroTotal = escape(formatTokens({tokens: total}).display);
+        const zeroTotal = escape(formatTokens({ tokens: total }).display);
 
-        return `${escape(from)}: ${zeroTotal}\n`;
+        return `${ escape(from) }: ${ zeroTotal }\n`;
       }
 
       const rows = [
         [
           'Channel Balance',
-          formatCoins(balances[i].offchain_balance),
+          formatCoins(balances[i].offchain_balance)
         ],
         [
           'Channel Pending',
-          formatCoins(balances[i].offchain_pending),
+          formatCoins(balances[i].offchain_pending)
         ],
         [
           'Closing Out',
-          formatCoins(balances[i].closing_balance),
+          formatCoins(balances[i].closing_balance)
         ],
         [
           'Chain Confirmed',
-          formatCoins(balances[i].onchain_confirmed),
+          formatCoins(balances[i].onchain_confirmed)
         ],
         [
           'Chain Pending',
-          formatCoins(balances[i].onchain_pending),
-        ],
+          formatCoins(balances[i].onchain_pending)
+        ]
       ];
 
       return formatReport(
         from,
-        renderTable(rows.filter(([, n]) => !!n), {border, singleLine: true})
+        renderTable(rows.filter(([, n]) => !!n), { border, singleLine: true })
       );
     });
 
-  const header = `*Funds:* ${overallTotal}\n\n`;
-  const icon = !otherNode ? `${icons.funds} ` : '';
+  const header = `*Funds:* ${ overallTotal }\n\n`;
+  const icon = !otherNode ? `${ icons.funds } ` : '';
 
-  return {message: `${icon}${header}${table.join('')}`};
-};
+  return { message: `${ icon }${ header }${ table.join('') }` };
+}
+
+export default fundsSummary;

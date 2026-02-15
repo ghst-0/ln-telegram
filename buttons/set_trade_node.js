@@ -17,39 +17,41 @@ const {isArray} = Array;
 
   @returns via cbk or Promise
 */
-export default ({ctx, nodes}, cbk) => {
+function setTradeNode({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!ctx) {
-          return cbk([400, 'ExpectedTelegramContextToHandleTradeNodePress']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!ctx) {
+            return cbk([400, 'ExpectedTelegramContextToHandleTradeNodePress']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfSavedNodesToHandleSetTradeNode']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedArrayOfSavedNodesToHandleSetTradeNode']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Add the saved nodes to the message
+        edit: ['validate', async ({}) => {
+          const { markup } = tradeEditButtons({ nodes, is_selecting: true });
+
+          // Post the original message but with updated buttons
+          return await ctx.editMessageText(
+            ctx.update.callback_query.message.text,
+            {
+              entities: ctx.update.callback_query.message.entities,
+              reply_markup: markup
+            }
+          );
+        }],
+
+        // Stop the loading message
+        respond: ['validate', async ({}) => await ctx.answerCallbackQuery()]
       },
-
-      // Add the saved nodes to the message
-      edit: ['validate', async ({}) => {
-        const {markup} = tradeEditButtons({nodes, is_selecting: true});
-
-        // Post the original message but with updated buttons
-        return await ctx.editMessageText(
-          ctx.update.callback_query.message.text,
-          {
-            entities: ctx.update.callback_query.message.entities,
-            reply_markup: markup,
-          },
-        );
-      }],
-
-      // Stop the loading message
-      respond: ['validate', async ({}) => await ctx.answerCallbackQuery()],
-    },
-    returnResult({reject, resolve}, cbk));
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default setTradeNode;

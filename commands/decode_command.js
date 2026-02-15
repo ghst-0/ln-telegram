@@ -24,63 +24,65 @@ const {isArray} = Array;
     params: [<Parameter String>]
   }
 */
-export default ({help, nodes, reply, text}, cbk) => {
+function decodeCommand({ help, nodes, reply, text }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!help) {
-          return cbk([400, 'ExpectedHelpTextToDecodeCommand']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!help) {
+            return cbk([400, 'ExpectedHelpTextToDecodeCommand']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedNodesWhenDecodingCommand']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedNodesWhenDecodingCommand']);
+          }
 
-        if (!reply) {
-          return cbk([400, 'ExpectedReplyFunctionToDecodeCommand']);
-        }
+          if (!reply) {
+            return cbk([400, 'ExpectedReplyFunctionToDecodeCommand']);
+          }
 
-        if (!text) {
-          return cbk([400, 'ExpectedCommandTextToDecodeCommand']);
-        }
+          if (!text) {
+            return cbk([400, 'ExpectedCommandTextToDecodeCommand']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Decoded elements
+        decoded: ['validate', ({}, cbk) => {
+          const [defaultNode] = nodes;
+          const elements = text.split(' ').slice(1);
+
+          const isMulti = nodes.length > [defaultNode].length;
+          const [nodeIndex] = elements;
+
+          const selectedNode = nodes[Number(nodeIndex || 1) - 1];
+
+          const node = !isMulti ? defaultNode : selectedNode;
+
+          // Exit early when the node to use is unknown
+          if (!node || (nodes.length > [node].length && !nodeIndex)) {
+            const syntax = help.syntax_example_text.split(' ');
+
+            syntax.splice(1, 0, '<node #>');
+
+            const text = []
+              .concat([help.select_node_text])
+              .concat(nodes.map(({ from }, i) => `- ${ i + 1 }: ${ from }`))
+              .concat([syntax.join(' ')]);
+
+            reply(text.join('\n'));
+
+            return cbk([400, 'UnknownNodeToUseForCommand']);
+          }
+
+          const params = nodes.length === 1 ? elements : elements.slice(1);
+
+          return cbk(null, { params, lnd: node.lnd })
+        }]
       },
-
-      // Decoded elements
-      decoded: ['validate', ({}, cbk) => {
-        const [defaultNode] = nodes;
-        const elements = text.split(' ').slice(1);
-
-        const isMulti = nodes.length > [defaultNode].length;
-        const [nodeIndex] = elements;
-
-        const selectedNode = nodes[Number(nodeIndex || 1) - 1];
-
-        const node = !isMulti ? defaultNode : selectedNode;
-
-        // Exit early when the node to use is unknown
-        if (!node || (nodes.length > [node].length && !nodeIndex)) {
-          const syntax = help.syntax_example_text.split(' ');
-
-          syntax.splice(1, 0, '<node #>');
-
-          const text = []
-            .concat([help.select_node_text])
-            .concat(nodes.map(({from}, i) => `- ${i + 1}: ${from}`))
-            .concat([syntax.join(' ')]);
-
-          reply(text.join('\n'));
-
-          return cbk([400, 'UnknownNodeToUseForCommand']);
-        }
-
-        const params = nodes.length === 1 ? elements : elements.slice(1);
-
-        return cbk(null, {params, lnd: node.lnd})
-      }],
-    },
-    returnResult({reject, resolve, of: 'decoded'}, cbk));
+      returnResult({ reject, resolve, of: 'decoded' }, cbk));
   });
-};
+}
+
+export default decodeCommand;

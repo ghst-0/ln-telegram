@@ -20,39 +20,41 @@ const title = 'Editing past messages is not supported.';
 
   @returns via cbk or Promise
 */
-export default ({ctx}, cbk) => {
+function handleEditedMessage({ ctx }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!ctx) {
-          return cbk([400, 'ExpectedTelegramContextToHandleEditedMessage']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!ctx) {
+            return cbk([400, 'ExpectedTelegramContextToHandleEditedMessage']);
+          }
 
-        return cbk();
+          return cbk();
+        },
+
+        // Post a warning message that editing past messages is not supported
+        warn: ['validate', async ({}) => {
+          // Exit early when there is no edited message
+          if (!ctx.update || !ctx.update.edited_message) {
+            return;
+          }
+
+          const message = ctx.update.edited_message;
+
+          // Ignore messages that are old
+          if (msSince(ctx.update.edited_message.date) > maxCommandDelayMs) {
+            return;
+          }
+
+          // Post the warning message that the bot doesn't respond to edits
+          return await ctx.reply(`${ icons.warning } *${ escape(title) }*`, {
+            parse_mode: parseMode,
+            reply_markup: removeMessageKeyboard(makeKeyboard())
+          });
+        }]
       },
-
-      // Post a warning message that editing past messages is not supported
-      warn: ['validate', async ({}) => {
-        // Exit early when there is no edited message
-        if (!ctx.update || !ctx.update.edited_message) {
-          return;
-        }
-
-        const message = ctx.update.edited_message;
-
-        // Ignore messages that are old
-        if (msSince(ctx.update.edited_message.date) > maxCommandDelayMs) {
-          return;
-        }
-
-        // Post the warning message that the bot doesn't respond to edits
-        return await ctx.reply(`${icons.warning} *${escape(title)}*`, {
-          parse_mode: parseMode,
-          reply_markup: removeMessageKeyboard(makeKeyboard()),
-        });
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default handleEditedMessage;

@@ -23,54 +23,56 @@ const url = n => `https://registry.npmjs.org/${n}/latest`;
 
   @returns via cbk or Promise
 */
-export default ({from, id, named, reply, request, version}, cbk) => {
+function handleVersionCommand({ from, id, named, reply, request, version }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!from) {
-          return cbk([400, 'ExpectedFromUserIdNumberForVersionCommand']);
-        }
-
-        if (!named) {
-          return cbk([400, 'ExpectedPackageNameStringToHandleVersionCommand']);
-        }
-
-        if (!reply) {
-          return cbk([400, 'ExpectedReplyFunctionToHandleVersionCommand']);
-        }
-
-        if (!request) {
-          return cbk([400, 'ExpectedRequestFunctionToHandleVersionCommand']);
-        }
-
-        if (!version) {
-          return cbk([400, 'ExpectedVersionStringToHandleVersionCommand']);
-        }
-
-        return cbk();
-      },
-
-      // Authenticate the command caller is authorized to this command
-      checkAccess: ['validate', ({}, cbk) => checkAccess({from, id}, cbk)],
-
-      // Get version from NPM
-      getVersion: ['checkAccess', ({}, cbk) => {
-        reply(currentVersion(version));
-
-        return request({json: true, url: url(named)}, (err, r, pkg) => {
-          if (!!err || !r || r.statusCode !== ok || !pkg || !pkg.version) {
-            reply(failedToGetLatestVersion);
-
-            return cbk();
+        // Check arguments
+        validate: cbk => {
+          if (!from) {
+            return cbk([400, 'ExpectedFromUserIdNumberForVersionCommand']);
           }
 
-          reply(latestVersion(pkg.version));
+          if (!named) {
+            return cbk([400, 'ExpectedPackageNameStringToHandleVersionCommand']);
+          }
+
+          if (!reply) {
+            return cbk([400, 'ExpectedReplyFunctionToHandleVersionCommand']);
+          }
+
+          if (!request) {
+            return cbk([400, 'ExpectedRequestFunctionToHandleVersionCommand']);
+          }
+
+          if (!version) {
+            return cbk([400, 'ExpectedVersionStringToHandleVersionCommand']);
+          }
 
           return cbk();
-        });
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+        },
+
+        // Authenticate the command caller is authorized to this command
+        checkAccess: ['validate', ({}, cbk) => checkAccess({ from, id }, cbk)],
+
+        // Get version from NPM
+        getVersion: ['checkAccess', ({}, cbk) => {
+          reply(currentVersion(version));
+
+          return request({ json: true, url: url(named) }, (err, r, pkg) => {
+            if (!!err || !r || r.statusCode !== ok || !pkg || !pkg.version) {
+              reply(failedToGetLatestVersion);
+
+              return cbk();
+            }
+
+            reply(latestVersion(pkg.version));
+
+            return cbk();
+          });
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default handleVersionCommand;

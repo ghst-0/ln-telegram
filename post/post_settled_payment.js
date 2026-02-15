@@ -39,78 +39,80 @@ const niceName = node => node.alias || node.id.substring(0, 8);
     text: <Settled Payment Message Text String>
   }
 */
-export default ({from, id, lnd, nodes, payment, send}, cbk) => {
+function postSettledPayment({ from, id, lnd, nodes, payment, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!from) {
-          return cbk([400, 'ExpectedPaymentFromNameStringToPostPayment']);
-        }
-
-        if (!id) {
-          return cbk([400, 'ExpectedUserIdToPostSettledPayment']);
-        }
-
-        if (!lnd) {
-          return cbk([400, 'ExpectedLndToPostSettledPayment']);
-        }
-
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfNodesToPostSettledPayment']);
-        }
-
-        if (!payment) {
-          return cbk([400, 'ExpectedPaymentToPostSettledPayment']);
-        }
-
-        if (!send) {
-          return cbk([400, 'ExpectedSendFunctionToPostSettledPayment']);
-        }
-
-        return cbk();
-      },
-
-      // Find the node that was paid to
-      getNode: ['validate', ({}, cbk) => {
-        return getNodeAlias({lnd, id: payment.destination}, cbk);
-      }],
-
-      // Get the aliases for relays
-      getRelays: ['validate', ({}, cbk) => {
-        return asyncMap(payment.paths || [], (path, cbk) => {
-          const [hop] = path.hops;
-
-          if (!hop) {
-            return cbk();
+        // Check arguments
+        validate: cbk => {
+          if (!from) {
+            return cbk([400, 'ExpectedPaymentFromNameStringToPostPayment']);
           }
 
-          return getNodeAlias({lnd, id: hop.public_key}, cbk);
+          if (!id) {
+            return cbk([400, 'ExpectedUserIdToPostSettledPayment']);
+          }
+
+          if (!lnd) {
+            return cbk([400, 'ExpectedLndToPostSettledPayment']);
+          }
+
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedArrayOfNodesToPostSettledPayment']);
+          }
+
+          if (!payment) {
+            return cbk([400, 'ExpectedPaymentToPostSettledPayment']);
+          }
+
+          if (!send) {
+            return cbk([400, 'ExpectedSendFunctionToPostSettledPayment']);
+          }
+
+          return cbk();
         },
-        cbk);
-      }],
 
-      // Create the message details
-      message: ['getNode', 'getRelays', ({getNode, getRelays}, cbk) => {
-        const isTransfer = nodes.includes(payment.destination);
-        const routingFee = `. Paid routing fee: ${display(payment.safe_fee)}`;
-        const sent = display(payment.safe_tokens - payment.safe_fee);
-        const toNode = niceName(getNode);
-        const via = ` out ${join(getRelays.filter(n => !!n).map(niceName))}`;
+        // Find the node that was paid to
+        getNode: ['validate', ({}, cbk) => {
+          return getNodeAlias({ lnd, id: payment.destination }, cbk);
+        }],
 
-        const action = isTransfer ? 'Transferred' : 'Sent';
-        const fee = !payment.safe_fee ? '' : routingFee;
+        // Get the aliases for relays
+        getRelays: ['validate', ({}, cbk) => {
+          return asyncMap(payment.paths || [], (path, cbk) => {
+              const [hop] = path.hops;
 
-        const details = escape(`${action} ${sent} to ${toNode}${via}${fee} -`);
+              if (!hop) {
+                return cbk();
+              }
 
-        return cbk(null, `${icons.spent} ${details} _${escape(from)}_`);
-      }],
+              return getNodeAlias({ lnd, id: hop.public_key }, cbk);
+            },
+            cbk);
+        }],
 
-      // Post message summarizing the payment
-      post: ['message', async ({message}) => {
-        return await send(id, message, markup);
-      }],
-    },
-    returnResult({reject, resolve, of: 'message'}, cbk));
+        // Create the message details
+        message: ['getNode', 'getRelays', ({ getNode, getRelays }, cbk) => {
+          const isTransfer = nodes.includes(payment.destination);
+          const routingFee = `. Paid routing fee: ${ display(payment.safe_fee) }`;
+          const sent = display(payment.safe_tokens - payment.safe_fee);
+          const toNode = niceName(getNode);
+          const via = ` out ${ join(getRelays.filter(n => !!n).map(niceName)) }`;
+
+          const action = isTransfer ? 'Transferred' : 'Sent';
+          const fee = !payment.safe_fee ? '' : routingFee;
+
+          const details = escape(`${ action } ${ sent } to ${ toNode }${ via }${ fee } -`);
+
+          return cbk(null, `${ icons.spent } ${ details } _${ escape(from) }_`);
+        }],
+
+        // Post message summarizing the payment
+        post: ['message', async ({ message }) => {
+          return await send(id, message, markup);
+        }]
+      },
+      returnResult({ reject, resolve, of: 'message' }, cbk));
   });
-};
+}
+
+export default postSettledPayment;

@@ -35,74 +35,76 @@ const uniq = arr => Array.from(new Set(arr));
     text: <Posted Channel Closing Message String>
   }
 */
-export default ({closing, from, id, lnd, nodes, send}, cbk) => {
+function postClosingMessage({ closing, from, id, lnd, nodes, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!isArray(closing)) {
-          return cbk([400, 'ExpectedClosingChannelsToPostClosingMessage']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!isArray(closing)) {
+            return cbk([400, 'ExpectedClosingChannelsToPostClosingMessage']);
+          }
 
-        if (!from) {
-          return cbk([400, 'ExpectedFromNameToPostChannelClosingMessage']);
-        }
+          if (!from) {
+            return cbk([400, 'ExpectedFromNameToPostChannelClosingMessage']);
+          }
 
-        if (!id) {
-          return cbk([400, 'ExpectedUserIdToPostChannelClosingMessage']);
-        }
+          if (!id) {
+            return cbk([400, 'ExpectedUserIdToPostChannelClosingMessage']);
+          }
 
-        if (!lnd) {
-          return cbk([400, 'ExpectedLndToPostChannelClosingMessage']);
-        }
+          if (!lnd) {
+            return cbk([400, 'ExpectedLndToPostChannelClosingMessage']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfSavedNodesToPostClosingMessage']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedArrayOfSavedNodesToPostClosingMessage']);
+          }
 
-        if (!send) {
-          return cbk([400, 'ExpectedSendFunctionToPostChanClosingMessage']);
-        }
+          if (!send) {
+            return cbk([400, 'ExpectedSendFunctionToPostChanClosingMessage']);
+          }
 
-        return cbk();
-      },
+          return cbk();
+        },
 
-      // Get peer aliases
-      getAliases: ['validate', ({}, cbk) => {
-        const ids = uniq(closing.map(n => n.partner_public_key));
+        // Get peer aliases
+        getAliases: ['validate', ({}, cbk) => {
+          const ids = uniq(closing.map(n => n.partner_public_key));
 
-        return asyncMap(ids, (id, cbk) => getNodeAlias({id, lnd}, cbk), cbk);
-      }],
+          return asyncMap(ids, (id, cbk) => getNodeAlias({ id, lnd }, cbk), cbk);
+        }],
 
-      // Put together the message to summarize the channels closing
-      message: ['getAliases', ({getAliases}, cbk) => {
-        const [, otherNode] = nodes;
+        // Put together the message to summarize the channels closing
+        message: ['getAliases', ({ getAliases }, cbk) => {
+          const [, otherNode] = nodes;
 
-        const details = closing.map(chan => {
-          const amount = formatTokens({tokens: chan.capacity}).display;
-          const node = getAliases.find(n => n.id === chan.partner_public_key);
+          const details = closing.map(chan => {
+            const amount = formatTokens({ tokens: chan.capacity }).display;
+            const node = getAliases.find(n => n.id === chan.partner_public_key);
 
-          const peer = escape(`${node.alias} ${node.id}`.trim());
+            const peer = escape(`${ node.alias } ${ node.id }`.trim());
 
-          const details = [
-            `${icons.closing} Closing ${escape(amount)} channel with ${peer}`,
-            `*Funding Outpoint:* \`${channelPoint(chan)}\``,
+            const details = [
+              `${ icons.closing } Closing ${ escape(amount) } channel with ${ peer }`,
+              `*Funding Outpoint:* \`${ channelPoint(chan) }\``
+            ];
+
+            return joinLines(details);
+          });
+
+          const lines = [
+            joinLines(details),
+            !!otherNode ? `_${ escape(from) }_` : ''
           ];
 
-          return joinLines(details);
-        });
+          return cbk(null, joinLines(lines));
+        }],
 
-        const lines = [
-          joinLines(details),
-          !!otherNode ? `_${escape(from)}_` : '',
-        ];
-
-        return cbk(null, joinLines(lines));
-      }],
-
-      // Send the channel closing message
-      send: ['message', async ({message}) => await send(id, message, markup)],
-    },
-    returnResult({reject, resolve, of: 'message'}, cbk));
+        // Send the channel closing message
+        send: ['message', async ({ message }) => await send(id, message, markup)]
+      },
+      returnResult({ reject, resolve, of: 'message' }, cbk));
   });
-};
+}
+
+export default postClosingMessage;

@@ -60,227 +60,228 @@ const uniq = arr => Array.from(new Set(arr));
 
   @returns via cbk or Promise
 */
-export default (args, cbk) => {
+function postSettledInvoice(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!args.from) {
-          return cbk([400, 'ExpectedFromNameToPostSettledInvoice']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!args.from) {
+            return cbk([400, 'ExpectedFromNameToPostSettledInvoice']);
+          }
 
-        if (!args.id) {
-          return cbk([400, 'ExpectedUserIdNumberToPostSettledInvoice']);
-        }
+          if (!args.id) {
+            return cbk([400, 'ExpectedUserIdNumberToPostSettledInvoice']);
+          }
 
-        if (!args.invoice) {
-          return cbk([400, 'ExpectedInvoiceToPostSettledInvoice']);
-        }
+          if (!args.invoice) {
+            return cbk([400, 'ExpectedInvoiceToPostSettledInvoice']);
+          }
 
-        if (!args.key) {
-          return cbk([400, 'ExpectedNodeIdentityKeyToPostSettledInvoice']);
-        }
+          if (!args.key) {
+            return cbk([400, 'ExpectedNodeIdentityKeyToPostSettledInvoice']);
+          }
 
-        if (!args.lnd) {
-          return cbk([400, 'ExpectedLndObjectToPostSettledInvoice']);
-        }
+          if (!args.lnd) {
+            return cbk([400, 'ExpectedLndObjectToPostSettledInvoice']);
+          }
 
-        if (!isArray(args.nodes)) {
-          return cbk([400, 'ExpectedArrayOfNodesToPostSettledInvoice']);
-        }
+          if (!isArray(args.nodes)) {
+            return cbk([400, 'ExpectedArrayOfNodesToPostSettledInvoice']);
+          }
 
-        if (!args.quiz) {
-          return cbk([400, 'ExpectedSendQuizFunctionToPostSettledInvoice']);
-        }
+          if (!args.quiz) {
+            return cbk([400, 'ExpectedSendQuizFunctionToPostSettledInvoice']);
+          }
 
-        if (!args.send) {
-          return cbk([400, 'ExpectedSendFunctionToPostSettledInvoice']);
-        }
+          if (!args.send) {
+            return cbk([400, 'ExpectedSendFunctionToPostSettledInvoice']);
+          }
 
-        return cbk();
-      },
-
-      // Parse balanced open request details if present
-      balancedOpen: ['validate', ({}, cbk) => {
-        // A proposal will be a push payment
-        if (!args.invoice.is_confirmed) {
           return cbk();
-        }
+        },
 
-        const {proposal} = balancedOpenRequest({
-          confirmed_at: args.invoice.confirmed_at,
-          is_push: args.invoice.is_push,
-          payments: args.invoice.payments,
-          received_mtokens: args.invoice.received_mtokens,
-        });
+        // Parse balanced open request details if present
+        balancedOpen: ['validate', ({}, cbk) => {
+          // A proposal will be a push payment
+          if (!args.invoice.is_confirmed) {
+            return cbk();
+          }
 
-        return cbk(null, proposal);
-      }],
+          const { proposal } = balancedOpenRequest({
+            confirmed_at: args.invoice.confirmed_at,
+            is_push: args.invoice.is_push,
+            payments: args.invoice.payments,
+            received_mtokens: args.invoice.received_mtokens
+          });
 
-      // Get the node aliases that forwarded this
-      getNodes: ['validate', ({}, cbk) => {
-        const inChannels = uniq(args.invoice.payments.map(n => n.in_channel));
+          return cbk(null, proposal);
+        }],
 
-        return asyncMap(inChannels, (id, cbk) => {
-          return getChannel({id, lnd: args.lnd}, (err, res) => {
-            if (!!err) {
-              return cbk(null, {id, alias: id});
+        // Get the node aliases that forwarded this
+        getNodes: ['validate', ({}, cbk) => {
+          const inChannels = uniq(args.invoice.payments.map(n => n.in_channel));
+
+          return asyncMap(inChannels, (id, cbk) => {
+              return getChannel({ id, lnd: args.lnd }, (err, res) => {
+                if (!!err) {
+                  return cbk(null, { id, alias: id });
+                }
+
+                const peer = res.policies.find(n => n.public_key !== args.key);
+
+                return getNodeAlias({ id: peer.public_key, lnd: args.lnd }, cbk);
+              });
+            },
+            cbk);
+        }],
+
+        // Find associated payment
+        getPayment: ['validate', ({}, cbk) => {
+          // Exit early when the invoice has yet to be confirmed
+          if (!args.invoice.is_confirmed) {
+            return cbk();
+          }
+
+          const sub = subscribeToPastPayment({
+            id: args.invoice.id,
+            lnd: args.lnd
+          });
+
+          sub.once('confirmed', payment => cbk(null, { payment }));
+          sub.once('error', () => cbk());
+          sub.once('failed', () => cbk());
+
+          return;
+        }],
+
+        // Find associated transfer
+        getTransfer: ['validate', ({}, cbk) => {
+          // Exit early when the invoice has yet to be confirmed
+          if (!args.invoice.is_confirmed) {
+            return cbk();
+          }
+
+          const otherNodes = args.nodes.filter(n => n.public_key !== args.key);
+
+          return asyncDetect(otherNodes, ({ lnd }, cbk) => {
+              const sub = subscribeToPastPayment({ lnd, id: args.invoice.id });
+
+              sub.once('confirmed', payment => cbk(null, true));
+              sub.once('error', () => cbk(null, false));
+              sub.once('failed', () => cbk(null, false));
+            },
+            cbk);
+        }],
+
+        // Details for message
+        details: [
+          'balancedOpen',
+          'getNodes',
+          'getPayment',
+          'getTransfer',
+          ({ balancedOpen, getNodes, getPayment, getTransfer }, cbk) => {
+            // Exit early when the invoice has yet to be confirmed
+            if (!args.invoice.is_confirmed) {
+              return cbk();
             }
 
-            const peer = res.policies.find(n => n.public_key !== args.key);
+            // Exit early when this is a node to node transfer
+            if (!!getTransfer) {
+              return cbk();
+            }
 
-            return getNodeAlias({id: peer.public_key, lnd: args.lnd}, cbk);
+            // Exit early when this is a balanced open
+            if (!!balancedOpen) {
+              return getBalancedOpenMessage({
+                  capacity: balancedOpen.capacity,
+                  from: balancedOpen.partner_public_key,
+                  lnd: args.lnd,
+                  rate: balancedOpen.fee_rate
+                },
+                cbk);
+            }
+
+            const isRebalance = !!getPayment;
+
+            // Exit early with no message when the rebalance amount is too small
+            if (isRebalance && args.invoice.received < args.min_rebalance_tokens) {
+              return cbk();
+            }
+
+            // Exit early when the received invoice is for a rebalance (self-pay)
+            if (!!isRebalance) {
+              return getRebalanceMessage({
+                  fee_mtokens: getPayment.payment.fee_mtokens,
+                  hops: getPayment.payment.hops,
+                  lnd: args.lnd,
+                  payments: args.invoice.payments,
+                  received_mtokens: args.invoice.received_mtokens
+                },
+                cbk);
+            }
+
+            return getReceivedMessage({
+                description: args.invoice.description,
+                lnd: args.lnd,
+                payments: args.invoice.payments,
+                received: args.invoice.received,
+                via: getNodes
+              },
+              cbk);
+          }],
+
+        // Post invoice
+        post: ['details', 'getPayment', async ({ details, getPayment }) => {
+          // Exit early when there is nothing to post
+          if (!details) {
+            return;
+          }
+
+          // Determine if node qualifier is necessary
+          const isMultiNode = args.nodes.length > [args.key].length;
+
+          const receivedOnNode = isMultiNode ? escape(` - ${ args.from }`) : '';
+
+          const message = `${ details.icon } ${ details.message }${ receivedOnNode }`;
+
+          return await args.send(args.id, message, sendOptions);
+        }],
+
+        // Post quiz
+        quiz: ['details', 'post', async ({ details, post }) => {
+          // Exit early when there is no quiz
+          if (!details || !details.quiz || details.quiz.length < minQuizLength) {
+            return;
+          }
+
+          // Exit early when the quiz has too many answers
+          if (details.quiz.length > maxQuizLength) {
+            return;
+          }
+
+          const [answer] = details.quiz;
+          const correct = randomIndex(details.quiz.length);
+
+          const replace = details.quiz[correct];
+
+          // Randomize the position of the correct answer
+          const answers = details.quiz.map((n, i) => {
+            if (i === correct) {
+              return answer;
+            }
+
+            if (!i) {
+              return replace;
+            }
+
+            return n;
           });
-        },
-        cbk);
-      }],
 
-      // Find associated payment
-      getPayment: ['validate', ({}, cbk) => {
-        // Exit early when the invoice has yet to be confirmed
-        if (!args.invoice.is_confirmed) {
-          return cbk();
-        }
-
-        const sub = subscribeToPastPayment({
-          id: args.invoice.id,
-          lnd: args.lnd,
-        });
-
-        sub.once('confirmed', payment => cbk(null, {payment}));
-        sub.once('error', () => cbk());
-        sub.once('failed', () => cbk());
-
-        return;
-      }],
-
-      // Find associated transfer
-      getTransfer: ['validate', ({}, cbk) => {
-        // Exit early when the invoice has yet to be confirmed
-        if (!args.invoice.is_confirmed) {
-          return cbk();
-        }
-
-        const otherNodes = args.nodes.filter(n => n.public_key !== args.key);
-
-        return asyncDetect(otherNodes, ({lnd}, cbk) => {
-          const sub = subscribeToPastPayment({lnd, id: args.invoice.id});
-
-          sub.once('confirmed', payment => cbk(null, true));
-          sub.once('error', () => cbk(null, false));
-          sub.once('failed', () => cbk(null, false));
-        },
-        cbk);
-      }],
-
-      // Details for message
-      details: [
-        'balancedOpen',
-        'getNodes',
-        'getPayment',
-        'getTransfer',
-        ({balancedOpen, getNodes, getPayment, getTransfer}, cbk) =>
-      {
-        // Exit early when the invoice has yet to be confirmed
-        if (!args.invoice.is_confirmed) {
-          return cbk();
-        }
-
-        // Exit early when this is a node to node transfer
-        if (!!getTransfer) {
-          return cbk();
-        }
-
-        // Exit early when this is a balanced open
-        if (!!balancedOpen) {
-          return getBalancedOpenMessage({
-            capacity: balancedOpen.capacity,
-            from: balancedOpen.partner_public_key,
-            lnd: args.lnd,
-            rate: balancedOpen.fee_rate,
-          },
-          cbk);
-        }
-
-        const isRebalance = !!getPayment;
-
-        // Exit early with no message when the rebalance amount is too small
-        if (isRebalance && args.invoice.received < args.min_rebalance_tokens) {
-          return cbk();
-        }
-
-        // Exit early when the received invoice is for a rebalance (self-pay)
-        if (!!isRebalance) {
-          return getRebalanceMessage({
-            fee_mtokens: getPayment.payment.fee_mtokens,
-            hops: getPayment.payment.hops,
-            lnd: args.lnd,
-            payments: args.invoice.payments,
-            received_mtokens: args.invoice.received_mtokens,
-          },
-          cbk);
-        }
-
-        return getReceivedMessage({
-          description: args.invoice.description,
-          lnd: args.lnd,
-          payments: args.invoice.payments,
-          received: args.invoice.received,
-          via: getNodes,
-        },
-        cbk);
-      }],
-
-      // Post invoice
-      post: ['details', 'getPayment', async ({details, getPayment}) => {
-        // Exit early when there is nothing to post
-        if (!details) {
-          return;
-        }
-
-        // Determine if node qualifier is necessary
-        const isMultiNode = args.nodes.length > [args.key].length;
-
-        const receivedOnNode = isMultiNode ? escape(` - ${args.from}`) : '';
-
-        const message = `${details.icon} ${details.message}${receivedOnNode}`;
-
-        return await args.send(args.id, message, sendOptions);
-      }],
-
-      // Post quiz
-      quiz: ['details', 'post', async ({details, post}) => {
-        // Exit early when there is no quiz
-        if (!details || !details.quiz || details.quiz.length < minQuizLength) {
-          return;
-        }
-
-        // Exit early when the quiz has too many answers
-        if (details.quiz.length > maxQuizLength) {
-          return;
-        }
-
-        const [answer] = details.quiz;
-        const correct = randomIndex(details.quiz.length);
-
-        const replace = details.quiz[correct];
-
-        // Randomize the position of the correct answer
-        const answers = details.quiz.map((n, i) => {
-          if (i === correct) {
-            return answer;
-          }
-
-          if (!i) {
-            return replace;
-          }
-
-          return n;
-        });
-
-        return await args.quiz({answers, correct, question: details.title});
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+          return await args.quiz({ answers, correct, question: details.title });
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default postSettledInvoice;

@@ -18,45 +18,47 @@ const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 
   @returns via cbk or Promise
 */
-export default ({backup, id, node, send}, cbk) => {
+function postUpdatedBackup({ backup, id, node, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!backup) {
-          return cbk([400, 'ExpectedBackupFileToPostUpdatedBackup']);
-        }
-
-        if (!id) {
-          return cbk([400, 'ExpectedIdToPostUpdatedBackup']);
-        }
-
-        if (!node) {
-          return cbk([400, 'ExpectedNodeToPostUpdatedBackup']);
-        }
-
-        if (!send) {
-          return cbk([400, 'ExpectedSendFunctionToPostUpdatedBackup']);
-        }
-
-        return cbk();
-      },
-
-      // Post the backup file
-      post: ['validate', ({}, cbk) => {
-        const filename = `${date()}-${node.alias}-${node.public_key}.backup`;
-
-        return (async () => {
-          try {
-            await send(id, {filename, source: hexAsBuffer(backup)});
-
-            return cbk();
-          } catch (err) {
-            return cbk([503, 'UnexpectedErrorSendingBackupFileUpdate', {err}]);
+        // Check arguments
+        validate: cbk => {
+          if (!backup) {
+            return cbk([400, 'ExpectedBackupFileToPostUpdatedBackup']);
           }
-        })();
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+
+          if (!id) {
+            return cbk([400, 'ExpectedIdToPostUpdatedBackup']);
+          }
+
+          if (!node) {
+            return cbk([400, 'ExpectedNodeToPostUpdatedBackup']);
+          }
+
+          if (!send) {
+            return cbk([400, 'ExpectedSendFunctionToPostUpdatedBackup']);
+          }
+
+          return cbk();
+        },
+
+        // Post the backup file
+        post: ['validate', ({}, cbk) => {
+          const filename = `${ date() }-${ node.alias }-${ node.public_key }.backup`;
+
+          return (async () => {
+            try {
+              await send(id, { filename, source: hexAsBuffer(backup) });
+
+              return cbk();
+            } catch (err) {
+              return cbk([503, 'UnexpectedErrorSendingBackupFileUpdate', { err }]);
+            }
+          })();
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default postUpdatedBackup;

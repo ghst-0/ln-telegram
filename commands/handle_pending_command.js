@@ -29,137 +29,139 @@ const uniq = arr => Array.from(new Set(arr));
 
   @returns via cbk or Promise
 */
-export default ({from, id, nodes, reply, working}, cbk) => {
+function handlePendingCommand({ from, id, nodes, reply, working }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!from) {
-          return cbk([400, 'ExpectedFromUserIdNumberForPendingCommand']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!from) {
+            return cbk([400, 'ExpectedFromUserIdNumberForPendingCommand']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedNodesToHandlePendingCommand']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedNodesToHandlePendingCommand']);
+          }
 
-        if (!reply) {
-          return cbk([400, 'ExpectedReplyFunctionToHandlePendingCommand']);
-        }
+          if (!reply) {
+            return cbk([400, 'ExpectedReplyFunctionToHandlePendingCommand']);
+          }
 
-        if (!working) {
-          return cbk([400, 'ExpectedWorkingFunctionToHandlePendingCommand']);
-        }
+          if (!working) {
+            return cbk([400, 'ExpectedWorkingFunctionToHandlePendingCommand']);
+          }
 
-        return cbk();
-      },
-
-      // Authenticate the command caller is authorized to this command
-      checkAccess: ['validate', ({}, cbk) => checkAccess({from, id}, cbk)],
-
-      // Get HTLCs in channels
-      getHtlcs: ['checkAccess', ({}, cbk) => {
-        working();
-
-        return asyncMap(nodes, ({from, lnd}, cbk) => {
-          return getChannels({lnd}, (err, res) => {
-            if (!!err) {
-              return cbk(err);
-            }
-
-            const {forwarding, sending} = pendingPayments({
-              channels: res.channels,
-            });
-
-            const peers = []
-              .concat(forwarding.map(n => n.in_peer))
-              .concat(forwarding.map(n => n.out_peer))
-              .concat(sending.map(n => n.out_peer));
-
-            return asyncMap(uniq(peers), (id, cbk) => {
-              return getNodeAlias({id, lnd}, cbk);
-            },
-            (err, nodes) => {
-              if (!!err) {
-                return cbk(err);
-              }
-
-              return cbk(null, {forwarding, from, nodes, sending});
-            });
-          });
+          return cbk();
         },
-        cbk);
-      }],
 
-      // Get pending channels
-      getPending: ['checkAccess', ({}, cbk) => {
-        return asyncMap(nodes, ({from, lnd}, cbk) => {
-          return getPendingChannels({lnd}, (err, res) => {
-            if (!!err) {
-              return cbk(err);
-            }
+        // Authenticate the command caller is authorized to this command
+        checkAccess: ['validate', ({}, cbk) => checkAccess({ from, id }, cbk)],
 
-            // Pending closing channels
-            const closing = res.pending_channels
-              .filter(n => !!n.is_closing)
-              .map(channel => ({
-                close_transaction_id: channel.close_transaction_id,
-                is_partner_initiated: channel.is_partner_initiated,
-                partner_public_key: channel.partner_public_key,
-                pending_balance: channel.pending_balance,
-                timelock_expiration: channel.timelock_expiration,
-                transaction_id: channel.transaction_id,
-              }));
+        // Get HTLCs in channels
+        getHtlcs: ['checkAccess', ({}, cbk) => {
+          working();
 
-            // Pending opening channels
-            const opening = res.pending_channels
-              .filter(n => !!n.is_opening)
-              .map(channel => ({
-                is_partner_initiated: channel.is_partner_initiated,
-                local_balance: channel.local_balance,
-                partner_public_key: channel.partner_public_key,
-                remote_balance: channel.remote_balance,
-                transaction_fee: channel.transaction_fee,
-                transaction_id: channel.transaction_id,
-              }));
-
-            const peers = []
-              .concat(closing.map(n => n.partner_public_key))
-              .concat(opening.map(n => n.partner_public_key));
-
-            return asyncMap(uniq(peers), (id, cbk) => {
-              return getNodeAlias({id, lnd}, cbk);
-            },
-            (err, nodes) => {
-              if (!!err) {
-                return cbk(err);
-              }
-
-              return getHeight({lnd}, (err, res) => {
+          return asyncMap(nodes, ({ from, lnd }, cbk) => {
+              return getChannels({ lnd }, (err, res) => {
                 if (!!err) {
                   return cbk(err);
                 }
 
-                const height = res.current_block_height;
+                const { forwarding, sending } = pendingPayments({
+                  channels: res.channels
+                });
 
-                return cbk(null, {closing, from, height, nodes, opening});
+                const peers = []
+                  .concat(forwarding.map(n => n.in_peer))
+                  .concat(forwarding.map(n => n.out_peer))
+                  .concat(sending.map(n => n.out_peer));
+
+                return asyncMap(uniq(peers), (id, cbk) => {
+                    return getNodeAlias({ id, lnd }, cbk);
+                  },
+                  (err, nodes) => {
+                    if (!!err) {
+                      return cbk(err);
+                    }
+
+                    return cbk(null, { forwarding, from, nodes, sending });
+                  });
               });
-            });
+            },
+            cbk);
+        }],
+
+        // Get pending channels
+        getPending: ['checkAccess', ({}, cbk) => {
+          return asyncMap(nodes, ({ from, lnd }, cbk) => {
+              return getPendingChannels({ lnd }, (err, res) => {
+                if (!!err) {
+                  return cbk(err);
+                }
+
+                // Pending closing channels
+                const closing = res.pending_channels
+                  .filter(n => !!n.is_closing)
+                  .map(channel => ({
+                    close_transaction_id: channel.close_transaction_id,
+                    is_partner_initiated: channel.is_partner_initiated,
+                    partner_public_key: channel.partner_public_key,
+                    pending_balance: channel.pending_balance,
+                    timelock_expiration: channel.timelock_expiration,
+                    transaction_id: channel.transaction_id
+                  }));
+
+                // Pending opening channels
+                const opening = res.pending_channels
+                  .filter(n => !!n.is_opening)
+                  .map(channel => ({
+                    is_partner_initiated: channel.is_partner_initiated,
+                    local_balance: channel.local_balance,
+                    partner_public_key: channel.partner_public_key,
+                    remote_balance: channel.remote_balance,
+                    transaction_fee: channel.transaction_fee,
+                    transaction_id: channel.transaction_id
+                  }));
+
+                const peers = []
+                  .concat(closing.map(n => n.partner_public_key))
+                  .concat(opening.map(n => n.partner_public_key));
+
+                return asyncMap(uniq(peers), (id, cbk) => {
+                    return getNodeAlias({ id, lnd }, cbk);
+                  },
+                  (err, nodes) => {
+                    if (!!err) {
+                      return cbk(err);
+                    }
+
+                    return getHeight({ lnd }, (err, res) => {
+                      if (!!err) {
+                        return cbk(err);
+                      }
+
+                      const height = res.current_block_height;
+
+                      return cbk(null, { closing, from, height, nodes, opening });
+                    });
+                  });
+              });
+            },
+            cbk);
+        }],
+
+        // Notify of pending forwards and channels
+        notify: ['getHtlcs', 'getPending', async ({ getHtlcs, getPending }) => {
+          const summary = pendingSummary({
+            count: nodes.length,
+            htlcs: getHtlcs,
+            pending: getPending
           });
-        },
-        cbk);
-      }],
 
-      // Notify of pending forwards and channels
-      notify: ['getHtlcs', 'getPending', async ({getHtlcs, getPending}) => {
-        const summary = pendingSummary({
-          count: nodes.length,
-          htlcs: getHtlcs,
-          pending: getPending,
-        });
-
-        return await reply(join(summary), markup);
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+          return await reply(join(summary), markup);
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default handlePendingCommand;

@@ -14,86 +14,88 @@ const parseMode = 'markdown';
     text: <Message Text String>
   }
 */
-export default ({id, key, request, text}, cbk) => {
+function sendMessage({ id, key, request, text }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!id) {
-          return cbk([400, 'ExpectedChatIdToSendMessageToTelegram']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!id) {
+            return cbk([400, 'ExpectedChatIdToSendMessageToTelegram']);
+          }
 
-        if (!key) {
-          return cbk([400, 'ExpectedApiKeyToSendMessageToTelegram']);
-        }
+          if (!key) {
+            return cbk([400, 'ExpectedApiKeyToSendMessageToTelegram']);
+          }
 
-        if (!request) {
-          return cbk([400, 'ExpectedRequestFunctionToSendMessageToTelegram']);
-        }
+          if (!request) {
+            return cbk([400, 'ExpectedRequestFunctionToSendMessageToTelegram']);
+          }
 
-        if (!text) {
-          return cbk([400, 'ExpectedTextOfMessageToSendToTelegram']);
-        }
+          if (!text) {
+            return cbk([400, 'ExpectedTextOfMessageToSendToTelegram']);
+          }
 
-        return cbk();
-      },
-
-      // Send message
-      send: ['validate', ({}, cbk) => {
-        return request({
-          qs: {
-            text,
-            chat_id: id,
-            parse_mode: parseMode,
-            disable_web_page_preview: true,
-          },
-          url: `${api}/bot${key}/sendMessage`,
+          return cbk();
         },
-        (err, r, body) => {
-          if (!!err) {
-            return cbk([503, 'FailedToConnectToTelegramToSendMessage', {err}]);
-          }
 
-          if (!r) {
-            return cbk([503, 'ExpectedResponseFromTelegramSendMessage']);
-          }
+        // Send message
+        send: ['validate', ({}, cbk) => {
+          return request({
+              qs: {
+                text,
+                chat_id: id,
+                parse_mode: parseMode,
+                disable_web_page_preview: true
+              },
+              url: `${ api }/bot${ key }/sendMessage`
+            },
+            (err, r, body) => {
+              if (!!err) {
+                return cbk([503, 'FailedToConnectToTelegramToSendMessage', { err }]);
+              }
 
-          if (r.statusCode !== ok) {
+              if (!r) {
+                return cbk([503, 'ExpectedResponseFromTelegramSendMessage']);
+              }
+
+              if (r.statusCode !== ok) {
+                return cbk();
+              }
+
+              return cbk(null, true);
+            });
+        }],
+
+        // Send message without format in case the first send didn't work
+        sendNormal: ['send', ({ send }, cbk) => {
+          // Exit early when regular send worked
+          if (!!send) {
             return cbk();
           }
 
-          return cbk(null, true);
-        });
-      }],
+          return request({
+              qs: { text, chat_id: id, disable_web_page_preview: true },
+              url: `${ api }/bot${ key }/sendMessage`
+            },
+            (err, r, body) => {
+              if (!!err) {
+                return cbk([503, 'FailedToConnectToTelegramApiToSend', { err }]);
+              }
 
-      // Send message without format in case the first send didn't work
-      sendNormal: ['send', ({send}, cbk) => {
-        // Exit early when regular send worked
-        if (!!send) {
-          return cbk();
-        }
+              if (!r) {
+                return cbk([503, 'ExpectedResponseFromTelegramSend']);
+              }
 
-        return request({
-          qs: {text, chat_id: id, disable_web_page_preview: true},
-          url: `${api}/bot${key}/sendMessage`,
-        },
-        (err, r, body) => {
-          if (!!err) {
-            return cbk([503, 'FailedToConnectToTelegramApiToSend', {err}]);
-          }
+              if (r.statusCode !== ok) {
+                return cbk([503, 'UnexpectedStatusCodeFromTelegram', { body }]);
+              }
 
-          if (!r) {
-            return cbk([503, 'ExpectedResponseFromTelegramSend']);
-          }
-
-          if (r.statusCode !== ok) {
-            return cbk([503, 'UnexpectedStatusCodeFromTelegram', {body}]);
-          }
-
-          return cbk();
-        });
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+              return cbk();
+            });
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default sendMessage;

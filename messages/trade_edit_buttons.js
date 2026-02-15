@@ -21,7 +21,7 @@ const switchNode = id => `${callbackCommands.moveTradeNode}${id}`;
     markup: <Keyboard Markup Object>
   }
 */
-export default args => {
+function tradeEditButtons(args) {
   const markup = new InlineKeyboard();
   const [, otherNode] = args.nodes;
 
@@ -29,13 +29,13 @@ export default args => {
     // Edit the trade description
     [
       labels.tradeMessageDescriptionButtonLabel,
-      callbackCommands.setTradeDescription,
+      callbackCommands.setTradeDescription
     ],
     // Edit the trade expiry
     [
       labels.tradeMessageExpiresAtLabel,
-      callbackCommands.setTradeExpiresAt,
-    ],
+      callbackCommands.setTradeExpiresAt
+    ]
   ];
 
   // Add the edit buttons
@@ -44,7 +44,7 @@ export default args => {
   if (!!args.is_selecting) {
     markup.text(
       labels.tradeMessageCancelButtonLabel,
-      callbackCommands.cancelTrade,
+      callbackCommands.cancelTrade
     );
 
     args.nodes.forEach(node => {
@@ -65,9 +65,11 @@ export default args => {
   if (!args.is_selecting) {
     markup.text(
       labels.tradeMessageCancelButtonLabel,
-      callbackCommands.cancelTrade,
+      callbackCommands.cancelTrade
     );
   }
 
-  return {markup};
-};
+  return { markup };
+}
+
+export default tradeEditButtons;

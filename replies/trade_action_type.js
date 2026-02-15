@@ -21,7 +21,7 @@ const tradeQuestions = editQuestions.trade.map(n => editQuestions[n]);
     [type]: <Trade Secret Action Type String>
   }
 */
-export default ({nodes, text}) => {
+function tradeActionType({ nodes, text }) {
   // Trade messages have a specific structure
   if (!text || !hasTradePrefix(text)) {
     return {};
@@ -39,25 +39,27 @@ export default ({nodes, text}) => {
 
   // The second line of a trade should be an encoded open trade secret
   try {
-    decodeTrade({trade});
+    decodeTrade({ trade });
   } catch (err) {
     return {};
   }
 
-  const {connect} = decodeTrade({trade});
+  const { connect } = decodeTrade({ trade });
 
   if (!connect || !connect.id) {
     return {};
   }
 
   switch (question) {
-  case editQuestions.editTradeDescription:
-    return {type: callbackCommands.setTradeDescription};
+    case editQuestions.editTradeDescription:
+      return { type: callbackCommands.setTradeDescription };
 
-  case editQuestions.editTradeExpiresAt:
-    return {type: callbackCommands.setTradeExpiresAt};
+    case editQuestions.editTradeExpiresAt:
+      return { type: callbackCommands.setTradeExpiresAt };
 
-  default:
-    return {};
+    default:
+      return {};
   }
-};
+}
+
+export default tradeActionType;

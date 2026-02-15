@@ -33,25 +33,27 @@ const titlePrefix = titles.createdTradePrefix;
     text: <Message Text String>
   }
 */
-export default args => {
+function createTradeMessage(args) {
   const expiry = escape(fromISO(args.expires_at).toLocaleString());
-  const {markup} = tradeEditButtons({nodes: args.nodes});
-  const memo = !args.description ? '' : `“${escape(args.description)}” `;
-  const price = escape(formatTokens({tokens: args.tokens}).display);
+  const { markup } = tradeEditButtons({ nodes: args.nodes });
+  const memo = !args.description ? '' : `“${ escape(args.description) }” `;
+  const price = escape(formatTokens({ tokens: args.tokens }).display);
 
-  const {trade} = encodeTrade({
+  const { trade } = encodeTrade({
     connect: {
       id: args.id,
       network: args.network,
-      nodes: [{channels: [], id: args.destination, sockets: []}],
-    },
+      nodes: [{ channels: [], id: args.destination, sockets: [] }]
+    }
   });
 
   const text = join([
-    `${escape(titlePrefix)}${price} ${memo}expires ${expiry}`,
-    `\`${trade}\``,
-    `${escape(args.from || '')}`,
+    `${ escape(titlePrefix) }${ price } ${ memo }expires ${ expiry }`,
+    `\`${ trade }\``,
+    `${ escape(args.from || '') }`
   ]);
 
-  return {markup, mode, text};
-};
+  return { markup, mode, text };
+}
+
+export default createTradeMessage;

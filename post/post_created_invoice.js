@@ -28,87 +28,89 @@ const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
 
   @returns via cbk or Promise
 */
-export default ({ctx, description, destination, nodes, tokens}, cbk) => {
+function postCreatedInvoice({ ctx, description, destination, nodes, tokens }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!ctx) {
-          return cbk([400, 'ExpectedTelegramContextToPostCreatedInvoice']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!ctx) {
+            return cbk([400, 'ExpectedTelegramContextToPostCreatedInvoice']);
+          }
 
-        if (!destination) {
-          return cbk([400, 'ExpectedInvoiceDestinationToPostCreatedInvoice']);
-        }
+          if (!destination) {
+            return cbk([400, 'ExpectedInvoiceDestinationToPostCreatedInvoice']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfNodesToPostCreatedInvoice']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedArrayOfNodesToPostCreatedInvoice']);
+          }
 
-        return cbk();
-      },
-
-      // Find the node associated with creating this invoice
-      node: ['validate', ({}, cbk) => {
-        const node = nodes.find(n => n.public_key === destination);
-
-        return cbk(null, node);
-      }],
-
-      // Create the new invoice
-      create: ['node', asyncReflect(({node}, cbk) => {
-        return createInvoice({
-          description,
-          tokens,
-          expires_at: expiry(),
-          is_including_private_channels: true,
-          lnd: node.lnd,
+          return cbk();
         },
-        cbk);
-      })],
 
-      // Post about a create invoice failure
-      failed: ['create', async ({create}) => {
-        // Exit early when create succeeded
-        if (!create.error) {
-          return;
-        }
+        // Find the node associated with creating this invoice
+        node: ['validate', ({}, cbk) => {
+          const node = nodes.find(n => n.public_key === destination);
 
-        const [, message] = create.error;
+          return cbk(null, node);
+        }],
 
-        try {
-          return await ctx.reply(createFailedMessage(message), {
-            parse_mode: parseMode,
-            reply_markup: removeMessageKeyboard(makeKeyboard()),
+        // Create the new invoice
+        create: ['node', asyncReflect(({ node }, cbk) => {
+          return createInvoice({
+              description,
+              tokens,
+              expires_at: expiry(),
+              is_including_private_channels: true,
+              lnd: node.lnd
+            },
+            cbk);
+        })],
+
+        // Post about a create invoice failure
+        failed: ['create', async ({ create }) => {
+          // Exit early when create succeeded
+          if (!create.error) {
+            return;
+          }
+
+          const [, message] = create.error;
+
+          try {
+            return await ctx.reply(createFailedMessage(message), {
+              parse_mode: parseMode,
+              reply_markup: removeMessageKeyboard(makeKeyboard())
+            });
+          } catch (err) {
+            // Ignore errors
+            return;
+          }
+        }],
+
+        // Post the invoice as a reply
+        post: ['create', 'node', async ({ create, node }) => {
+          // Exit early when there is no created invoice
+          if (!create.value) {
+            return;
+          }
+
+          const [, other] = nodes;
+
+          // Make the invoice message text
+          const message = createInvoiceMessage({
+            from: !!other ? node.from : undefined,
+            request: create.value.request
           });
-        } catch (err) {
-          // Ignore errors
-          return;
-        }
-      }],
 
-      // Post the invoice as a reply
-      post: ['create', 'node', async ({create, node}) => {
-        // Exit early when there is no created invoice
-        if (!create.value) {
-          return;
-        }
-
-        const [, other] = nodes;
-
-        // Make the invoice message text
-        const message = createInvoiceMessage({
-          from: !!other ? node.from : undefined,
-          request: create.value.request,
-        });
-
-        // Post the new invoice as a message
-        return await ctx.reply(message.text, {
-          parse_mode: message.mode,
-          reply_markup: message.markup,
-        });
-      }],
-    },
-    returnResult({reject, resolve}, cbk));
+          // Post the new invoice as a message
+          return await ctx.reply(message.text, {
+            parse_mode: message.mode,
+            reply_markup: message.markup
+          });
+        }]
+      },
+      returnResult({ reject, resolve }, cbk));
   });
-};
+}
+
+export default postCreatedInvoice;

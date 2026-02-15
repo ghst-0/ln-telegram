@@ -42,137 +42,139 @@ const uniq = arr => Array.from(new Set(arr));
     text: <Forward Notify Message Text String>
   }
 */
-export default ({forwards, from, id, lnd, node, nodes, send}, cbk) => {
+function notifyOfForwards({ forwards, from, id, lnd, node, nodes, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({
-      // Check arguments
-      validate: cbk => {
-        if (!isArray(forwards)) {
-          return cbk([400, 'ExpectedForwardsArrayToNotifyOfForwards']);
-        }
+        // Check arguments
+        validate: cbk => {
+          if (!isArray(forwards)) {
+            return cbk([400, 'ExpectedForwardsArrayToNotifyOfForwards']);
+          }
 
-        if (!from) {
-          return cbk([400, 'ExpectedFromNodeNameToNotifyOfForwards']);
-        }
+          if (!from) {
+            return cbk([400, 'ExpectedFromNodeNameToNotifyOfForwards']);
+          }
 
-        if (!id) {
-          return cbk([400, 'ExpectedConnectedUserIdToNotifyOfForwards']);
-        }
+          if (!id) {
+            return cbk([400, 'ExpectedConnectedUserIdToNotifyOfForwards']);
+          }
 
-        if (!lnd) {
-          return cbk([400, 'ExpectedLndToNotifyOfForwards']);
-        }
+          if (!lnd) {
+            return cbk([400, 'ExpectedLndToNotifyOfForwards']);
+          }
 
-        if (!node) {
-          return cbk([400, 'ExpectedFromNodePublicKeyToNotifyOfForwards']);
-        }
+          if (!node) {
+            return cbk([400, 'ExpectedFromNodePublicKeyToNotifyOfForwards']);
+          }
 
-        if (!isArray(nodes)) {
-          return cbk([400, 'ExpectedArrayOfNodesToNotifyOfForwards']);
-        }
+          if (!isArray(nodes)) {
+            return cbk([400, 'ExpectedArrayOfNodesToNotifyOfForwards']);
+          }
 
-        if (!send) {
-          return cbk([400, 'ExpectedSendFunctionToNotifyOfForwards']);
-        }
+          if (!send) {
+            return cbk([400, 'ExpectedSendFunctionToNotifyOfForwards']);
+          }
 
-        return cbk();
-      },
-
-      // Get channel details
-      getChannels: ['validate', ({}, cbk) => {
-        const channels = []
-          .concat(forwards.map(n => n.incoming_channel))
-          .concat(forwards.map(n => n.outgoing_channel));
-
-        return asyncMap(uniq(channels), (id, cbk) => {
-          return getChannel({id, lnd}, (err, res) => {
-            // Ignore errors
-            if (!!err) {
-              return cbk();
-            }
-
-            const policy = res.policies.find(n => n.public_key !== node);
-
-            return cbk(null, {id, key: policy.public_key});
-          });
-        },
-        cbk);
-      }],
-
-      // Get nodes associated with channels
-      getNodes: ['getChannels', ({getChannels}, cbk) => {
-        return asyncMap(getChannels.filter(n => !!n), (channel, cbk) => {
-          return getNodeAlias({lnd, id: channel.key}, cbk);
-        },
-        cbk);
-      }],
-
-      // Construct message to send to telegram
-      message: ['getChannels', 'getNodes', ({getChannels, getNodes}, cbk) => {
-        // Exit early when there are no forwards
-        if (!forwards.length) {
           return cbk();
-        }
+        },
 
-        const channels = getChannels.filter(n => !!n);
-        const aliases = getNodes.filter(n => !!n);
+        // Get channel details
+        getChannels: ['validate', ({}, cbk) => {
+          const channels = []
+            .concat(forwards.map(n => n.incoming_channel))
+            .concat(forwards.map(n => n.outgoing_channel));
 
-        const details = consolidate(forwards).map(forward => {
-          const inboundChannel = channels
-            .find(channel => channel.id === forward.incoming_channel) || {};
+          return asyncMap(uniq(channels), (id, cbk) => {
+              return getChannel({ id, lnd }, (err, res) => {
+                // Ignore errors
+                if (!!err) {
+                  return cbk();
+                }
 
-          const outboundChannel = channels
-            .find(channel => channel.id === forward.outgoing_channel) || {};
+                const policy = res.policies.find(n => n.public_key !== node);
 
-          const inbound = aliases.find(({id}) => id === inboundChannel.key);
-          const outbound = aliases.find(({id}) => id === outboundChannel.key);
+                return cbk(null, { id, key: policy.public_key });
+              });
+            },
+            cbk);
+        }],
 
-          return {
-            fee: forward.fee,
-            inbound: inbound || {channel: forward.incoming_channel},
-            outbound: outbound || {channel: forward.outgoing_channel},
-            tokens: forward.tokens,
-          };
-        });
+        // Get nodes associated with channels
+        getNodes: ['getChannels', ({ getChannels }, cbk) => {
+          return asyncMap(getChannels.filter(n => !!n), (channel, cbk) => {
+              return getNodeAlias({ lnd, id: channel.key }, cbk);
+            },
+            cbk);
+        }],
 
-        const allForwards = details.map(({fee, inbound, outbound, tokens}) => {
-          const feePercent = asPercent(fee, tokens);
-          const feeRate = asPpm(fee, tokens);
-          const fromPeer = inbound.alias || inbound.id || inbound.channel;
-          const toPeer = outbound.alias || outbound.id || outbound.channel;
+        // Construct message to send to telegram
+        message: ['getChannels', 'getNodes', ({ getChannels, getNodes }, cbk) => {
+          // Exit early when there are no forwards
+          if (!forwards.length) {
+            return cbk();
+          }
 
-          const between = `${escape(fromPeer)} *→* ${escape(toPeer)}`;
-          const feeInfo = `${formatValue(fee)} ${feePercent}% (${feeRate})`;
+          const channels = getChannels.filter(n => !!n);
+          const aliases = getNodes.filter(n => !!n);
 
-          return join([
-            `${icons.earn} Forwarded ${escape(formatValue(tokens))}`,
-            `${between}${escape('.')}`,
-            escape(`Earned ${feeInfo}`),
-          ]);
-        });
+          const details = consolidate(forwards).map(forward => {
+            const inboundChannel = channels
+              .find(channel => channel.id === forward.incoming_channel) || {};
 
-        const lines = joinAsLines(allForwards);
+            const outboundChannel = channels
+              .find(channel => channel.id === forward.outgoing_channel) || {};
 
-        const [, otherNode] = nodes;
+            const inbound = aliases.find(({ id }) => id === inboundChannel.key);
+            const outbound = aliases.find(({ id }) => id === outboundChannel.key);
 
-        // Exit early when there is just a single node
-        if (!otherNode) {
-          return cbk(null, lines);
-        }
+            return {
+              fee: forward.fee,
+              inbound: inbound || { channel: forward.incoming_channel },
+              outbound: outbound || { channel: forward.outgoing_channel },
+              tokens: forward.tokens
+            };
+          });
 
-        return cbk(null, join([lines, escape('-'), `_${escape(from)}_`]));
-      }],
+          const allForwards = details.map(({ fee, inbound, outbound, tokens }) => {
+            const feePercent = asPercent(fee, tokens);
+            const feeRate = asPpm(fee, tokens);
+            const fromPeer = inbound.alias || inbound.id || inbound.channel;
+            const toPeer = outbound.alias || outbound.id || outbound.channel;
 
-      // Send the forwards report message
-      send: ['message', async ({message}) => {
-        // Exit early when there is no message to send
-        if (!message) {
-          return;
-        }
+            const between = `${ escape(fromPeer) } *→* ${ escape(toPeer) }`;
+            const feeInfo = `${ formatValue(fee) } ${ feePercent }% (${ feeRate })`;
 
-        return await send(id, message, markup);
-      }],
-    },
-    returnResult({reject, resolve, of: 'message'}, cbk));
+            return join([
+              `${ icons.earn } Forwarded ${ escape(formatValue(tokens)) }`,
+              `${ between }${ escape('.') }`,
+              escape(`Earned ${ feeInfo }`)
+            ]);
+          });
+
+          const lines = joinAsLines(allForwards);
+
+          const [, otherNode] = nodes;
+
+          // Exit early when there is just a single node
+          if (!otherNode) {
+            return cbk(null, lines);
+          }
+
+          return cbk(null, join([lines, escape('-'), `_${ escape(from) }_`]));
+        }],
+
+        // Send the forwards report message
+        send: ['message', async ({ message }) => {
+          // Exit early when there is no message to send
+          if (!message) {
+            return;
+          }
+
+          return await send(id, message, markup);
+        }]
+      },
+      returnResult({ reject, resolve, of: 'message' }, cbk));
   });
-};
+}
+
+export default notifyOfForwards;
