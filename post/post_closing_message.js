@@ -1,10 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
 
-const {formatTokens} = require('./../interface');
-const {icons} = require('./../interface');
+import { formatTokens } from './../interface/index.js';
+import { icons } from './../interface/index.js';
 
 const channelPoint = n => `${n.transaction_id}:${n.transaction_vout}`;
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -36,7 +36,7 @@ const uniq = arr => Array.from(new Set(arr));
     text: <Posted Channel Closing Message String>
   }
 */
-module.exports = ({closing, from, id, lnd, nodes, send}, cbk) => {
+export default ({closing, from, id, lnd, nodes, send}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

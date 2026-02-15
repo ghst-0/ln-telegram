@@ -1,4 +1,4 @@
-const interaction = require('./../interaction');
+import interaction from './../interaction.json' with { type: 'json' };
 
 /** Handle connect command
 
@@ -12,7 +12,7 @@ const interaction = require('./../interaction');
     reply: <Reply Function>
   }
 */
-module.exports = ({from, id, reply}) => {
+export default ({from, id, reply}) => {
   if (!!id) {
     return reply(interaction.bot_is_connected);
   }

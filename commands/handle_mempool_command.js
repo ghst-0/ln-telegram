@@ -1,10 +1,10 @@
-const asyncAuto = require('async/auto');
-const {getBorderCharacters} = require('table');
-const renderTable = require('table').table;
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { getBorderCharacters } from 'table';
+import { table as renderTable } from 'table';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const interaction = require('./../interaction');
+import { checkAccess } from './../authentication/index.js';
+import interaction from './../interaction.json' with { type: 'json' };
 
 const border = getBorderCharacters('void');
 const feeAsRate = medianFee => `~${Math.ceil(medianFee)}/vByte`;
@@ -29,7 +29,7 @@ const waitTimeForBlock = n => `${n * 10} min`;
 
   @returns via cbk or Promise
 */
-module.exports = ({from, id, reply, request}, cbk) => {
+export default ({from, id, reply, request}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,20 +1,20 @@
-const notifyOfForwards = require('./notify_of_forwards');
-const postChainTransaction = require('./post_chain_transaction');
-const postClosedMessage = require('./post_closed_message');
-const postClosingMessage = require('./post_closing_message');
-const postCreatedInvoice = require('./post_created_invoice');
-const postCreatedTrade = require('./post_created_trade');
-const postNodesOffline = require('./post_nodes_offline');
-const postNodesOnline = require('./post_nodes_online');
-const postOpenMessage = require('./post_open_message');
-const postOpeningMessage = require('./post_opening_message');
-const postSettledInvoice = require('./post_settled_invoice');
-const postSettledPayment = require('./post_settled_payment');
-const postSettledTrade = require('./post_settled_trade');
-const postUpdatedBackup = require('./post_updated_backup');
-const sendMessage = require('./send_message');
+import notifyOfForwards from './notify_of_forwards.js';
+import postChainTransaction from './post_chain_transaction.js';
+import postClosedMessage from './post_closed_message.js';
+import postClosingMessage from './post_closing_message.js';
+import postCreatedInvoice from './post_created_invoice.js';
+import postCreatedTrade from './post_created_trade.js';
+import postNodesOffline from './post_nodes_offline.js';
+import postNodesOnline from './post_nodes_online.js';
+import postOpenMessage from './post_open_message.js';
+import postOpeningMessage from './post_opening_message.js';
+import postSettledInvoice from './post_settled_invoice.js';
+import postSettledPayment from './post_settled_payment.js';
+import postSettledTrade from './post_settled_trade.js';
+import postUpdatedBackup from './post_updated_backup.js';
+import sendMessage from './send_message.js';
 
-module.exports = {
+export {
   notifyOfForwards,
   postChainTransaction,
   postClosedMessage,

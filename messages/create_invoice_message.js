@@ -1,10 +1,10 @@
-const {InlineKeyboard} = require('grammy');
-const {parsePaymentRequest} = require('ln-service');
+import { InlineKeyboard } from 'grammy';
+import { parsePaymentRequest } from 'ln-service';
 
-const {callbackCommands} = require('./../interface');
-const {formatTokens} = require('./../interface');
-const {labels} = require('./../interface');
-const {titles} = require('./../interface');
+import { callbackCommands } from './../interface/index.js';
+import { formatTokens } from './../interface/index.js';
+import { labels } from './../interface/index.js';
+import { titles } from './../interface/index.js';
 
 const {cancelInvoice} = callbackCommands;
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -32,7 +32,7 @@ const {setInvoiceTokens} = callbackCommands;
     text: <Message Text String>
   }
 */
-module.exports = ({from, request}) => {
+export default ({from, request}) => {
   const markup = new InlineKeyboard();
 
   const {description, tokens} = parsePaymentRequest({request});

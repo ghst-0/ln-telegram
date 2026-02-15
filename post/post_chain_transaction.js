@@ -1,8 +1,8 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
-const {formatTokens} = require('./../interface');
-const {icons} = require('./../interface');
+import { formatTokens } from './../interface/index.js';
+import { icons } from './../interface/index.js';
 
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatAmount = tokens => formatTokens({tokens}).display;
@@ -36,7 +36,7 @@ const markup = {parse_mode: 'MarkdownV2'};
 
   @returns via cbk or Promise
 */
-module.exports = ({confirmed, from, id, nodes, send, transaction}, cbk) => {
+export default ({confirmed, from, id, nodes, send, transaction}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

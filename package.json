@@ -6,6 +6,7 @@
   "bugs": {
     "url": "https://github.com/alexbosworth/ln-telegram/issues"
   },
+  "type": "module",
   "dependencies": {
     "@alexbosworth/fiat": "2.0.0",
     "async": "3.2.6",

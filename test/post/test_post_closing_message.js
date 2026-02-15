@@ -1,10 +1,9 @@
-const {deepEqual} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual, rejects } from 'node:assert/strict';
 
-const {chanInfoResponse} = require('./../fixtures');
-const {getNodeInfoResponse} = require('./../fixtures');
-const {postClosingMessage} = require('./../../post');
+import { chanInfoResponse } from './../fixtures/index.js';
+import { getNodeInfoResponse } from './../fixtures/index.js';
+import { postClosingMessage } from './../../post/index.js';
 
 const pubKey = '000000000000000000000000000000000000000000000000000000000000000000';
 

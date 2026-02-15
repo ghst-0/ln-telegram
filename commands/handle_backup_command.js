@@ -1,10 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncEach = require('async/each');
-const asyncMap = require('async/map');
-const {getBackups} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncEach from 'async/each.js';
+import asyncMap from 'async/map.js';
+import { getBackups } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
+import { checkAccess } from './../authentication/index.js';
 
 const date = () => new Date().toISOString().substring(0, 10);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
@@ -27,7 +27,7 @@ const replyMarkdownV1 = reply => n => reply(n, {parse_mode: 'Markdown'});
 
   @returns via cbk or Promise
 */
-module.exports = ({from, id, nodes, reply, send}, cbk) => {
+export default ({from, id, nodes, reply, send}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,10 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncReflect = require('async/reflect');
-const {createInvoice} = require('ln-service');
-const {InlineKeyboard} = require('grammy');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncReflect from 'async/reflect.js';
+import { createInvoice } from 'ln-service';
+import { InlineKeyboard } from 'grammy';
+import { returnResult } from 'asyncjs-util';
 
-const {createInvoiceMessage} = require('./../messages');
+import { createInvoiceMessage } from './../messages/index.js';
 
 const createFailedMessage = msg => `⚠️ *Failed to create invoice: ${msg}*`
 const expiry = () => new Date(Date.now() + 1000 * 60 * 60 * 3).toISOString();
@@ -28,7 +28,7 @@ const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
 
   @returns via cbk or Promise
 */
-module.exports = ({ctx, description, destination, nodes, tokens}, cbk) => {
+export default ({ctx, description, destination, nodes, tokens}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

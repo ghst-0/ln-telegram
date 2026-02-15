@@ -1,17 +1,17 @@
-const asyncAuto = require('async/auto');
-const asyncDetect = require('async/detect');
-const asyncFilter = require('async/filter');
-const asyncMap = require('async/map');
-const asyncUntil = require('async/until');
-const {getBorderCharacters} = require('table');
-const {getInvoices} = require('ln-service');
-const {getPayment} = require('ln-service');
-const renderTable = require('table').table;
-const {getForwards} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncDetect from 'async/detect.js';
+import asyncFilter from 'async/filter.js';
+import asyncMap from 'async/map.js';
+import asyncUntil from 'async/until.js';
+import { getBorderCharacters } from 'table';
+import { getInvoices } from 'ln-service';
+import { getPayment } from 'ln-service';
+import { table as renderTable } from 'table';
+import { getForwards } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const {formatTokens} = require('./../interface');
+import { checkAccess } from './../authentication/index.js';
+import { formatTokens } from './../interface/index.js';
 
 const border = getBorderCharacters('void');
 const dayMs = 1000 * 60 * 60 * 24;
@@ -48,7 +48,7 @@ const weekMs = 1000 * 60 * 60 * 24 * 7;
     working: <Reply Bot is Working Function>
   }
 */
-module.exports = ({from, id, nodes, reply, working}, cbk) => {
+export default ({from, id, nodes, reply, working}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

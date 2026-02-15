@@ -1,9 +1,9 @@
-const {deepEqual} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual } from 'node:assert/strict';
 
-const {spawnLightningCluster} = require('ln-docker-daemons');
+import { spawnLightningCluster } from 'ln-docker-daemons';
 
-const {getAmountAsTokens} = require('./../../interface');
+import { getAmountAsTokens } from './../../interface/index.js';
 
 // Get amount as tokens
 test(`Get an amount as tokens`, async () => {

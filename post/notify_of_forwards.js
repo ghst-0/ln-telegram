@@ -1,13 +1,13 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getChannel} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {getWalletInfo} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getChannel } from 'ln-service';
+import { getNodeAlias } from 'ln-sync';
+import { getWalletInfo } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
-const consolidateForwards = require('./consolidate_forwards');
-const {formatTokens} = require('./../interface');
-const {icons} = require('./../interface');
+import consolidateForwards from './consolidate_forwards.js';
+import { formatTokens } from './../interface/index.js';
+import { icons } from './../interface/index.js';
 
 const asPercent = (fee, tokens) => (fee / tokens * 100).toFixed(2);
 const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed();
@@ -44,7 +44,7 @@ const uniq = arr => Array.from(new Set(arr));
     text: <Forward Notify Message Text String>
   }
 */
-module.exports = ({forwards, from, id, lnd, node, nodes, send}, cbk) => {
+export default ({forwards, from, id, lnd, node, nodes, send}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

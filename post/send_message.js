@@ -1,5 +1,5 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
 const api = 'https://api.telegram.org';
 const ok = 200;
@@ -14,7 +14,7 @@ const parseMode = 'markdown';
     text: <Message Text String>
   }
 */
-module.exports = ({id, key, request, text}, cbk) => {
+export default ({id, key, request, text}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

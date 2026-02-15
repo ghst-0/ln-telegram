@@ -39,7 +39,7 @@ const flatten = arr => [].concat(...arr);
     }]
   }
 */
-module.exports = ({channels}) => {
+export default ({channels}) => {
   // Collect all the outbound type HTLCs
   const sending = flatten(channels.map(channel => {
     return (channel.pending_payments || [])

@@ -1,20 +1,20 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const asyncReflect = require('async/reflect');
-const {cancelHodlInvoice} = require('ln-service');
-const {createAnchoredTrade} = require('paid-services');
-const {DateTime} = require('luxon');
-const {decodeTrade} = require('paid-services');
-const {getAnchoredTrade} = require('paid-services');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import asyncReflect from 'async/reflect.js';
+import { cancelHodlInvoice } from 'ln-service';
+import { createAnchoredTrade } from 'paid-services';
+import { DateTime } from 'luxon';
+import { decodeTrade } from 'paid-services';
+import { getAnchoredTrade } from 'paid-services';
+import { returnResult } from 'asyncjs-util';
 
-const {callbackCommands} = require('./../interface');
-const {checkAccess} = require('./../authentication');
-const {createTradeMessage} = require('./../messages');
-const {editQuestions} = require('./../interface');
-const {failureMessage} = require('./../messages');
-const {postCreatedTrade} = require('./../post');
-const tradeActionType = require('./trade_action_type');
+import { callbackCommands } from './../interface/index.js';
+import { checkAccess } from './../authentication/index.js';
+import { createTradeMessage } from './../messages/index.js';
+import { editQuestions } from './../interface/index.js';
+import { failureMessage } from './../messages/index.js';
+import { postCreatedTrade } from './../post/index.js';
+import tradeActionType from './trade_action_type.js';
 
 const failure = message => `⚠️ Failed to update trade: ${message}.`;
 const {fromISO} = DateTime;
@@ -38,7 +38,7 @@ const toISOString = n => n.setZone('utc').toISO();
 
   @returns via cbk or Promise
 */
-module.exports = ({api, ctx, id, nodes}, cbk) => {
+export default ({api, ctx, id, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

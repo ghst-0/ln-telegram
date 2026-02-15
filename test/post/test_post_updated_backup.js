@@ -1,7 +1,7 @@
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { rejects } from 'node:assert/strict';
 
-const {postUpdatedBackup} = require('./../../post');
+import { postUpdatedBackup } from './../../post/index.js';
 
 const makeArgs = overrides => {
   const args = {

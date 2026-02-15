@@ -1,10 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
 
-const {icons} = require('./../interface');
-const {formatTokens} = require('./../interface');
+import { icons } from './../interface/index.js';
+import { formatTokens } from './../interface/index.js';
 
 const elementJoiner = ' ';
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -33,7 +33,7 @@ const {unannounced} = icons;
     text: <Posted Channel Open Message String>
   }
 */
-module.exports = ({from, id, lnd, opening, send}, cbk) => {
+export default ({from, id, lnd, opening, send}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

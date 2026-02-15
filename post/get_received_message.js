@@ -1,11 +1,11 @@
-const asyncAuto = require('async/auto');
-const {getIdentity} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
-const {verifyBytesSignature} = require('ln-service');
+import asyncAuto from 'async/auto.js';
+import { getIdentity } from 'ln-service';
+import { getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
+import { verifyBytesSignature } from 'ln-service';
 
-const {formatTokens} = require('./../interface');
-const {icons} = require('./../interface');
+import { formatTokens } from './../interface/index.js';
+import { icons } from './../interface/index.js';
 
 const bufFromHex = hex => Buffer.from(hex, 'hex');
 const dash = ' - ';
@@ -50,7 +50,7 @@ const sort = (a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0);
     [title]: <Sender Message String>
   }
 */
-module.exports = ({description, lnd, payments, received, via}, cbk) => {
+export default ({description, lnd, payments, received, via}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,10 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getNodeFunds} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getNodeFunds } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const {fundsSummary} = require('./../messages');
+import { checkAccess } from './../authentication/index.js';
+import { fundsSummary } from './../messages/index.js';
 
 const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};
@@ -27,7 +27,7 @@ const markup = {parse_mode: 'MarkdownV2'};
     working: <Working Function>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

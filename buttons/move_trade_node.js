@@ -1,14 +1,14 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const asyncReflect = require('async/reflect');
-const {cancelHodlInvoice} = require('ln-service');
-const {createAnchoredTrade} = require('paid-services');
-const {decodeTrade} = require('paid-services');
-const {getAnchoredTrade} = require('paid-services');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import asyncReflect from 'async/reflect.js';
+import { cancelHodlInvoice } from 'ln-service';
+import { createAnchoredTrade } from 'paid-services';
+import { decodeTrade } from 'paid-services';
+import { getAnchoredTrade } from 'paid-services';
+import { returnResult } from 'asyncjs-util';
 
-const {callbackCommands} = require('./../interface');
-const {failureMessage} = require('./../messages');
+import { callbackCommands } from './../interface/index.js';
+import { failureMessage } from './../messages/index.js';
 
 const failure = msg => `⚠️ Unexpected error \`${msg}\`. Try again?`;
 const {isArray} = Array;
@@ -26,7 +26,7 @@ const split = n => n.split('\n');
 
   @returns via cbk or Promise
 */
-module.exports = ({ctx, nodes}, cbk) => {
+export default ({ctx, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

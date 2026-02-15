@@ -1,22 +1,22 @@
-const handleBackupCommand = require('./handle_backup_command');
-const handleBalanceCommand = require('./handle_balance_command');
-const handleBlocknotifyCommand = require('./handle_blocknotify_command');
-const handleConnectCommand = require('./handle_connect_command');
-const handleCostsCommand = require('./handle_costs_command');
-const handleEarningsCommand = require('./handle_earnings_command');
-const handleEditedMessage = require('./handle_edited_message');
-const handleGraphCommand = require('./handle_graph_command');
-const handleInfoCommand = require('./handle_info_command');
-const handleInvoiceCommand = require('./handle_invoice_command');
-const handleLiquidityCommand = require('./handle_liquidity_command');
-const handleMempoolCommand = require('./handle_mempool_command');
-const handlePayCommand = require('./handle_pay_command');
-const handlePendingCommand = require('./handle_pending_command');
-const handleStartCommand = require('./handle_start_command');
-const handleStopCommand = require('./handle_stop_command');
-const handleVersionCommand = require('./handle_version_command');
+import handleBackupCommand from './handle_backup_command.js';
+import handleBalanceCommand from './handle_balance_command.js';
+import handleBlocknotifyCommand from './handle_blocknotify_command.js';
+import handleConnectCommand from './handle_connect_command.js';
+import handleCostsCommand from './handle_costs_command.js';
+import handleEarningsCommand from './handle_earnings_command.js';
+import handleEditedMessage from './handle_edited_message.js';
+import handleGraphCommand from './handle_graph_command.js';
+import handleInfoCommand from './handle_info_command.js';
+import handleInvoiceCommand from './handle_invoice_command.js';
+import handleLiquidityCommand from './handle_liquidity_command.js';
+import handleMempoolCommand from './handle_mempool_command.js';
+import handlePayCommand from './handle_pay_command.js';
+import handlePendingCommand from './handle_pending_command.js';
+import handleStartCommand from './handle_start_command.js';
+import handleStopCommand from './handle_stop_command.js';
+import handleVersionCommand from './handle_version_command.js';
 
-module.exports = {
+export {
   handleBackupCommand,
   handleBalanceCommand,
   handleBlocknotifyCommand,

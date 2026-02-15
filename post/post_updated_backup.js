@@ -1,5 +1,5 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
 const date = () => new Date().toISOString().substring(0, 10);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
@@ -18,7 +18,7 @@ const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 
   @returns via cbk or Promise
 */
-module.exports = ({backup, id, node, send}, cbk) => {
+export default ({backup, id, node, send}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

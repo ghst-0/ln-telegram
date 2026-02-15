@@ -1,4 +1,4 @@
-const {formatTokens} = require('./../interface');
+import { formatTokens } from './../interface/index.js';
 
 const join = arr => arr.filter(n => !!n).join('\n');
 const markup = undefined;
@@ -22,7 +22,7 @@ const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
     text: <Message Text String>
   }
 */
-module.exports = args => {
+export default args => {
   const memo = !args.description ? '' : `“${escape(args.description)}”`;
   const to = `${escape(args.alias)} \`${args.to}\``.trim();
 

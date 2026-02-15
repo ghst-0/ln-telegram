@@ -1,4 +1,4 @@
-const handleButtonPush = require('./handle_button_push');
-const makeRemoveButton = require('./make_remove_button');
+import handleButtonPush from './handle_button_push.js';
+import makeRemoveButton from './make_remove_button.js';
 
-module.exports = {handleButtonPush, makeRemoveButton};
+export { handleButtonPush, makeRemoveButton };

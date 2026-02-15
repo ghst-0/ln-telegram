@@ -1,9 +1,9 @@
-const asyncAuto = require('async/auto');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
 
-const {icons} = require('./../interface');
-const {formatTokens} = require('./../interface');
+import { icons } from './../interface/index.js';
+import { formatTokens } from './../interface/index.js';
 
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatCapacity = tokens => formatTokens({tokens}).display;
@@ -25,7 +25,7 @@ const join = arr => arr.join('\n');
     message: <Message String>
   }
 */
-module.exports = ({capacity, from, lnd, rate}, cbk) => {
+export default ({capacity, from, lnd, rate}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

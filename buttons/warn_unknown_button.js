@@ -1,9 +1,9 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
+
+import { failureMessage } from './../messages/index.js';
 
 const message = '🤖 Unexpected button pushed. This button may no longer be supported?';
-
-const {failureMessage} = require('./../messages');
 
 /** User pressed an unknown button
 
@@ -13,7 +13,7 @@ const {failureMessage} = require('./../messages');
 
   @returns via cbk or Promise
 */
-module.exports = ({ctx}, cbk) => {
+export default ({ctx}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

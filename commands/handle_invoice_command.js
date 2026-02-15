@@ -1,11 +1,11 @@
-const asyncAuto = require('async/auto');
-const asyncReflect = require('async/reflect');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncReflect from 'async/reflect.js';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const {failureMessage} = require('./../messages');
-const {getAmountAsTokens} = require('./../interface');
-const {postCreatedInvoice} = require('./../post');
+import { checkAccess } from './../authentication/index.js';
+import { failureMessage } from './../messages/index.js';
+import { getAmountAsTokens } from './../interface/index.js';
+import { postCreatedInvoice } from './../post/index.js';
 
 const defaultAmount = '';
 const defaultDescription = '';
@@ -27,7 +27,7 @@ const splitArguments = n => n.split(' ');
 
   @returns via cbk or Promise
 */
-module.exports = ({ctx, id, nodes, request}, cbk) => {
+export default ({ctx, id, nodes, request}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

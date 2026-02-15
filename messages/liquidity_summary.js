@@ -1,8 +1,8 @@
-const {getBorderCharacters} = require('table');
-const renderTable = require('table').table;
+import { getBorderCharacters } from 'table';
+import { table as renderTable } from 'table';
 
-const {formatTokens} = require('./../interface');
-const {icons} = require('./../interface');
+import { formatTokens } from './../interface/index.js';
+import { icons } from './../interface/index.js';
 
 const border = getBorderCharacters('void');
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -41,7 +41,7 @@ const shortId = key => key.substring(0, 8);
     message: <Message Text String>
   }
 */
-module.exports = ({alias, inbound, nodes, outbound, peer}) => {
+export default ({alias, inbound, nodes, outbound, peer}) => {
   const [, otherNode] = nodes;
 
   const header = !!peer ? peerTitle(escape(alias), shortId(peer)) : head;

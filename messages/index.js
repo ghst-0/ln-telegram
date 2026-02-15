@@ -1,13 +1,13 @@
-const createInvoiceMessage = require('./create_invoice_message');
-const createTradeMessage = require('./create_trade_message');
-const failureMessage = require('./failure_message');
-const fundsSummary = require('./funds_summary');
-const liquiditySummary = require('./liquidity_summary');
-const settleTradeMessage = require('./settle_trade_message');
-const stopBotMessage = require('./stop_bot_message');
-const tradeEditButtons = require('./trade_edit_buttons');
+import createInvoiceMessage from './create_invoice_message.js';
+import createTradeMessage from './create_trade_message.js';
+import failureMessage from './failure_message.js';
+import fundsSummary from './funds_summary.js';
+import liquiditySummary from './liquidity_summary.js';
+import settleTradeMessage from './settle_trade_message.js';
+import stopBotMessage from './stop_bot_message.js';
+import tradeEditButtons from './trade_edit_buttons.js';
 
-module.exports = {
+export {
   createInvoiceMessage,
   createTradeMessage,
   failureMessage,

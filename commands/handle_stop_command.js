@@ -1,8 +1,8 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const {stopBotMessage} = require('./../messages');
+import { checkAccess } from './../authentication/index.js';
+import { stopBotMessage } from './../messages/index.js';
 
 const markup = {parse_mode: 'MarkdownV2'};
 const replyMarkdownV1 = reply => n => reply(n, {parse_mode: 'Markdown'});
@@ -18,7 +18,7 @@ const replyMarkdownV1 = reply => n => reply(n, {parse_mode: 'Markdown'});
 
   @returns via cbk or Promise
 */
-module.exports = ({from, id, reply}, cbk) => {
+export default ({from, id, reply}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

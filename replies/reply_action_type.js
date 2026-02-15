@@ -1,5 +1,5 @@
-const invoiceActionType = require('./invoice_action_type');
-const tradeActionType = require('./trade_action_type');
+import invoiceActionType from './invoice_action_type.js';
+import tradeActionType from './trade_action_type.js';
 
 /** Determine the type of a reply action, if any
 
@@ -15,7 +15,7 @@ const tradeActionType = require('./trade_action_type');
     [type]: <Type String>
   }
 */
-module.exports = ({nodes, text}) => {
+export default ({nodes, text}) => {
   if (!!invoiceActionType({nodes, text}).type) {
     return {type: invoiceActionType({nodes, text}).type};
   }

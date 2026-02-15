@@ -1,12 +1,11 @@
-const {deepEqual} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual, rejects } from 'node:assert/strict';
 
-const {chanInfoResult} = require('./../fixtures');
-const {getInfoResponse} = require('./../fixtures');
-const {nodeInfoResult} = require('./../fixtures');
-const {versionInfo} = require('./../fixtures');
-const {notifyOfForwards} = require('./../../');
+import { chanInfoResult } from './../fixtures/index.js';
+import { getInfoResponse } from './../fixtures/index.js';
+import { nodeInfoResult } from './../fixtures/index.js';
+import { versionInfo } from './../fixtures/index.js';
+import { notifyOfForwards } from './../../index.js';
 
 const makeArgs = overrides => {
   const args = {

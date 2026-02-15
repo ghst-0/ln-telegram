@@ -1,8 +1,7 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const {postNodesOffline} = require('./../../');
+import { postNodesOffline } from './../../index.js';
 
 const makeArgs = overrides => {
   const args = {

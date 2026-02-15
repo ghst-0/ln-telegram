@@ -1,17 +1,17 @@
-const asyncAuto = require('async/auto');
-const asyncReflect = require('async/reflect');
-const {createInvoice} = require('ln-service');
-const {parsePaymentRequest} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncReflect from 'async/reflect.js';
+import { createInvoice } from 'ln-service';
+import { parsePaymentRequest } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
-const {callbackCommands} = require('./../interface');
-const {checkAccess} = require('./../authentication');
-const {createInvoiceMessage} = require('./../messages');
-const {editQuestions} = require('./../interface');
-const {failureMessage} = require('./../messages');
-const {getAmountAsTokens} = require('./../interface');
-const invoiceActionType = require('./invoice_action_type');
-const {postCreatedInvoice} = require('./../post');
+import { callbackCommands } from './../interface/index.js';
+import { checkAccess } from './../authentication/index.js';
+import { createInvoiceMessage } from './../messages/index.js';
+import { editQuestions } from './../interface/index.js';
+import { failureMessage } from './../messages/index.js';
+import { getAmountAsTokens } from './../interface/index.js';
+import invoiceActionType from './invoice_action_type.js';
+import { postCreatedInvoice } from './../post/index.js';
 
 const {isArray} = Array;
 const {isInteger} = Number;
@@ -33,7 +33,7 @@ const split = n => n.split('\n');
 
   @returns via cbk or Promise
 */
-module.exports = ({api, ctx, id, nodes, request}, cbk) => {
+export default ({api, ctx, id, nodes, request}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,8 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const test = require('node:test');
-const {throws} = require('node:assert').strict;
+import test from 'node:test';
+import { deepEqual, throws } from 'node:assert/strict';
 
-const pendingSummary = require('./../../commands/pending_summary');
+import pendingSummary from './../../commands/pending_summary.js';
 
 const makeArgs = overrides => {
   const args = {

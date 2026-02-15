@@ -1,12 +1,12 @@
-const callbackCommands = require('./callback_commands');
-const editQuestions = require('./edit_questions');
-const formatTokens = require('./format_tokens');
-const getAmountAsTokens = require('./get_amount_as_tokens');
-const icons = require('./icons');
-const labels = require('./labels');
-const titles = require('./titles');
+import callbackCommands from './callback_commands.json' with { type: 'json' };
+import editQuestions from './edit_questions.json' with { type: 'json' };
+import formatTokens from './format_tokens.js';
+import getAmountAsTokens from './get_amount_as_tokens.js';
+import icons from './icons.json' with { type: 'json' };
+import labels from './labels.json' with { type: 'json' };
+import titles from './titles.json' with { type: 'json' };
 
-module.exports = {
+export {
   callbackCommands,
   editQuestions,
   formatTokens,

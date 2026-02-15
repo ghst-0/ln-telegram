@@ -1,8 +1,8 @@
-const EventEmitter = require('node:events');
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import EventEmitter from 'node:events';
+import test from 'node:test';
+import { rejects } from 'node:assert/strict';
 
-const {postSettledInvoice} = require('./../../');
+import { postSettledInvoice } from './../../index.js';
 
 const makeInvoice = overrides => {
   const invoice = {

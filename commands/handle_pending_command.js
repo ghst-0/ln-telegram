@@ -1,14 +1,14 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getChannels} = require('ln-service');
-const {getHeight} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {getPendingChannels} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getChannels } from 'ln-service';
+import { getHeight } from 'ln-service';
+import { getNodeAlias } from 'ln-sync';
+import { getPendingChannels } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const pendingPayments = require('./pending_payments');
-const pendingSummary = require('./pending_summary');
+import { checkAccess } from './../authentication/index.js';
+import pendingPayments from './pending_payments.js';
+import pendingSummary from './pending_summary.js';
 
 const blocksAsEpoch = blocks => Date.now() + blocks * 1000 * 60 * 10;
 const flatten = arr => [].concat(...arr);
@@ -34,7 +34,7 @@ const uniq = arr => Array.from(new Set(arr));
 
   @returns via cbk or Promise
 */
-module.exports = ({from, id, nodes, reply, working}, cbk) => {
+export default ({from, id, nodes, reply, working}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

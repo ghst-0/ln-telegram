@@ -1,8 +1,8 @@
-const asyncAuto = require('async/auto');
-const {InlineKeyboard} = require('grammy');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { InlineKeyboard } from 'grammy';
+import { returnResult } from 'asyncjs-util';
 
-const {icons} = require('./../interface');
+import { icons } from './../interface/index.js';
 
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const makeKeyboard = () => new InlineKeyboard();
@@ -20,7 +20,7 @@ const title = 'Editing past messages is not supported.';
 
   @returns via cbk or Promise
 */
-module.exports = ({ctx}, cbk) => {
+export default ({ctx}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

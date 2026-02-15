@@ -1,3 +1,3 @@
-const checkAccess = require('./check_access');
+import checkAccess from './check_access.js';
 
-module.exports = {checkAccess};
+export { checkAccess };

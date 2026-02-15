@@ -1,11 +1,10 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const {listChannelsResponse} = require('./../fixtures');
-const {getInfoResponse} = require('./../fixtures');
-const {getNodeInfoResponse} = require('./../fixtures');
-const getReceivedMessage = require('./../../post/get_received_message');
+import { listChannelsResponse } from './../fixtures/index.js';
+import { getInfoResponse } from './../fixtures/index.js';
+import { getNodeInfoResponse } from './../fixtures/index.js';
+import getReceivedMessage from './../../post/get_received_message.js';
 
 const getInfoRes = () => JSON.parse(JSON.stringify(getInfoResponse));
 

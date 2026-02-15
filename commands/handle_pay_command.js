@@ -1,15 +1,15 @@
-const asyncAuto = require('async/auto');
-const {getPayment} = require('ln-service');
-const {parsePaymentRequest} = require('ln-service');
-const {payViaRoutes} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
-const {subscribeToProbeForRoute} = require('ln-service');
+import asyncAuto from 'async/auto.js';
+import { getPayment } from 'ln-service';
+import { parsePaymentRequest } from 'ln-service';
+import { payViaRoutes } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
+import { subscribeToProbeForRoute } from 'ln-service';
 
-const {checkAccess} = require('./../authentication');
-const decodeCommand = require('./decode_command');
-const {icons} = require('./../interface');
-const interaction = require('./../interaction');
-const {sendMessage} = require('./../post');
+import { checkAccess } from './../authentication/index.js';
+import decodeCommand from './decode_command.js';
+import { icons } from './../interface/index.js';
+import interaction from './../interaction.json' with { type: 'json' };
+import { sendMessage } from './../post/index.js';
 
 const {ceil} = Math;
 const cltvDeltaBuffer = 3;
@@ -39,7 +39,7 @@ const pathfindTimeoutMs = 1000 * 60;
     tokens: <Spent Tokens Number>
   }
 */
-module.exports = ({budget, from, id, nodes, reply, text}, cbk) => {
+export default ({budget, from, id, nodes, reply, text}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,12 +1,12 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
-const {bot} = require('./../interaction');
-const {checkAccess} = require('./../authentication');
+import interaction from './../interaction.json' with { type: 'json' };
+import { checkAccess } from './../authentication/index.js';
 
-const failedToGetLatestVersion = `${bot} Failed to get latest version information from NPM`;
-const currentVersion = n => `${bot} Running version: ${n}`;
-const latestVersion = n => `${bot} Latest version: ${n}`;
+const failedToGetLatestVersion = `${interaction.bot} Failed to get latest version information from NPM`;
+const currentVersion = n => `${interaction.bot} Running version: ${n}`;
+const latestVersion = n => `${interaction.bot} Latest version: ${n}`;
 const ok = 200;
 const url = n => `https://registry.npmjs.org/${n}/latest`;
 
@@ -23,7 +23,7 @@ const url = n => `https://registry.npmjs.org/${n}/latest`;
 
   @returns via cbk or Promise
 */
-module.exports = ({from, id, named, reply, request, version}, cbk) => {
+export default ({from, id, named, reply, request, version}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

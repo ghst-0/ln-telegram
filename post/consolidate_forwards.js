@@ -23,7 +23,7 @@ const mtokensAsTokens = n => Number(n) / 1e3;
     }]
   }
 */
-module.exports = ({forwards}) => {
+export default ({forwards}) => {
   const unique = forwards.reduce((sum, forward) => {
     const fee = mtokensAsTokens(forward.fee_mtokens);
     const tokens = mtokensAsTokens(forward.mtokens);

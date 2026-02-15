@@ -1,4 +1,4 @@
-const replyActionType = require('./reply_action_type');
+import replyActionType from './reply_action_type.js';
 
 const split = n => n.split('\n');
 
@@ -14,7 +14,7 @@ const split = n => n.split('\n');
   @returns
   <Message is a Reply to Message Action Bool>
 */
-module.exports = ({ctx, nodes}) => {
+export default ({ctx, nodes}) => {
   if (!ctx || !ctx.update || !ctx.update.message) {
     return false;
   }

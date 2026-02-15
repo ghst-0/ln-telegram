@@ -1,10 +1,9 @@
-const {equal} = require('node:assert').strict;
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { equal, rejects } from 'node:assert/strict';
 
-const {listChannelsResponse} = require('./../fixtures');
-const {getNodeInfoResponse} = require('./../fixtures');
-const getRebalanceMessage = require('./../../post/get_rebalance_message');
+import { listChannelsResponse } from './../fixtures/index.js';
+import { getNodeInfoResponse } from './../fixtures/index.js';
+import getRebalanceMessage from './../../post/get_rebalance_message.js';
 
 const makeArgs = overrides => {
   const args = {

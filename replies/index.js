@@ -1,4 +1,5 @@
-const actOnMessageReply = require('./act_on_message_reply');
-const isMessageReplyAction = require('./is_message_reply_action');
+import actOnMessageReply from './act_on_message_reply.js';
+import isMessageReplyAction from './is_message_reply_action.js';
+import updateInvoiceFromReply from './update_invoice_from_reply.js';
 
-module.exports = {actOnMessageReply, isMessageReplyAction};
+export {actOnMessageReply, isMessageReplyAction, updateInvoiceFromReply};

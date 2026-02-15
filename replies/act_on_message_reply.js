@@ -1,10 +1,10 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
-const {callbackCommands} = require('./../interface');
-const replyActionType = require('./reply_action_type');
-const updateInvoiceFromReply = require('./update_invoice_from_reply');
-const updateTradeFromReply = require('./update_trade_from_reply');
+import { callbackCommands } from './../interface/index.js';
+import replyActionType from './reply_action_type.js';
+import updateInvoiceFromReply from './update_invoice_from_reply.js';
+import updateTradeFromReply from './update_trade_from_reply.js';
 
 const {isArray} = Array;
 
@@ -23,7 +23,7 @@ const {isArray} = Array;
 
   @returns via cbk or Promise
 */
-module.exports = ({api, ctx, id, nodes, request}, cbk) => {
+export default ({api, ctx, id, nodes, request}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

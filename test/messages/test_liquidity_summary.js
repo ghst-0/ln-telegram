@@ -1,7 +1,7 @@
-const {deepEqual} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual } from 'node:assert/strict';
 
-const {liquiditySummary} = require('./../../messages');
+import { liquiditySummary } from './../../messages/index.js';
 
 const tests = [
   {

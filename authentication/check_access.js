@@ -1,7 +1,5 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
-
-const interaction = require('./../interaction');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
 /** Check access to private commands
 
@@ -12,7 +10,7 @@ const interaction = require('./../interaction');
 
   @returns via cbk or Promise
 */
-module.exports = ({from, id}, cbk) => {
+export default ({from, id}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

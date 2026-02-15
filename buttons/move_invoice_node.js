@@ -1,11 +1,11 @@
-const asyncAuto = require('async/auto');
-const asyncReflect = require('async/reflect');
-const {parsePaymentRequest} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncReflect from 'async/reflect.js';
+import { parsePaymentRequest } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
-const {callbackCommands} = require('./../interface');
-const {failureMessage} = require('./../messages');
-const {postCreatedInvoice} = require('./../post');
+import { callbackCommands } from './../interface/index.js';
+import { failureMessage } from './../messages/index.js';
+import { postCreatedInvoice } from './../post/index.js';
 
 const {isArray} = Array;
 const parseFailure = msg => `⚠️ Unexpected error \`${msg}\`. Try again?`;
@@ -25,7 +25,7 @@ const split = n => n.split('\n');
 
   @returns via cbk or Promise
 */
-module.exports = ({ctx, nodes}, cbk) => {
+export default ({ctx, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

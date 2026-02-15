@@ -1,4 +1,4 @@
-const {InlineKeyboard} = require('grammy');
+import { InlineKeyboard } from 'grammy';
 
 const makeKeyboard = () => new InlineKeyboard();
 const genericError = '⚠️ _Unexpected error :(_'
@@ -22,7 +22,7 @@ const parseMode = 'Markdown';
     message: <Failure Message String>
   }
 */
-module.exports = args => {
+export default args => {
   const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
 
   const actions = {

@@ -1,4 +1,4 @@
-const {InlineKeyboard} = require('grammy');
+import { InlineKeyboard } from 'grammy';
 
 const makeKeyboard = () => new InlineKeyboard();
 const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
@@ -12,6 +12,6 @@ const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
     markup: <Reply Markup Object>
   }
 */
-module.exports = ({}) => {
+export default ({}) => {
   return {markup: removeMessageKeyboard(makeKeyboard())};
 };

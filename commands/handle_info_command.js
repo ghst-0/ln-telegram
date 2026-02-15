@@ -1,10 +1,10 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getWalletInfo} = require('ln-service');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getWalletInfo } from 'ln-service';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const {icons} = require('./../interface');
+import { checkAccess } from './../authentication/index.js';
+import { icons } from './../interface/index.js';
 
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
@@ -30,7 +30,7 @@ const replyMarkdownV1 = reply => n => reply(n, {parse_mode: 'Markdown'});
     reply: <Reply Function>
   }
 */
-module.exports = ({from, id, nodes, remove, reply}, cbk) => {
+export default ({from, id, nodes, remove, reply}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

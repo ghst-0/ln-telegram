@@ -1,21 +1,21 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const asyncReflect = require('async/reflect');
-const {DateTime} = require('luxon');
-const {decodeChanId} = require('bolt07');
-const {findKey} = require('ln-sync');
-const {getBorderCharacters} = require('table');
-const {getHeight} = require('ln-service');
-const {getNode} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {parsePaymentRequest} = require('ln-service');
-const renderTable = require('table').table;
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import asyncReflect from 'async/reflect.js';
+import { DateTime } from 'luxon';
+import { decodeChanId } from 'bolt07';
+import { findKey } from 'ln-sync';
+import { getBorderCharacters } from 'table';
+import { getHeight } from 'ln-service';
+import { getNode } from 'ln-service';
+import { getNodeAlias } from 'ln-sync';
+import { parsePaymentRequest } from 'ln-service';
+import { table as renderTable } from 'table';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const {formatTokens} = require('./../interface');
-const {icons} = require('./../interface');
-const {makeRemoveButton} = require('./../buttons');
+import { checkAccess } from './../authentication/index.js';
+import { formatTokens } from './../interface/index.js';
+import { icons } from './../interface/index.js';
+import { makeRemoveButton } from './../buttons/index.js';
 
 const {isArray} = Array;
 
@@ -68,7 +68,7 @@ const uniq = arr => Array.from(new Set(arr));
     working: <Working Function>
   }
 */
-module.exports = ({from, id, nodes, remove, reply, text, working}, cbk) => {
+export default ({from, id, nodes, remove, reply, text, working}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

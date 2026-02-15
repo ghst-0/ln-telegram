@@ -1,7 +1,7 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
-const {icons} = require('./../interface');
+import { icons } from './../interface/index.js';
 
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const markup = {parse_mode: 'MarkdownV2'};
@@ -17,7 +17,7 @@ const shutdownMessage = `${icons.bot} Bot shutting down...`
 
   @returns via cbk or Promise
 */
-module.exports = ({bot, ctx, exit}, cbk) => {
+export default ({bot, ctx, exit}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

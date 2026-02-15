@@ -1,8 +1,8 @@
-const {decodeTrade} = require('paid-services');
+import { decodeTrade } from 'paid-services';
 
-const {callbackCommands} = require('./../interface');
-const {editQuestions} = require('./../interface');
-const {titles} = require('./../interface');
+import { callbackCommands } from './../interface/index.js';
+import { editQuestions } from './../interface/index.js';
+import { titles } from './../interface/index.js';
 
 const expectedSpacer = '';
 const hasTradePrefix = n => n.startsWith(titles.createdTradePrefix);
@@ -23,7 +23,7 @@ const tradeQuestions = editQuestions.trade.map(n => editQuestions[n]);
     [type]: <Trade Secret Action Type String>
   }
 */
-module.exports = ({nodes, text}) => {
+export default ({nodes, text}) => {
   // Trade messages have a specific structure
   if (!text || !hasTradePrefix(text)) {
     return {};

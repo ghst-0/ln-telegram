@@ -1,8 +1,8 @@
-const {parsePaymentRequest} = require('ln-service');
+import { parsePaymentRequest } from 'ln-service';
 
-const {callbackCommands} = require('./../interface');
-const {editQuestions} = require('./../interface');
-const {titles} = require('./../interface');
+import { callbackCommands } from './../interface/index.js';
+import { editQuestions } from './../interface/index.js';
+import { titles } from './../interface/index.js';
 
 const expectedSpacer = '';
 const hasInvoicePrefix = n => n.startsWith(titles.createdInvoicePrefix);
@@ -23,7 +23,7 @@ const split = n => n.split('\n');
     [type]: <Invoice Action Type String>
   }
 */
-module.exports = ({nodes, text}) => {
+export default ({nodes, text}) => {
   // Invoice messages have a specific structure
   if (!text || !hasInvoicePrefix(text)) {
     return {};

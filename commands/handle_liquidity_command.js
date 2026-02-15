@@ -1,16 +1,16 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {findKey} = require('ln-sync');
-const {getChannel} = require('ln-service');
-const {getChannels} = require('ln-service');
-const {getLiquidity} = require('ln-sync');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { findKey } from 'ln-sync';
+import { getChannel } from 'ln-service';
+import { getChannels } from 'ln-service';
+import { getLiquidity } from 'ln-sync';
+import { getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const {icons} = require('./../interface');
-const interaction = require('./../interaction');
-const {liquiditySummary} = require('./../messages');
+import { checkAccess } from './../authentication/index.js';
+import { icons } from './../interface/index.js';
+import interaction from './../interaction.json' with { type: 'json' };
+import { liquiditySummary } from './../messages/index.js';
 
 const defaultAlias = '';
 const {isArray} = Array;
@@ -38,7 +38,7 @@ const uniq = arr => Array.from(new Set(arr));
     working: <Working Function>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

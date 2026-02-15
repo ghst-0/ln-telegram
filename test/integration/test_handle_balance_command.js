@@ -1,11 +1,11 @@
-const {deepEqual} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual } from 'node:assert/strict';
 
-const {getNode} = require('lightning');
-const {setupChannel} = require('ln-docker-daemons');
-const {spawnLightningCluster} = require('ln-docker-daemons');
+import { getNode } from 'lightning';
+import { setupChannel } from 'ln-docker-daemons';
+import { spawnLightningCluster } from 'ln-docker-daemons';
 
-const {handleBalanceCommand} = require('./../../');
+import { handleBalanceCommand } from './../../index.js';
 
 const size = 2;
 

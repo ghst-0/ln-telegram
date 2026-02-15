@@ -1,12 +1,12 @@
-const asyncAuto = require('async/auto');
-const asyncDetect = require('async/detect');
-const asyncReflect = require('async/reflect');
-const {cancelHodlInvoice} = require('ln-service');
-const {getInvoice} = require('ln-service');
-const {decodeTrade} = require('paid-services');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncDetect from 'async/detect.js';
+import asyncReflect from 'async/reflect.js';
+import { cancelHodlInvoice } from 'ln-service';
+import { getInvoice } from 'ln-service';
+import { decodeTrade } from 'paid-services';
+import { returnResult } from 'asyncjs-util';
 
-const {failureMessage} = require('./../messages');
+import { failureMessage } from './../messages/index.js';
 
 const failure = msg => `⚠️ Unexpected error \`${msg}\`. Try again?`;
 const {isArray} = Array;
@@ -23,7 +23,7 @@ const split = n => n.split('\n');
 
   @returns via cbk or Promise
 */
-module.exports = ({ctx, nodes}, cbk) => {
+export default ({ctx, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,20 +1,20 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
-const askToUpdateTrade = require('./ask_to_update_trade');
-const {callbackCommands} = require('./../interface');
-const cancelInvoice = require('./cancel_invoice');
-const cancelTrade = require('./cancel_trade');
-const {checkAccess} = require('./../authentication');
-const moveInvoiceNode = require('./move_invoice_node');
-const moveTradeNode = require('./move_trade_node');
-const removeMessage = require('./remove_message');
-const setInvoiceDescription = require('./set_invoice_description');
-const setInvoiceNode = require('./set_invoice_node');
-const setInvoiceTokens = require('./set_invoice_tokens');
-const setTradeNode = require('./set_trade_node');
-const terminateBot = require('./terminate_bot');
-const warnUnknownButton = require('./warn_unknown_button');
+import askToUpdateTrade from './ask_to_update_trade.js';
+import { callbackCommands } from './../interface/index.js';
+import cancelInvoice from './cancel_invoice.js';
+import cancelTrade from './cancel_trade.js';
+import { checkAccess } from './../authentication/index.js';
+import moveInvoiceNode from './move_invoice_node.js';
+import moveTradeNode from './move_trade_node.js';
+import removeMessage from './remove_message.js';
+import setInvoiceDescription from './set_invoice_description.js';
+import setInvoiceNode from './set_invoice_node.js';
+import setInvoiceTokens from './set_invoice_tokens.js';
+import setTradeNode from './set_trade_node.js';
+import terminateBot from './terminate_bot.js';
+import warnUnknownButton from './warn_unknown_button.js';
 
 const {exit} = process;
 const {isArray} = Array;
@@ -34,7 +34,7 @@ const {isArray} = Array;
 
   @returns via cbk or Promise
 */
-module.exports = ({bot, ctx, id, nodes}, cbk) => {
+export default ({bot, ctx, id, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

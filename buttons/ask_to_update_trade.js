@@ -1,13 +1,11 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const asyncReflect = require('async/reflect');
-const {decodeTrade} = require('paid-services');
-const {getAnchoredTrade} = require('paid-services');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import asyncReflect from 'async/reflect.js';
+import { decodeTrade, getAnchoredTrade } from 'paid-services';
+import { returnResult } from 'asyncjs-util';
 
-const {callbackCommands} = require('./../interface');
-const {editQuestions} = require('./../interface');
-const {failureMessage} = require('./../messages');
+import { callbackCommands, editQuestions } from './../interface/index.js';
+import { failureMessage } from './../messages/index.js';
 
 const code = n => `\`${n}\``;
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -31,7 +29,7 @@ const split = n => n.split('\n');
 
   @returns via cbk or Promise
 */
-module.exports = ({command, ctx, nodes}, cbk) => {
+export default ({command, ctx, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

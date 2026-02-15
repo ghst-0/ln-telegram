@@ -1,8 +1,8 @@
-const asyncAuto = require('async/auto');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
 
-const {settleTradeMessage} = require('./../messages');
+import { settleTradeMessage } from './../messages/index.js';
 
 const {isArray} = Array;
 
@@ -23,7 +23,7 @@ const {isArray} = Array;
 
   @returns via cbk or Promise
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

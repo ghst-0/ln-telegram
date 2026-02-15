@@ -1,8 +1,8 @@
-const {getBorderCharacters} = require('table');
-const renderTable = require('table').table;
+import { getBorderCharacters } from 'table';
+import { table as renderTable } from 'table';
 
-const {formatTokens} = require('./../interface');
-const {icons} = require('./../interface');
+import { formatTokens } from './../interface/index.js';
+import { icons } from './../interface/index.js';
 
 const border = getBorderCharacters('void');
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -34,7 +34,7 @@ const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
     message: <Message Text String>
   }
 */
-module.exports = ({balances, nodes}) => {
+export default ({balances, nodes}) => {
   const [, otherNode] = nodes;
 
   const total = sumOf(nodes.map((_, i) => {

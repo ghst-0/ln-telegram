@@ -1,8 +1,8 @@
-const asyncAuto = require('async/auto');
-const {getNetwork} = require('ln-sync');
-const {getPrices} = require('@alexbosworth/fiat');
-const {parseAmount} = require('ln-accounting');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { getNetwork } from 'ln-sync';
+import { getPrices } from '@alexbosworth/fiat';
+import { parseAmount } from 'ln-accounting';
+import { returnResult } from 'asyncjs-util';
 
 const defaultFiatRateProvider = 'coingecko';
 const defaultTokens = 0;
@@ -29,7 +29,7 @@ const tokensAsBigTokens = n => Math.round(n * 1e8);
     tokens: <Amount Number>
   }
 */
-module.exports = ({amount, lnd, request}, cbk) => {
+export default ({amount, lnd, request}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       validate: cbk => {

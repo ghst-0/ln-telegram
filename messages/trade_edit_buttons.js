@@ -1,7 +1,7 @@
-const {InlineKeyboard} = require('grammy');
+import { InlineKeyboard } from 'grammy';
 
-const {callbackCommands} = require('./../interface');
-const {labels} = require('./../interface');
+import { callbackCommands } from './../interface/index.js';
+import { labels } from './../interface/index.js';
 
 const nodeLabel = named => `Node: ${named}`;
 const shortId = key => key.slice(0, 46);
@@ -22,7 +22,7 @@ const switchNode = id => `${callbackCommands.moveTradeNode}${id}`;
     markup: <Keyboard Markup Object>
   }
 */
-module.exports = args => {
+export default args => {
   const markup = new InlineKeyboard();
   const [, otherNode] = args.nodes;
 

@@ -1,16 +1,16 @@
-const asyncAuto = require('async/auto');
-const asyncDetect = require('async/detect');
-const asyncMap = require('async/map');
-const {balancedOpenRequest} = require('paid-services');
-const {getChannel} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
-const {subscribeToPastPayment} = require('ln-service');
+import asyncAuto from 'async/auto.js';
+import asyncDetect from 'async/detect.js';
+import asyncMap from 'async/map.js';
+import { balancedOpenRequest } from 'paid-services';
+import { getChannel } from 'ln-service';
+import { getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
+import { subscribeToPastPayment } from 'ln-service';
 
-const getBalancedOpenMessage = require('./get_balanced_open_message');
-const getRebalanceMessage = require('./get_rebalance_message');
-const getReceivedMessage = require('./get_received_message');
-const {icons} = require('./../interface');
+import getBalancedOpenMessage from './get_balanced_open_message.js';
+import getRebalanceMessage from './get_rebalance_message.js';
+import getReceivedMessage from './get_received_message.js';
+import { icons } from './../interface/index.js';
 
 const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
@@ -62,7 +62,7 @@ const uniq = arr => Array.from(new Set(arr));
 
   @returns via cbk or Promise
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

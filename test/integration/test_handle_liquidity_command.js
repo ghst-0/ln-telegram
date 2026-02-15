@@ -1,12 +1,12 @@
-const {deepEqual} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { deepEqual } from 'node:assert/strict';
 
-const asyncRetry = require('async/retry');
-const {getNode} = require('lightning');
-const {setupChannel} = require('ln-docker-daemons');
-const {spawnLightningCluster} = require('ln-docker-daemons');
+import asyncRetry from 'async/retry.js';
+import { getNode } from 'lightning';
+import { setupChannel } from 'ln-docker-daemons';
+import { spawnLightningCluster } from 'ln-docker-daemons';
 
-const {handleLiquidityCommand} = require('./../../');
+import { handleLiquidityCommand } from './../../index.js';
 
 const interval = 10;
 const size = 2;

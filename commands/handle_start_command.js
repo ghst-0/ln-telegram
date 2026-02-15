@@ -1,4 +1,4 @@
-const interaction = require('./../interaction');
+import interaction from './../interaction.json' with { type: 'json' };
 
 /** Handle start command
 
@@ -12,7 +12,7 @@ const interaction = require('./../interaction');
     reply: <Reply Function>
   }
 */
-module.exports = ({id, reply}) => {
+export default ({id, reply}) => {
   // Exit early when the bot is already connected
   if (!!id) {
     return reply(interaction.bot_is_connected);

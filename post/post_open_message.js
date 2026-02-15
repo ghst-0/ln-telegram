@@ -1,8 +1,8 @@
-const asyncAuto = require('async/auto');
-const {getPeerLiquidity} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { getPeerLiquidity } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
 
-const {formatTokens} = require('./../interface');
+import { formatTokens } from './../interface/index.js';
 
 const detailsJoiner = ' ';
 const displayAmount = tokens => formatTokens({tokens}).display;
@@ -28,7 +28,7 @@ const textJoiner = '\n';
     text: <Posted Channel Open Message String>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,13 +1,13 @@
-const asyncAuto = require('async/auto');
-const asyncMap = require('async/map');
-const {getBorderCharacters} = require('table');
-const {getChainTransactions} = require('ln-accounting')
-const {getRebalancePayments} = require('ln-sync');
-const renderTable = require('table').table;
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import asyncMap from 'async/map.js';
+import { getBorderCharacters } from 'table';
+import { getChainTransactions } from 'ln-accounting';
+import { getRebalancePayments } from 'ln-sync';
+import { table as renderTable } from 'table';
+import { returnResult } from 'asyncjs-util';
 
-const {checkAccess} = require('./../authentication');
-const {formatTokens} = require('./../interface');
+import { checkAccess } from './../authentication/index.js';
+import { formatTokens } from './../interface/index.js';
 
 const border = getBorderCharacters('void');
 const dayMs = 1000 * 60 * 60 * 24;
@@ -41,7 +41,7 @@ const weekMs = 1000 * 60 * 60 * 24 * 7;
     working: <Working Function>
   }
 */
-module.exports = ({from, id, nodes, reply, request, working}, cbk) => {
+export default ({from, id, nodes, reply, request, working}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

@@ -1,7 +1,7 @@
-const asyncAuto = require('async/auto');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { returnResult } from 'asyncjs-util';
 
-const interaction = require('./../interaction');
+import interaction from './../interaction.json' with { type: 'json' };
 
 const {isArray} = Array;
 
@@ -26,7 +26,7 @@ const {isArray} = Array;
     params: [<Parameter String>]
   }
 */
-module.exports = ({help, nodes, reply, text}, cbk) => {
+export default ({help, nodes, reply, text}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

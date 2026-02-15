@@ -1,8 +1,8 @@
-const asyncAuto = require('async/auto');
-const {getNetwork} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { getNetwork } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
 
-const {createTradeMessage} = require('./../messages');
+import { createTradeMessage } from './../messages/index.js';
 
 const {isArray} = Array;
 
@@ -23,7 +23,7 @@ const {isArray} = Array;
     user: <Telegram User Id Number>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

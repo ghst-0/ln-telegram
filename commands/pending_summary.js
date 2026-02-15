@@ -1,7 +1,7 @@
-const {DateTime} = require('luxon');
+import { DateTime } from 'luxon';
 
-const {formatTokens} = require('./../interface');
-const {icons} = require('./../interface');
+import { formatTokens } from './../interface/index.js';
+import { icons } from './../interface/index.js';
 
 const asRelative = n => n.toRelative({locale: 'en'});
 const blocksAsEpoch = blocks => Date.now() + blocks * 1000 * 60 * 10;
@@ -58,7 +58,7 @@ const uniq = arr => Array.from(new Set(arr));
   @returns
   <Pending Item String>
 */
-module.exports = ({count, htlcs, pending}) => {
+export default ({count, htlcs, pending}) => {
   // Pending closing and opening channels
   const channels = pending.map(node => {
     // Opening channels, waiting for confirmation

@@ -1,7 +1,7 @@
-const {rejects} = require('node:assert').strict;
-const test = require('node:test');
+import test from 'node:test';
+import { rejects } from 'node:assert/strict';
 
-const {checkAccess} = require('./../../authentication');
+import { checkAccess } from './../../authentication/index.js';
 
 const makeArgs = overrides => {
   const args = {from: 1, id: 1};
@@ -33,14 +33,12 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
-    if (!!error) {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
+    if (error) {
       await rejects(checkAccess(args), error, 'Got expected error');
     } else {
       await checkAccess(args);
     }
-
-    return;
-  });
-});
+  })
+}

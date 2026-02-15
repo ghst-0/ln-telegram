@@ -1,10 +1,10 @@
-const asyncAuto = require('async/auto');
-const {InlineKeyboard} = require('grammy');
-const {returnResult} = require('asyncjs-util');
+import asyncAuto from 'async/auto.js';
+import { InlineKeyboard } from 'grammy';
+import { returnResult } from 'asyncjs-util';
 
-const {callbackCommands} = require('./../interface');
-const {labels} = require('./../interface');
-const {tradeEditButtons} = require('./../messages');
+import { callbackCommands } from './../interface/index.js';
+import { labels } from './../interface/index.js';
+import { tradeEditButtons } from './../messages/index.js';
 
 const {isArray} = Array;
 const nodeLabel = named => `Node: ${named}`;
@@ -22,7 +22,7 @@ const switchNode = id => `${callbackCommands.moveInvoiceNode}${id}`;
 
   @returns via cbk or Promise
 */
-module.exports = ({ctx, nodes}, cbk) => {
+export default ({ctx, nodes}, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

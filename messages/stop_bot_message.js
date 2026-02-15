@@ -1,8 +1,8 @@
-const {InlineKeyboard} = require('grammy');
+import { InlineKeyboard } from 'grammy';
 
-const {callbackCommands} = require('./../interface');
-const {icons} = require('./../interface');
-const {labels} = require('./../interface');
+import { callbackCommands } from './../interface/index.js';
+import { icons } from './../interface/index.js';
+import { labels } from './../interface/index.js';
 
 const {removeMessage} = callbackCommands;
 const {terminateBot} = callbackCommands;
@@ -21,7 +21,7 @@ const mode = 'MarkdownV2';
     text: <Message Text String>
   }
 */
-module.exports = args => {
+export default args => {
   const markup = new InlineKeyboard();
 
   markup.text(stopBotCancelButtonLabel, terminateBot);

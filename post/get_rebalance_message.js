@@ -1,11 +1,11 @@
-const asyncAuto = require('async/auto');
-const {getChannels} = require('ln-service');
-const {getNodeAlias} = require('ln-sync');
-const {returnResult} = require('asyncjs-util');
-const {subscribeToPastPayment} = require('ln-service');
+import asyncAuto from 'async/auto.js';
+import { getChannels } from 'ln-service';
+import { getNodeAlias } from 'ln-sync';
+import { returnResult } from 'asyncjs-util';
+import { subscribeToPastPayment } from 'ln-service';
 
-const {formatTokens} = require('./../interface');
-const {icons} = require('./../interface');
+import { formatTokens } from './../interface/index.js';
+import { icons } from './../interface/index.js';
 
 const asPercent = (fee, tokens) => (fee / tokens * 100).toFixed(2);
 const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed();
@@ -35,7 +35,7 @@ const sanitize = n => (n || '').replace(/_/g, '\\_').replace(/[*~`]/g, '');
     message: <Rebalance Message String>
   }
 */
-module.exports = (args, cbk) => {
+export default (args, cbk) => {
   return new Promise((resolve, reject) => {
     return asyncAuto({
       // Check arguments

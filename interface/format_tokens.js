@@ -16,7 +16,7 @@ const tokensAsBigUnit = tokens => (tokens / 1e8).toFixed(8);
     display: <Formtted Tokens String>
   }
 */
-module.exports = ({none, tokens}) => {
+export default ({none, tokens}) => {
   if (isString(none) && !tokens) {
     return {display: none};
   }
