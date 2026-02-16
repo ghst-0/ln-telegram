@@ -3,7 +3,7 @@ import { returnResult } from 'asyncjs-util';
 
 import { icons } from './../interface/index.js';
 
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};
 const shortId = id => id.slice(0, 8);
@@ -45,7 +45,7 @@ function postNodesOffline({ bot, connected, offline }, cbk) {
           }
 
           // Exit early when no nodes went offline
-          if (!offline.length) {
+          if (offline.length === 0) {
             return cbk();
           }
 

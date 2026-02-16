@@ -18,7 +18,9 @@ const makeArgs = overrides => {
     received_mtokens: 1000,
   };
 
-  Object.keys(overrides).forEach(k => args[k] = overrides[k]);
+  for (const k of Object.keys(overrides)) {
+    args[k] = overrides[k]
+  }
 
   return args;
 };
@@ -79,16 +81,14 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
-    if (!!error) {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
+    if (error) {
       await rejects(getRebalanceMessage(args), error, 'Got expected error');
     } else {
-      const {message} = await getRebalanceMessage(args);
+      const { message } = await getRebalanceMessage(args);
 
       equal(message, expected.message, 'Got expected message');
     }
-
-    return;
-  });
-});
+  })
+}

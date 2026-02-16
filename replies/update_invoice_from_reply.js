@@ -80,10 +80,9 @@ function updateInvoiceFromReply({ api, ctx, id, nodes, request }, cbk) {
         // Delete the answer message the user just entered
         deleteAnswer: ['type', async ({ type }) => {
           try {
-            return !!type ? await ctx.deleteMessage() : null;
-          } catch (err) {
+            return type ? await ctx.deleteMessage() : null;
+          } catch {
             // Ignore errors when deleting
-            return;
           }
         }],
 
@@ -98,9 +97,8 @@ function updateInvoiceFromReply({ api, ctx, id, nodes, request }, cbk) {
               ctx.update.message.reply_to_message.chat.id,
               ctx.update.message.reply_to_message.message_id
             );
-          } catch (err) {
+          } catch {
             // Ignore errors when deleting
-            return;
           }
         }],
 
@@ -152,7 +150,7 @@ function updateInvoiceFromReply({ api, ctx, id, nodes, request }, cbk) {
                 // Revert back to the last good tokens when there is a parse fail
                 return cbk(null, {
                   description,
-                  tokens: !!getTokens.value ? getTokens.value.tokens : tokens
+                  tokens: getTokens.value ? getTokens.value.tokens : tokens
                 });
 
               default:
@@ -191,7 +189,7 @@ function updateInvoiceFromReply({ api, ctx, id, nodes, request }, cbk) {
 
           try {
             await ctx.reply(message, failure.actions);
-          } catch (err) {
+          } catch {
             // Ignore errors
           }
         }]

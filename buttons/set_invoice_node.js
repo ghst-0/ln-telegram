@@ -64,13 +64,14 @@ function setInvoiceNode({ ctx, nodes }, cbk) {
           const buttons = [].concat(editButtons).concat(nodeButtons);
 
           // Add buttons to message markup
-          buttons.forEach(([label, command], i) => {
+          for (let i = 0; i < buttons.length; i++){
+            const [label, command] = buttons[i]
             if (i < rowsIndex) {
-              return markup.text(label, command);
+              markup.text(label, command)
             } else {
-              return markup.text(label, command).row();
+              markup.text(label, command).row()
             }
-          });
+          }
 
           // Post the original message but with move node buttons
           return await ctx.editMessageText(

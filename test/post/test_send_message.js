@@ -39,11 +39,10 @@ const tests = [
       id: 1,
       key: 'key',
       request: ({qs}, cbk) => {
-        if (!qs.parse_mode) {
-          return cbk('err')
-        } else {
-          return cbk(null, {statusCode: 400});
+        if (qs.parse_mode) {
+          return cbk(null, { statusCode: 400 });
         }
+        return cbk('err')
       },
       text: 'text',
     },
@@ -55,11 +54,10 @@ const tests = [
       id: 1,
       key: 'key',
       request: ({qs}, cbk) => {
-        if (!qs.parse_mode) {
-          return cbk()
-        } else {
-          return cbk(null, {statusCode: 400});
+        if (qs.parse_mode) {
+          return cbk(null, { statusCode: 400 });
         }
+        return cbk()
       },
       text: 'text',
     },
@@ -90,11 +88,10 @@ const tests = [
       id: 1,
       key: 'key',
       request: ({qs}, cbk) => {
-        if (!!qs.parse_mode) {
+        if (qs.parse_mode) {
           return cbk(null, {statusCode: 400});
-        } else {
-          return cbk(null, {statusCode: 200});
         }
+        return cbk(null, {statusCode: 200});
       },
       text: 'text',
     },
@@ -102,14 +99,12 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
-    if (!!error) {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
+    if (error) {
       await rejects(sendMessage(args), error, 'Got expected error');
     } else {
       await sendMessage(args);
     }
-
-    return;
-  });
-});
+  })
+}

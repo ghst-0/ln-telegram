@@ -13,7 +13,9 @@ const makeArgs = overrides => {
     send: () => new Promise((resolve, reject) => resolve()),
   };
 
-  Object.keys(overrides).forEach(k => args[k] = overrides[k]);
+  for (const k of Object.keys(overrides)) {
+    args[k] = overrides[k]
+  }
 
   return args;
 };
@@ -53,16 +55,14 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
-    if (!!error) {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
+    if (error) {
       await rejects(postNodesOnline(args), error, 'Got expected error');
     } else {
       const res = await postNodesOnline(args);
 
       equal(res, expected, 'Got expected result');
     }
-
-    return;
-  });
-});
+  })
+}

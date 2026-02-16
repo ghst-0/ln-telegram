@@ -79,9 +79,8 @@ function handleBalanceCommand(args, cbk) {
         working: ['checkAccess', async ({}) => {
           try {
             return await args.working();
-          } catch (err) {
+          } catch {
             // Ignore errors notifying working
-            return;
           }
         }],
 

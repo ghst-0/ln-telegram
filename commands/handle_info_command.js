@@ -6,7 +6,7 @@ import { returnResult } from 'asyncjs-util';
 import { checkAccess } from './../authentication/index.js';
 import { icons } from './../interface/index.js';
 
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const join = arr => arr.join('\n');
 const markup = {parse_mode: 'MarkdownV2'};

@@ -7,7 +7,7 @@ import { editQuestions } from './../interface/index.js';
 import { failureMessage } from './../messages/index.js';
 
 const code = n => `\`${n}\``;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const inputFieldPlaceholder = 'Enter amount to invoice...';
 const {isArray} = Array;
 const italic = n => `_${n}_`;
@@ -56,13 +56,13 @@ function setInvoiceTokens({ ctx, nodes }, cbk) {
 
           try {
             parsePaymentRequest({ request });
-          } catch (err) {
+          } catch {
             return cbk([400, 'ExpectedValidPaymentRequestToSetInvoiceTokens']);
           }
 
           const { destination } = parsePaymentRequest({ request });
 
-          if (!nodes.find(n => n.public_key === destination)) {
+          if (!nodes.some(n => n.public_key === destination)) {
             return cbk([400, 'MissingNodeToUpdateInvoiceDescriptionFor']);
           }
 
@@ -110,7 +110,7 @@ function setInvoiceTokens({ ctx, nodes }, cbk) {
 
         // Remove the referenced message
         remove: ['invoice', async ({ invoice }) => {
-          return !!invoice.error ? null : await ctx.deleteMessage();
+          return invoice.error ? null : await ctx.deleteMessage();
         }]
       },
       returnResult({ reject, resolve }, cbk));

@@ -50,7 +50,7 @@ function sendMessage({ id, key, request, text }, cbk) {
               url: `${ api }/bot${ key }/sendMessage`
             },
             (err, r, body) => {
-              if (!!err) {
+              if (err) {
                 return cbk([503, 'FailedToConnectToTelegramToSendMessage', { err }]);
               }
 
@@ -69,7 +69,7 @@ function sendMessage({ id, key, request, text }, cbk) {
         // Send message without format in case the first send didn't work
         sendNormal: ['send', ({ send }, cbk) => {
           // Exit early when regular send worked
-          if (!!send) {
+          if (send) {
             return cbk();
           }
 
@@ -78,7 +78,7 @@ function sendMessage({ id, key, request, text }, cbk) {
               url: `${ api }/bot${ key }/sendMessage`
             },
             (err, r, body) => {
-              if (!!err) {
+              if (err) {
                 return cbk([503, 'FailedToConnectToTelegramApiToSend', { err }]);
               }
 

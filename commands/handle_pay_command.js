@@ -1,6 +1,6 @@
 import asyncAuto from 'async/auto.js';
-import { getPayment, parsePaymentRequest, payViaRoutes, subscribeToProbeForRoute } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
+import { getNode, getPayment, parsePaymentRequest, payViaRoutes, subscribeToProbeForRoute } from 'ln-service';
 
 import { checkAccess } from './../authentication/index.js';
 import decodeCommand from './decode_command.js';
@@ -11,7 +11,7 @@ const {ceil} = Math;
 const cltvDeltaBuffer = 3;
 const defaultMaxTokensMultiplier = 1.01;
 const {isArray} = Array;
-const isNumber = n => !isNaN(n);
+const isNumber = n => !Number.isNaN(n);
 const {min} = Math;
 const mtokensToTokens = tokens => Number(BigInt(tokens) / BigInt(1e3));
 const pathTimeoutMs = 1000 * 30;
@@ -30,7 +30,7 @@ const pathfindTimeoutMs = 1000 * 60;
  * @param {function} reply Reply to Telegram Context Function
  * @param {string} text Original Command Text
  * @param {function} cbk Callback function
- * @returns {Promise<{{tokens: number}}>} via cbk
+ * @returns {Promise<{tokens: number}>} via cbk
  *   tokens: Spent Tokens Number
  */
 function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
@@ -46,7 +46,7 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
             return cbk([400, 'ExpectedCommandFromUserIdNumberToPayCommand']);
           }
 
-          if (!isArray(nodes) || !nodes.length) {
+          if (!isArray(nodes) || nodes.length === 0) {
             return cbk([400, 'ExpectedNodesForPayCommand']);
           }
 
@@ -76,7 +76,6 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
 
         // Decode payment request
         decodeRequest: ['decodeCommand', ({ decodeCommand }, cbk) => {
-          const { lnd } = decodeCommand;
           const [request] = decodeCommand.params;
 
           try {
@@ -145,7 +144,7 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
               path_timeout_ms: pathTimeoutMs,
               payment: decodeRequest.payment,
               routes: decodeRequest.routes,
-              total_mtokens: !!decodeRequest.payment ? mtokens : undefined
+              total_mtokens: decodeRequest.payment ? mtokens : undefined
             });
 
             const finished = (err, res) => {
@@ -174,7 +173,7 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
               const at = `at ${ fail.channel || fail.public_key }`;
               const source = fail.route.hops[fail.index - [fail].length];
 
-              let fromName = !source ? null : source.public_key;
+              let fromName = source ? source.public_key : null;
 
               try {
                 const node = await getNode({
@@ -184,10 +183,10 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
                 });
 
                 fromName = node.alias;
-              } catch (err) {
+              } catch {
               }
 
-              const from = !source ? '' : `from ${ fromName }`;
+              const from = source ? `from ${ fromName }` : '';
 
               const text = `${ fail.reason } ${ at } ${ from }`;
 
@@ -205,8 +204,6 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
 
               return finished(null, { route });
             });
-
-            return;
           }],
 
         // Pay the request
@@ -237,22 +234,22 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
                 lnd: decodeCommand.lnd
               },
               (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(err);
                 }
 
                 // Exit with error when the payment was rejected
-                if (!!res.failed && !!res.is_invalid_payment) {
+                if (res.failed && res.is_invalid_payment) {
                   return cbk([503, 'PaymentRejectedByDestination']);
                 }
 
                 // Exit with error when the payment failed for reason
-                if (!!res.is_failed) {
+                if (res.is_failed) {
                   return cbk([503, 'PaymentFailedToSend']);
                 }
 
                 // Exit with error when the payment is in limbo
-                if (!!res.is_pending) {
+                if (res.is_pending) {
                   const text = interaction.payment_is_stuck;
 
                   reply(text);
@@ -282,7 +279,7 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
           }]
       },
       (err, res) => {
-        if (!!isArray(err)) {
+        if (isArray(err)) {
           const [code, message, context] = err;
 
           // Setting text means that the payment definitively failed

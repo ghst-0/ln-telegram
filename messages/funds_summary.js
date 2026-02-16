@@ -3,7 +3,7 @@ import { table as renderTable, getBorderCharacters } from 'table';
 import { formatTokens, icons } from './../interface/index.js';
 
 const border = getBorderCharacters('void');
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatCoins = tokens => formatTokens({tokens, none: ''}).display;
 const formatReport = (from, n) => `${from}\`\`\`\n${n}\`\`\``;
 const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
@@ -51,7 +51,7 @@ function fundsSummary({ balances, nodes }) {
       ]);
 
       const displayTotal = escape(formatCoins(total));
-      const icon = !!otherNode ? `${ icons.funds } ` : '';
+      const icon = otherNode ? `${ icons.funds } ` : '';
 
       const from = `_${ icon }${ escape(node.from) }_: ${ displayTotal }\n`;
 
@@ -92,7 +92,7 @@ function fundsSummary({ balances, nodes }) {
     });
 
   const header = `*Funds:* ${ overallTotal }\n\n`;
-  const icon = !otherNode ? `${ icons.funds } ` : '';
+  const icon = otherNode ? '' : `${ icons.funds } `;
 
   return { message: `${ icon }${ header }${ table.join('') }` };
 }

@@ -4,7 +4,7 @@ import { parsePaymentRequest } from 'ln-service';
 import { callbackCommands, formatTokens, labels, titles } from './../interface/index.js';
 
 const {cancelInvoice} = callbackCommands;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {invoiceMessageCancelButtonLabel} = labels;
 const {invoiceMessageDescriptionButtonLabel} = labels;
 const {invoiceMessageNodeButtonLabel} = labels;
@@ -33,13 +33,13 @@ function createInvoiceMessage({ from, request }) {
   markup.text(invoiceMessageDescriptionButtonLabel, setInvoiceDescription);
   markup.text(invoiceMessageSetTokensButtonLabel, setInvoiceTokens);
 
-  if (!!from) {
+  if (from) {
     markup.text(invoiceMessageNodeButtonLabel, setInvoiceNode);
   }
 
   markup.text(invoiceMessageCancelButtonLabel, cancelInvoice);
 
-  const memo = !description ? '' : `“${ description }”`;
+  const memo = description ? `“${ description }”` : '';
 
   const title = escape(titles.createdInvoicePrefix);
   const amount = escape(formatTokens({ tokens }).display);

@@ -79,9 +79,8 @@ function postCreatedInvoice({ ctx, description, destination, nodes, tokens }, cb
               parse_mode: parseMode,
               reply_markup: removeMessageKeyboard(makeKeyboard())
             });
-          } catch (err) {
+          } catch {
             // Ignore errors
-            return;
           }
         }],
 
@@ -96,7 +95,7 @@ function postCreatedInvoice({ ctx, description, destination, nodes, tokens }, cb
 
           // Make the invoice message text
           const message = createInvoiceMessage({
-            from: !!other ? node.from : undefined,
+            from: other ? node.from : undefined,
             request: create.value.request
           });
 

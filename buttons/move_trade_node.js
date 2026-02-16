@@ -56,7 +56,7 @@ function moveTradeNode({ ctx, nodes }, cbk) {
           // Make sure the trade is a regular trade-secret
           try {
             decodeTrade({ trade });
-          } catch (err) {
+          } catch {
             return cbk([400, 'ExpectedValidTradeToMoveTradeNode']);
           }
 
@@ -86,7 +86,7 @@ function moveTradeNode({ ctx, nodes }, cbk) {
           // Fetch the full details of the trade
           return asyncMap(nodes, (node, cbk) => {
               return getAnchoredTrade({ id, lnd: node.lnd }, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(err);
                 }
 
@@ -103,7 +103,7 @@ function moveTradeNode({ ctx, nodes }, cbk) {
               });
             },
             (err, res) => {
-              if (!!err) {
+              if (err) {
                 return cbk(err);
               }
 
@@ -128,7 +128,7 @@ function moveTradeNode({ ctx, nodes }, cbk) {
 
         // Cancel the anchored invoice
         cancel: ['trade', asyncReflect(({ trade }, cbk) => {
-          if (!!trade.error) {
+          if (trade.error) {
             return cbk();
           }
 

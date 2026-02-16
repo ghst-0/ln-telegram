@@ -34,20 +34,22 @@ function tradeEditButtons(args) {
   ];
 
   // Add the edit buttons
-  buttons.forEach(([label, command]) => markup.text(label, command));
+  for (const [label, command] of buttons) {
+    markup.text(label, command)
+  }
 
-  if (!!args.is_selecting) {
+  if (args.is_selecting) {
     markup.text(
       labels.tradeMessageCancelButtonLabel,
       callbackCommands.cancelTrade
     );
 
-    args.nodes.forEach(node => {
-      return markup.row().text(
+    for (const node of args.nodes) {
+      markup.row().text(
         nodeLabel(node.from),
         switchNode(shortId(node.public_key))
-      );
-    });
+      )
+    }
   }
 
   if (!args.is_selecting && !!otherNode) {

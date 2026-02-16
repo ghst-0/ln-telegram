@@ -8,7 +8,7 @@ const defaultFiatRateProvider = 'coingecko';
 const defaultTokens = 0;
 const hasFiat = n => !!n && /(eur|usd)/gim.test(n);
 const {isInteger} = Number;
-const isNumber = n => !isNaN(n);
+const isNumber = n => !Number.isNaN(n);
 const networks = {btc: 'BTC', btcregtest: 'BTC', btctestnet: 'BTC'};
 const rateAsTokens = rate => 1e10 / rate;
 const symbols = ['EUR', 'USD'];

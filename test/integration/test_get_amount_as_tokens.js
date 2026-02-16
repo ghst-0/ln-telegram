@@ -64,6 +64,4 @@ test(`Get an amount as tokens`, async () => {
   }
 
   await kill({});
-
-  return;
 });

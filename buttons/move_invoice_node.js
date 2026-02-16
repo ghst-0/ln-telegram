@@ -69,7 +69,7 @@ function moveInvoiceNode({ ctx, nodes }, cbk) {
               destination: node.public_key,
               tokens: details.tokens
             });
-          } catch (err) {
+          } catch {
             return cbk([400, 'ExpectedValidPaymentRequestToMoveInvoiceNode']);
           }
         })],

@@ -1,7 +1,7 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
-const date = () => new Date().toISOString().substring(0, 10);
+const date = () => new Date().toISOString().slice(0, 10);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 
 /**

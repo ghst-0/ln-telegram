@@ -8,7 +8,7 @@ import interaction from './../interaction.json' with { type: 'json' };
  * @returns {*}
  */
 function handleConnectCommand({ from, id, reply }) {
-  if (!!id) {
+  if (id) {
     return reply(interaction.bot_is_connected);
   }
 

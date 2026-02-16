@@ -4,10 +4,10 @@ import { formatTokens, icons } from './../interface/index.js';
 
 const asRelative = n => n.toRelative({locale: 'en'});
 const blocksAsEpoch = blocks => Date.now() + blocks * 1000 * 60 * 10;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const flatten = arr => [].concat(...arr);
-const fromNow = ms => !ms ? undefined : DateTime.fromMillis(ms);
-const nodeAlias = (alias, id) => `${alias} ${id.substring(0, 8)}`.trim();
+const fromNow = ms => ms ? DateTime.fromMillis(ms) : undefined;
+const nodeAlias = (alias, id) => `${alias} ${id.slice(0, 8)}`.trim();
 const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
 const uniq = arr => Array.from(new Set(arr));
 
@@ -79,7 +79,7 @@ function pendingSummary({ count, htlcs, pending }) {
     // Opening channels, waiting for confirmation
     const openingChannels = node.opening
       .map(opening => {
-        const direction = !!opening.is_partner_initiated ? 'in' : 'out';
+        const direction = opening.is_partner_initiated ? 'in' : 'out';
         const funds = [opening.local_balance, opening.remote_balance];
         const peerId = opening.partner_public_key;
         const tx = opening.transaction_id;
@@ -145,7 +145,7 @@ function pendingSummary({ count, htlcs, pending }) {
       return escape(nodeAlias(out.alias, out.id));
     });
 
-    const probing = !probes.length ?
+    const probing = probes.length === 0 ?
       [] : [`${ icons.probe } Probing out ${ probes.join(', ') }`];
 
     return { from: node.from, payments: [].concat(forwarding).concat(probing) };
@@ -154,17 +154,21 @@ function pendingSummary({ count, htlcs, pending }) {
   const nodes = [];
 
   // Pending channels for a node
-  channels.filter(node => !!node.channels.length).forEach(node => {
-    return node.channels.forEach(item => nodes.push({ item, from: node.from }));
-  });
+  for (const node1 of channels.filter(node => node.channels.length > 0)) {
+    for (const item of node1.channels) {
+      nodes.push({ item, from: node1.from })
+    }
+  }
 
   // Pending payments for a node
-  payments.filter(n => !!n.payments.length).forEach(node => {
-    return node.payments.forEach(item => nodes.push({ item, from: node.from }));
-  });
+  for (const node of payments.filter(n => n.payments.length > 0)) {
+    for (const item of node.payments) {
+      nodes.push({ item, from: node.from })
+    }
+  }
 
   // Exit early when there is nothing pending for any nodes
-  if (!nodes.length) {
+  if (nodes.length === 0) {
     return [`${ icons.bot } No pending payments or channels`];
   }
 

@@ -4,7 +4,7 @@ import { returnResult } from 'asyncjs-util';
 import { icons } from './../interface/index.js';
 
 const commaJoin = arr => arr.join(', ');
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};
 

@@ -80,18 +80,18 @@ function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
                 cbk => {
                   return getInvoices({
                       token,
-                      limit: !token ? defaultInvoicesLimit : undefined,
+                      limit: token ? undefined : defaultInvoicesLimit,
                       lnd: node.lnd
                     },
                     (err, res) => {
-                      if (!!err) {
+                      if (err) {
                         return cbk(err);
                       }
 
                       token = res.next || false;
 
                       // Stop paging when there is an invoice older than the start
-                      if (!!res.invoices.find(n => n.created_at < after)) {
+                      if (res.invoices.find(n => n.created_at < after)) {
                         token = false;
                       }
 
@@ -105,7 +105,7 @@ function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
                     });
                 },
                 err => {
-                  if (!!err) {
+                  if (err) {
                     return cbk(err);
                   }
 
@@ -121,7 +121,7 @@ function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
                                 return cbk(null, false);
                               }
 
-                              if (!!err) {
+                              if (err) {
                                 return cbk(err);
                               }
 
@@ -129,7 +129,7 @@ function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
                             });
                         },
                         (err, payment) => {
-                          if (!!err) {
+                          if (err) {
                             return cbk(err);
                           }
 
@@ -138,7 +138,7 @@ function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
                         });
                     },
                     (err, received) => {
-                      if (!!err) {
+                      if (err) {
                         return cbk(err);
                       }
 
@@ -166,7 +166,7 @@ function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
               const { lnd } = node;
 
               return getForwards({ after, before, limit, lnd }, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(err);
                 }
 

@@ -80,7 +80,7 @@ function postCreatedTrade(args, cbk) {
           const message = createTradeMessage({
             description: args.description,
             expires_at: args.expires_at,
-            from: !!other ? node.from : undefined,
+            from: other ? node.from : undefined,
             id: args.id,
             destination: args.destination,
             network: getNetwork.network,

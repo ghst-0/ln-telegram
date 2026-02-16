@@ -4,7 +4,7 @@ import { returnResult } from 'asyncjs-util';
 
 import { icons } from './../interface/index.js';
 
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const makeKeyboard = () => new InlineKeyboard();
 const maxCommandDelayMs = 1000 * 10;
 const msSince = epoch => Date.now() - (epoch * 1e3);
@@ -36,8 +36,6 @@ function handleEditedMessage({ ctx }, cbk) {
           if (!ctx.update || !ctx.update.edited_message) {
             return;
           }
-
-          const message = ctx.update.edited_message;
 
           // Ignore messages that are old
           if (msSince(ctx.update.edited_message.date) > maxCommandDelayMs) {

@@ -37,7 +37,7 @@ test(`Handle liquidity command`, async () => {
     });
 
     deepEqual(replies, [[
-      `🌊 *Liquidity with ${target.id.substring(0, 20)} ${target.id.substring(0, 8)}:*`,
+      `🌊 *Liquidity with ${target.id.slice(0, 20)} ${target.id.slice(0, 8)}:*`,
       '',
       '```',
       ' Inbound   -           0.00% (1) ',
@@ -51,6 +51,4 @@ test(`Handle liquidity command`, async () => {
   }
 
   await kill({});
-
-  return;
 });

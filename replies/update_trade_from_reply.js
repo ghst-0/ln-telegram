@@ -88,7 +88,7 @@ function updateTradeFromReply({ api, ctx, id, nodes }, cbk) {
                   lnd: node.lnd
                 },
                 (err, res) => {
-                  if (!!err) {
+                  if (err) {
                     return cbk(err);
                   }
 
@@ -105,7 +105,7 @@ function updateTradeFromReply({ api, ctx, id, nodes }, cbk) {
                 });
             },
             (err, res) => {
-              if (!!err) {
+              if (err) {
                 return cbk(err);
               }
 
@@ -138,7 +138,7 @@ function updateTradeFromReply({ api, ctx, id, nodes }, cbk) {
 
         // Delete the answer message
         deleteAnswer: ['type', async ({ type }) => {
-          return !!type ? await ctx.deleteMessage() : null;
+          return type ? await ctx.deleteMessage() : null;
         }],
 
         // Delete the edit message
@@ -161,7 +161,7 @@ function updateTradeFromReply({ api, ctx, id, nodes }, cbk) {
           }
 
           // Exit early when there was an error getting the trade
-          if (!!getTrade.error) {
+          if (getTrade.error) {
             return cbk(getTrade.error);
           }
 
@@ -212,7 +212,7 @@ function updateTradeFromReply({ api, ctx, id, nodes }, cbk) {
         // Remove the existing open trade
         removeTrade: ['update', asyncReflect(({ update }, cbk) => {
           // Exit early when there was an issue with the update
-          if (!!update.error) {
+          if (update.error) {
             return cbk();
           }
 

@@ -6,7 +6,7 @@ import { formatTokens } from './../interface/index.js';
 
 const detailsJoiner = ' ';
 const displayTokens = tokens => formatTokens({tokens}).display;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const markup = {parse_mode: 'MarkdownV2'};
 const textJoiner = '\n';
 
@@ -86,9 +86,8 @@ function postClosedMessage(args, cbk) {
             return `Force-closed ${ capacity } channel with`;
           } else if (args.is_remote_force_close) {
             return `${ capacity } channel was force closed by`;
-          } else {
-            return `${ capacity } channel closed with`;
           }
+          return `${ capacity } channel closed with`;
         }],
 
         // Get peer liquidity rundown

@@ -3,7 +3,7 @@ import { formatTokens } from './../interface/index.js';
 const join = arr => arr.filter(n => !!n).join('\n');
 const markup = undefined;
 const mode = 'MarkdownV2';
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 
 /**
  * Settle trade message
@@ -19,7 +19,7 @@ const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
  *   text: Message Text
  */
 function settleTradeMessage(args) {
-  const memo = !args.description ? '' : `“${ escape(args.description) }”`;
+  const memo = args.description ? `“${ escape(args.description) }”` : '';
   const to = `${ escape(args.alias) } \`${ args.to }\``.trim();
 
   const text = join([

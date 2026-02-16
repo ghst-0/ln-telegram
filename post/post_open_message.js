@@ -6,7 +6,7 @@ import { formatTokens } from './../interface/index.js';
 
 const detailsJoiner = ' ';
 const displayAmount = tokens => formatTokens({tokens}).display;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const markup = {parse_mode: 'MarkdownV2'};
 const textJoiner = '\n';
 
@@ -74,7 +74,7 @@ function postOpenMessage(args, cbk) {
           const action = args.is_partner_initiated ? 'Accepted' : 'Opened';
           const capacity = displayAmount(args.capacity);
           const channel = args.is_private ? 'private channel' : 'channel';
-          const direction = !!args.is_partner_initiated ? 'from' : 'to';
+          const direction = args.is_partner_initiated ? 'from' : 'to';
           const moniker = `${ getLiquidity.alias } ${ args.partner_public_key }`;
 
           const event = `${ action } new ${ capacity } ${ channel }`;

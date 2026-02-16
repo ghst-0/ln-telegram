@@ -10,11 +10,11 @@ import tradeActionType from './trade_action_type.js';
  * @returns {{type?: string}}
  */
 function replyActionType({ nodes, text }) {
-  if (!!invoiceActionType({ nodes, text }).type) {
+  if (invoiceActionType({ nodes, text }).type) {
     return { type: invoiceActionType({ nodes, text }).type };
   }
 
-  if (!!tradeActionType({ nodes, text }).type) {
+  if (tradeActionType({ nodes, text }).type) {
     return { type: tradeActionType({ nodes, text }).type };
   }
 

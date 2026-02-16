@@ -53,7 +53,7 @@ function decodeCommand({ help, nodes, reply, text }, cbk) {
 
           const selectedNode = nodes[Number(nodeIndex || 1) - 1];
 
-          const node = !isMulti ? defaultNode : selectedNode;
+          const node = isMulti ? selectedNode : defaultNode;
 
           // Exit early when the node to use is unknown
           if (!node || (nodes.length > [node].length && !nodeIndex)) {

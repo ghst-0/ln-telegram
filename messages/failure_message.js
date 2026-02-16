@@ -31,11 +31,11 @@ function failureMessage(args) {
     reply_markup: removeMessageKeyboard(makeKeyboard())
   };
 
-  if (!!args.is_fractional_amount) {
+  if (args.is_fractional_amount) {
     return { actions, message: invalidInt };
   }
 
-  if (!!args.is_invalid_amount) {
+  if (args.is_invalid_amount) {
     return { actions, message: invalidNumber };
   }
 

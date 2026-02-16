@@ -8,9 +8,9 @@ import consolidateForwards from './consolidate_forwards.js';
 import { formatTokens, icons } from './../interface/index.js';
 
 const asPercent = (fee, tokens) => (fee / tokens * 100).toFixed(2);
-const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed();
+const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed(0);
 const consolidate = forwards => consolidateForwards({forwards}).forwards;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatValue = tokens => formatTokens({tokens}).display;
 const {isArray} = Array;
 const join = n => n.filter(n => !!n).join(' ');
@@ -88,7 +88,7 @@ function notifyOfForwards({ forwards, from, id, lnd, node, nodes, send }, cbk) {
           return asyncMap(uniq(channels), (id, cbk) => {
               return getChannel({ id, lnd }, (err, res) => {
                 // Ignore errors
-                if (!!err) {
+                if (err) {
                   return cbk();
                 }
 
@@ -111,7 +111,7 @@ function notifyOfForwards({ forwards, from, id, lnd, node, nodes, send }, cbk) {
         // Construct message to send to telegram
         message: ['getChannels', 'getNodes', ({ getChannels, getNodes }, cbk) => {
           // Exit early when there are no forwards
-          if (!forwards.length) {
+          if (forwards.length === 0) {
             return cbk();
           }
 

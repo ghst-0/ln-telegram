@@ -68,7 +68,7 @@ function handleCostsCommand({ from, id, nodes, reply, request, working }, cbk) {
           const lnds = nodes.map(n => n.lnd);
 
           return getRebalancePayments({ after, lnds }, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -100,7 +100,7 @@ function handleCostsCommand({ from, id, nodes, reply, request, working }, cbk) {
               const { lnd } = node;
 
               return getChainTransactions({ after, lnd, request }, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(err);
                 }
 

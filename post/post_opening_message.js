@@ -6,7 +6,7 @@ import { returnResult } from 'asyncjs-util';
 import { icons, formatTokens } from './../interface/index.js';
 
 const elementJoiner = ' ';
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};
 const textJoiner = '\n';
@@ -65,7 +65,7 @@ function postOpeningMessage({ from, id, lnd, opening, send }, cbk) {
 
             const action = chan.is_partner_initiated ? 'Accepting' : 'Opening';
             const announce = chan.is_private ? `${ unannounced } private` : '';
-            const direction = !!chan.is_partner_initiated ? 'from' : 'to';
+            const direction = chan.is_partner_initiated ? 'from' : 'to';
             const moniker = `${ escape(node.alias) } \`${ node.id }\``.trim();
 
             const elements = [

@@ -6,11 +6,11 @@ import { returnResult } from 'asyncjs-util';
 import { icons, formatTokens } from './../interface/index.js';
 
 const display = tokens => formatTokens({tokens}).display;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const join = arr => arr.join(', ');
 const markup = {parse_mode: 'MarkdownV2'};
-const niceName = node => node.alias || node.id.substring(0, 8);
+const niceName = node => node.alias || node.id.slice(0, 8);
 
 /**
  * Post settled payment
@@ -89,7 +89,7 @@ function postSettledPayment({ from, id, lnd, nodes, payment, send }, cbk) {
           const via = ` out ${ join(getRelays.filter(n => !!n).map(niceName)) }`;
 
           const action = isTransfer ? 'Transferred' : 'Sent';
-          const fee = !payment.safe_fee ? '' : routingFee;
+          const fee = payment.safe_fee ? routingFee : '';
 
           const details = escape(`${ action } ${ sent } to ${ toNode }${ via }${ fee } -`);
 

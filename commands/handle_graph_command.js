@@ -18,25 +18,25 @@ const argsFromText = text => text.split(' ');
 const bigType = 'large_channels';
 const blockTime = (now, start) => Date.now() - 1000 * 60 * 10 * (now - start);
 const border = getBorderCharacters('void');
-const displayFee = (n, rate) => !n.length ? '' : `${(rate / 1e4).toFixed(2)}%`;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const displayFee = (n, rate) => n.length > 0 ? `${ (rate / 1e4).toFixed(2) }%` : '';
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const expectedQueryErrorMessage = 'ExpectedQueryForGraphCommand';
 const formatAmount = tokens => formatTokens({tokens}).display;
-const fromNow = ms => !ms ? undefined : DateTime.fromMillis(ms).toRelative();
+const fromNow = ms => ms ? DateTime.fromMillis(ms).toRelative() : undefined;
 const header = [' ', ' ', 'In %', 'Capacity', 'Out %'];
 const ipv4Match = /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$/;
 const ipv6Match = /^[a-fA-F0-9:]+$/;
-const isEmoji = /[^\p{L}\p{N}\p{P}\p{Z}{\^\$}]/gu;
+const isEmoji = /[^\p{L}\p{N}\p{P}\p{Z}{^$}]/gu;
 const limitPeers = peers => peers.slice(0, 6);
 const markup = {parse_mode: 'MarkdownV2'};
 const {max} = Math;
-const niceAlias = (alias, id) => (alias.trim() || id).substring(0, 16);
+const niceAlias = (alias, id) => (alias.trim() || id).slice(0, 16);
 const noEmoji = str => str.replace(isEmoji, String()).trim();
 const noQueryMsg = 'Missing graph query, try `/graph (public key/peer alias)`';
 const none = ' ';
 const notFoundCode = 404;
-const notFoundMsg = query => `\`${query}\` not found\\\. Wrong public key?`;
-const shortKey = key => key.substring(0, 16);
+const notFoundMsg = query => `\`${query}\` not found\\. Wrong public key?`;
+const shortKey = key => key.slice(0, 16);
 const socketHost = n => n.split(':').slice(0, -1).join(':');
 const torV3Match = /[a-z2-7]{56}.onion/i;
 const uniq = arr => Array.from(new Set(arr));
@@ -109,9 +109,8 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
         remove: ['checkAccess', async ({}) => {
           try {
             return await remove();
-          } catch (err) {
+          } catch {
             // Ignore errors
-            return;
           }
         }],
 
@@ -126,7 +125,7 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
             const { destination } = parsePaymentRequest({ request });
 
             return cbk(null, destination);
-          } catch (err) {
+          } catch {
             // Ignore errors
           }
 
@@ -145,7 +144,7 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
           // Look for a match
           return asyncMap(nodes, ({ lnd }, cbk) => {
               return findKey({ lnd, query }, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(null, {});
                 }
 
@@ -170,7 +169,7 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
         // Get node info, exit early if one saved node returns data
         getNodeInfo: ['query', 'getKey', asyncReflect(({ query, getKey }, cbk) => {
           // Exit early when there is no get key result
-          if (!!getKey.error) {
+          if (getKey.error) {
             return cbk();
           }
 
@@ -181,7 +180,7 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
           }
 
           return getNode({ lnd: node.lnd, public_key: node.id }, (err, res) => {
-            if (!!err) {
+            if (err) {
               return cbk(err);
             }
 
@@ -189,11 +188,11 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
               return policies.find(n => n.public_key !== node.id).public_key;
             });
 
-            const isMissingCapacity = !!res.channels.find(n => !n.capacity);
+            const isMissingCapacity = !!res.channels.some(n => !n.capacity);
 
             return cbk(null, {
               alias: res.alias,
-              capacity: !isMissingCapacity ? res.capacity : undefined,
+              capacity: isMissingCapacity ? undefined : res.capacity,
               channels: res.channels,
               features: res.features,
               id: node.id,
@@ -216,11 +215,11 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
 
             const peers = nodeInfo.peers.map(peerKey => {
               const capacity = nodeInfo.channels
-                .filter(n => !!n.policies.find(n => n.public_key === peerKey))
+                .filter(n => !!n.policies.some(n => n.public_key === peerKey))
                 .reduce((sum, { capacity }) => sum + capacity, Number());
 
               const height = max(...nodeInfo.channels
-                .filter(n => !!n.policies.find(n => n.public_key === peerKey))
+                .filter(n => !!n.policies.some(n => n.public_key === peerKey))
                 .map(({ id }) => decodeChanId({ channel: id }).block_height));
 
               const inPolicies = nodeInfo.channels
@@ -228,7 +227,7 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
                 .filter(n => !!n && n.fee_rate !== undefined);
 
               const outPolicies = nodeInfo.channels
-                .filter(n => !!n.policies.find(n => n.public_key === peerKey))
+                .filter(n => !!n.policies.some(n => n.public_key === peerKey))
                 .map(n => n.policies.find(n => n.public_key !== peerKey))
                 .filter(n => n.fee_rate !== undefined);
 
@@ -267,7 +266,7 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
               return getNodeAlias({ id, lnd: latest.lnd }, cbk);
             },
             (err, nodes) => {
-              if (!!err) {
+              if (err) {
                 return cbk(err);
               }
 
@@ -286,7 +285,7 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
                 });
 
                 return cbk(null, `\`${ escape(chart) }\``);
-              } catch (err) {
+              } catch {
                 return cbk(null, '');
               }
             });
@@ -302,10 +301,10 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
           const node = getNodeInfo.value;
 
           const capacity = `${ formatAmount(node.capacity) } capacity `;
-          const isBig = !!node.features.find(n => n.type === bigType);
-          const isIpV4 = !!node.sockets.find(n => ipv4Match.test(socketHost(n)));
-          const isIpV6 = !!node.sockets.find(n => ipv6Match.test(socketHost(n)));
-          const isTor = !!node.sockets.find(n => torV3Match.test(socketHost(n)));
+          const isBig = !!node.features.some(n => n.type === bigType);
+          const isIpV4 = !!node.sockets.some(n => ipv4Match.test(socketHost(n)));
+          const isIpV6 = !!node.sockets.some(n => ipv6Match.test(socketHost(n)));
+          const isTor = !!node.sockets.some(n => torV3Match.test(socketHost(n)));
 
           const isClearnet = isIpV4 || isIpV6;
 
@@ -319,11 +318,11 @@ function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, c
 
 
           const summary = [
-            `A ${ !!node.capacity ? escape(capacity) : '' }node`,
+            `A ${ node.capacity ? escape(capacity) : '' }node`,
             ` with ${ node.peers.length } peer${ node.peers.length > 1 ? 's' : '' }`,
             isBig ? ' that accepts large channels' : '',
             escape('.'),
-            !!connection ? ` ${ escape(connection) }` : ''
+            connection ? ` ${ escape(connection) }` : ''
           ];
 
           const report = [

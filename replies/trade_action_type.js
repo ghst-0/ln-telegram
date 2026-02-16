@@ -5,12 +5,12 @@ import { callbackCommands, editQuestions, titles } from './../interface/index.js
 const expectedSpacer = '';
 const hasTradePrefix = n => n.startsWith(titles.createdTradePrefix);
 const split = n => n.split('\n');
-const tradeQuestions = editQuestions.trade.map(n => editQuestions[n]);
+const tradeQuestions = new Set(editQuestions.trade.map(n => editQuestions[n]));
 
 /**
  * Is the message a reply to a created invoice
  * @param {string} text Message Text
- * @returns {{type: string}} type: Trade Secret Action Type
+ * @returns {{type: string}|{}} type: Trade Secret Action Type
  */
 function tradeActionType({ text }) {
   // Trade messages have a specific structure
@@ -24,7 +24,7 @@ function tradeActionType({ text }) {
     return {};
   }
 
-  if (!tradeQuestions.includes(question)) {
+  if (!tradeQuestions.has(question)) {
     return {};
   }
 

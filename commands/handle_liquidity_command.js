@@ -87,7 +87,7 @@ function handleLiquidityCommand(args, cbk) {
 
           return asyncMap(args.nodes, (node, cbk) => {
               return getChannels({ lnd: node.lnd }, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(err);
                 }
 
@@ -97,7 +97,7 @@ function handleLiquidityCommand(args, cbk) {
                     lnd: node.lnd
                   },
                   (err, found) => {
-                    if (!!err) {
+                    if (err) {
                       return cbk();
                     }
 
@@ -109,7 +109,7 @@ function handleLiquidityCommand(args, cbk) {
                         return getChannel({ id, lnd: node.lnd }, cbk);
                       },
                       (err, res) => {
-                        if (!!err) {
+                        if (err) {
                           return cbk(err);
                         }
 
@@ -166,10 +166,10 @@ function handleLiquidityCommand(args, cbk) {
             return asyncMap(args.nodes, (node, cbk) => {
                 return getLiquidity({
                     lnd: node.lnd,
-                    with: !!withPeer ? [withPeer] : undefined
+                    with: withPeer ? [withPeer] : undefined
                   },
                   (err, res) => {
-                    if (!!err) {
+                    if (err) {
                       return cbk(err);
                     }
 
@@ -178,7 +178,7 @@ function handleLiquidityCommand(args, cbk) {
                       .filter(n => n.node === node.public_key)
                       .filter(n => n.id === withPeer);
 
-                    const channels = !!fees ? fees.channels : [];
+                    const channels = fees ? fees.channels : [];
 
                     const feeRate = max(...channels
                       .map(n => n.policies.find(n => n.public_key !== node.public_key))
@@ -187,7 +187,7 @@ function handleLiquidityCommand(args, cbk) {
 
                     return cbk(null, {
                       balance: res.tokens.reduce((sum, n) => sum + n, Number()),
-                      fee_rate: isFinite(feeRate) ? feeRate : undefined,
+                      fee_rate: Number.isFinite(feeRate) ? feeRate : undefined,
                       public_key: node.public_key
                     });
                   });
@@ -206,10 +206,10 @@ function handleLiquidityCommand(args, cbk) {
                 return getLiquidity({
                     lnd: node.lnd,
                     is_outbound: true,
-                    with: !!withPeer ? [withPeer] : undefined
+                    with: withPeer ? [withPeer] : undefined
                   },
                   (err, res) => {
-                    if (!!err) {
+                    if (err) {
                       return cbk(err);
                     }
 
@@ -218,7 +218,7 @@ function handleLiquidityCommand(args, cbk) {
                       .filter(n => n.node === node.public_key)
                       .filter(n => n.id === withPeer);
 
-                    const channels = !!fees ? fees.channels : [];
+                    const channels = fees ? fees.channels : [];
 
                     const feeRate = max(...channels
                       .map(n => n.policies.find(n => n.public_key === node.public_key))
@@ -227,7 +227,7 @@ function handleLiquidityCommand(args, cbk) {
 
                     return cbk(null, {
                       balance: res.tokens.reduce((sum, n) => sum + n, Number()),
-                      fee_rate: isFinite(feeRate) ? feeRate : undefined,
+                      fee_rate: Number.isFinite(feeRate) ? feeRate : undefined,
                       public_key: node.public_key
                     });
                   });

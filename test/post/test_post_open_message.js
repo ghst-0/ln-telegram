@@ -25,7 +25,9 @@ const makeArgs = (overrides => {
     send: ({}) => new Promise(resolve => resolve()),
   };
 
-  Object.keys(overrides).forEach(key => args[key] = overrides[key]);
+  for (const key of Object.keys(overrides)) {
+    args[key] = overrides[key]
+  }
 
   return args;
 });
@@ -88,16 +90,14 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
-    if (!!error) {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
+    if (error) {
       await rejects(postOpenMessage(args), error, 'Got expected error');
     } else {
-      const {text} = await postOpenMessage(args);
+      const { text } = await postOpenMessage(args);
 
       deepEqual(text.split('\n'), expected.text, 'Got expected open message');
     }
-
-    return;
-  });
-});
+  })
+}

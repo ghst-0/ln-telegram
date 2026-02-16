@@ -3,7 +3,7 @@ import { returnResult } from 'asyncjs-util';
 
 import { formatTokens, icons } from './../interface/index.js';
 
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatAmount = tokens => formatTokens({tokens}).display;
 const {isArray} = Array;
 const joinElements = arr => arr.join(' ');
@@ -80,7 +80,7 @@ function postChainTransaction({ confirmed, from, id, nodes, send, transaction },
         details: ['validate', ({}, cbk) => {
           const chainFee = transaction.chain_fee;
 
-          const fee = !!chainFee ? `Paid ${ formatAmount(chainFee) } fee` : '';
+          const fee = chainFee ? `Paid ${ formatAmount(chainFee) } fee` : '';
 
           const related = transaction.related_channels.map(related => {
             const alias = related.node || related.with || String();
@@ -115,25 +115,25 @@ function postChainTransaction({ confirmed, from, id, nodes, send, transaction },
           const relatedChannels = related.filter(n => !!n).join('. ');
 
           // Exit early when the transaction is receiving
-          if (!!transaction.received) {
+          if (transaction.received) {
             const elements = [
               `Received ${ formatAmount(transaction.received) }`,
               fee,
-              !!relatedChannels.length ? `Related: ${ relatedChannels }` : ''
+              relatedChannels.length > 0 ? `Related: ${ relatedChannels }` : ''
             ];
 
             return cbk(null, elements.filter(n => !!n).join('. '));
           }
 
           // Exit early when the the transaction is sending
-          if (!!transaction.sent) {
+          if (transaction.sent) {
             const sentTo = transaction.sent_to;
 
             const elements = [
               `Sent ${ formatAmount(transaction.sent) }`,
               fee,
-              !!sentTo ? `Sent to ${ sentTo.join(', ') }` : '',
-              !!relatedChannels.length ? `Related: ${ relatedChannels }` : ''
+              sentTo ? `Sent to ${ sentTo.join(', ') }` : '',
+              relatedChannels.length > 0 ? `Related: ${ relatedChannels }` : ''
             ];
 
             return cbk(null, elements.filter(n => !!n).join('. '));
@@ -150,7 +150,7 @@ function postChainTransaction({ confirmed, from, id, nodes, send, transaction },
           }
 
           const [, otherNode] = nodes;
-          const pending = !confirmed ? `(pending) ${ details }` : details;
+          const pending = confirmed ? details : `(pending) ${ details }`;
 
           const action = escape(`${ icons.chain } ${ pending.trim() }`);
 

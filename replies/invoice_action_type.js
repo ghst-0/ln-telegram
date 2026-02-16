@@ -33,14 +33,14 @@ function invoiceActionType({ nodes, text }) {
   // The second line of an invoice should be a payment request
   try {
     parsePaymentRequest({ request });
-  } catch (err) {
+  } catch {
     return {};
   }
 
   const { destination } = parsePaymentRequest({ request });
 
   // The invoice destination must match a node
-  if (!nodes.find(n => n.public_key === destination)) {
+  if (!nodes.some(n => n.public_key === destination)) {
     return {};
   }
 

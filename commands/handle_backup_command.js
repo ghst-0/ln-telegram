@@ -6,7 +6,7 @@ import { returnResult } from 'asyncjs-util';
 
 import { checkAccess } from './../authentication/index.js';
 
-const date = () => new Date().toISOString().substring(0, 10);
+const date = () => new Date().toISOString().slice(0, 10);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
 
@@ -55,7 +55,7 @@ function handleBackupCommand({ from, id, nodes, reply, send }, cbk) {
         getBackups: ['checkAccess', ({}, cbk) => {
           return asyncMap(nodes, (node, cbk) => {
               return getBackups({ lnd: node.lnd }, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(err);
                 }
 

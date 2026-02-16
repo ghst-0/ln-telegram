@@ -10,7 +10,7 @@ import getBalancedOpenMessage from './get_balanced_open_message.js';
 import getRebalanceMessage from './get_rebalance_message.js';
 import getReceivedMessage from './get_received_message.js';
 
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const minQuizLength = 2;
 const maxQuizLength = 10;
@@ -122,7 +122,7 @@ function postSettledInvoice(args, cbk) {
 
           return asyncMap(inChannels, (id, cbk) => {
               return getChannel({ id, lnd: args.lnd }, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(null, { id, alias: id });
                 }
 
@@ -149,8 +149,6 @@ function postSettledInvoice(args, cbk) {
           sub.once('confirmed', payment => cbk(null, { payment }));
           sub.once('error', () => cbk());
           sub.once('failed', () => cbk());
-
-          return;
         }],
 
         // Find associated transfer
@@ -185,12 +183,12 @@ function postSettledInvoice(args, cbk) {
             }
 
             // Exit early when this is a node to node transfer
-            if (!!getTransfer) {
+            if (getTransfer) {
               return cbk();
             }
 
             // Exit early when this is a balanced open
-            if (!!balancedOpen) {
+            if (balancedOpen) {
               return getBalancedOpenMessage({
                   capacity: balancedOpen.capacity,
                   from: balancedOpen.partner_public_key,
@@ -208,7 +206,7 @@ function postSettledInvoice(args, cbk) {
             }
 
             // Exit early when the received invoice is for a rebalance (self-pay)
-            if (!!isRebalance) {
+            if (isRebalance) {
               return getRebalanceMessage({
                   fee_mtokens: getPayment.payment.fee_mtokens,
                   hops: getPayment.payment.hops,

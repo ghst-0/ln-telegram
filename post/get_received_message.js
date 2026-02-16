@@ -8,7 +8,7 @@ import { formatTokens, icons } from './../interface/index.js';
 const bufFromHex = hex => Buffer.from(hex, 'hex');
 const dash = ' - ';
 const dateType = '34349343';
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatAmt = tokens => formatTokens({tokens}).display;
 const fromKeyType = '34349339';
 const hexAsUtf8 = hex => Buffer.from(hex, 'hex').toString('utf8');
@@ -80,7 +80,7 @@ function getReceivedMessage({ description, lnd, payments, received, via }, cbk) 
         // Derive the message details
         messageDetails: ['validate', ({}, cbk) => {
           // Exit early when there are no TLV records
-          if (!payments.length) {
+          if (payments.length === 0) {
             return cbk();
           }
 
@@ -112,7 +112,7 @@ function getReceivedMessage({ description, lnd, payments, received, via }, cbk) 
         // Description of the received amount
         receiveLine: ['validate', ({}, cbk) => {
           const relays = `${ via.map(n => short(n.alias || n.id)).join(', ') }`;
-          const quoted = !description ? '' : `for “${ description }”`;
+          const quoted = description ? `for “${ description }”` : '';
 
           const got = `Received ${ formatAmt(received) } ${ quoted }`.trim();
 
@@ -158,7 +158,7 @@ function getReceivedMessage({ description, lnd, payments, received, via }, cbk) 
               },
               (err, res) => {
                 // Ignore errors
-                if (!!err) {
+                if (err) {
                   return cbk();
                 }
 

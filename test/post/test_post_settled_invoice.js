@@ -29,7 +29,9 @@ const makeInvoice = overrides => {
     received_mtokens: 1000,
   };
 
-  Object.keys(overrides).forEach(k => invoice[k] = overrides[k]);
+  for (const k of Object.keys(overrides)) {
+    invoice[k] = overrides[k]
+  }
 
   return invoice;
 };
@@ -197,7 +199,9 @@ const makeArgs = (overrides, expected) => {
     }),
   };
 
-  Object.keys(overrides).forEach(k => args[k] = overrides[k]);
+  for (const k of Object.keys(overrides)) {
+    args[k] = overrides[k]
+  }
 
   return args;
 };
@@ -287,16 +291,14 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, async () => {
-    if (!!error) {
+for (const { args, description, error, expected } of tests) {
+  test(description, async () => {
+    if (error) {
       await rejects(postSettledInvoice(args), error, 'Got expected error');
     } else {
       process.nextTick(async () => {
         await postSettledInvoice(args);
       });
     }
-
-    return;
-  });
-});
+  })
+}

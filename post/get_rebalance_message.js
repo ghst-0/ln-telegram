@@ -6,11 +6,11 @@ import { returnResult } from 'asyncjs-util';
 import { formatTokens, icons } from './../interface/index.js';
 
 const asPercent = (fee, tokens) => (fee / tokens * 100).toFixed(2);
-const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed();
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed(0);
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const mtokensAsTokens = n => Number(n) / 1e3;
-const niceName = node => node.alias || (node.id || '').substring(0, 8);
+const niceName = node => node.alias || (node.id || '').slice(0, 8);
 
 /**
  * Get a rebalance message

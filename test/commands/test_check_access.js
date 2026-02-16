@@ -6,7 +6,9 @@ import { checkAccess } from './../../authentication/index.js';
 const makeArgs = overrides => {
   const args = {from: 1, id: 1};
 
-  Object.keys(overrides).forEach(k => args[k] = overrides[k]);
+  for (const k of Object.keys(overrides)) {
+    args[k] = overrides[k]
+  }
 
   return args;
 };

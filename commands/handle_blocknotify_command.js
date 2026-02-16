@@ -82,8 +82,6 @@ function handleBlocknotifyCommand({ from, id, reply, request }, cbk) {
 
             return cbk([503, 'UnexpectedErrorGettingBlock', { err }]);
           });
-
-          return;
         }]
       },
       returnResult({ reject, resolve }, cbk));

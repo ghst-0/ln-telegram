@@ -3,7 +3,7 @@ import { returnResult } from 'asyncjs-util';
 
 import { icons } from './../interface/index.js';
 
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const markup = {parse_mode: 'MarkdownV2'};
 const shutdownMessage = `${icons.bot} Bot shutting down...`
 

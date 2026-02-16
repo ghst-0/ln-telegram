@@ -6,7 +6,7 @@ import { returnResult } from 'asyncjs-util';
 import { formatTokens, icons } from './../interface/index.js';
 
 const channelPoint = n => `${n.transaction_id}:${n.transaction_vout}`;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const joinLines = lines => lines.filter(n => !!n).join('\n');
 const markup = {parse_mode: 'MarkdownV2'};
@@ -89,7 +89,7 @@ function postClosingMessage({ closing, from, id, lnd, nodes, send }, cbk) {
 
           const lines = [
             joinLines(details),
-            !!otherNode ? `_${ escape(from) }_` : ''
+            otherNode ? `_${ escape(from) }_` : ''
           ];
 
           return cbk(null, joinLines(lines));

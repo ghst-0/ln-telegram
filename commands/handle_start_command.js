@@ -8,7 +8,7 @@ import interaction from './../interaction.json' with { type: 'json' };
  */
 function handleStartCommand({ id, reply }) {
   // Exit early when the bot is already connected
-  if (!!id) {
+  if (id) {
     return reply(interaction.bot_is_connected);
   }
 

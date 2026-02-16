@@ -8,6 +8,7 @@ const {isArray} = Array;
 
 /**
  * Post a settled trade message
+ * @param {{}} args
  * @param {{}} args.api Telegram API Object
  * @param {string} args.description Trade Description
  * @param {string} args.destination Trade Invoice Creator Public Key Hex
@@ -19,8 +20,8 @@ const {isArray} = Array;
  *   from: Saved Node Name,
  *   public_key: <Public Key Hex
  * }
- * @param {number} tokens Trade Price Tokens
- * @param {number} user Telegram User Id
+ * @param {number} args.tokens Trade Price Tokens
+ * @param {number} args.user Telegram User Id
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise
  */
@@ -75,7 +76,7 @@ function postSettledTrade(args, cbk) {
           const message = settleTradeMessage({
             alias: getAlias.alias,
             description: args.description,
-            from: !!other ? node.from : undefined,
+            from: other ? node.from : undefined,
             to: args.to,
             tokens: args.tokens
           });

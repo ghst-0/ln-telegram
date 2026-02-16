@@ -116,12 +116,12 @@ const tests = [
   },
 ];
 
-tests.forEach(({args, description, error, expected}) => {
-  return test(description, (t, end) => {
-    const {message} = liquiditySummary(args);
+for (const { args, description, error, expected } of tests) {
+  test(description, (t, end) => {
+    const { message } = liquiditySummary(args);
 
     deepEqual(message.split('\n'), expected, 'Got expected result');
 
     return end();
-  });
-});
+  })
+}

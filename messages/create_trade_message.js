@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { formatTokens, titles } from './../interface/index.js';
 import tradeEditButtons from './trade_edit_buttons.js';
 
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {fromISO} = DateTime;
 const join = arr => arr.filter(n => !!n).join('\n');
 const mode = 'MarkdownV2';
@@ -33,7 +33,7 @@ const titlePrefix = titles.createdTradePrefix;
 function createTradeMessage(args) {
   const expiry = escape(fromISO(args.expires_at).toLocaleString());
   const { markup } = tradeEditButtons({ nodes: args.nodes });
-  const memo = !args.description ? '' : `“${ escape(args.description) }” `;
+  const memo = args.description ? `“${ escape(args.description) }” ` : '';
   const price = escape(formatTokens({ tokens: args.tokens }).display);
 
   const { trade } = encodeTrade({

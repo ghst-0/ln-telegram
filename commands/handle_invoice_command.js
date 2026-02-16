@@ -34,7 +34,7 @@ function handleInvoiceCommand({ ctx, id, nodes, request }, cbk) {
             return cbk([400, 'ExpectedTelegramMessageContextToCreateInvoice']);
           }
 
-          if (!isArray(nodes) || !nodes.length) {
+          if (!isArray(nodes) || nodes.length === 0) {
             return cbk([400, 'ExpectedArrayOfNodesToCreateInvoice']);
           }
 
@@ -80,9 +80,8 @@ function handleInvoiceCommand({ ctx, id, nodes, request }, cbk) {
         removeMessage: ['checkAccess', async ({}) => {
           try {
             return await ctx.deleteMessage();
-          } catch (err) {
+          } catch {
             // Do nothing on delete message errors
-            return;
           }
         }],
 
@@ -102,7 +101,7 @@ function handleInvoiceCommand({ ctx, id, nodes, request }, cbk) {
           'getTokens',
           asyncReflect(({ decodeCommand, getTokens }, cbk) => {
             // Exit early when there was a problem getting the tokens value
-            if (!!getTokens.error) {
+            if (getTokens.error) {
               return cbk(getTokens.error);
             }
 
@@ -129,7 +128,7 @@ function handleInvoiceCommand({ ctx, id, nodes, request }, cbk) {
 
           try {
             await ctx.reply(message, failure.actions);
-          } catch (err) {
+          } catch {
             // Ignore errors
           }
         }]

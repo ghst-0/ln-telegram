@@ -8,7 +8,7 @@ import { callbackCommands, editQuestions } from './../interface/index.js';
 import { failureMessage } from './../messages/index.js';
 
 const code = n => `\`${n}\``;
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const failure = msg => `⚠️ Unexpected error \`${msg}\`. Try again?`;
 const {isArray} = Array;
 const italic = n => `_${n}_`;
@@ -86,7 +86,7 @@ function askToUpdateTrade({ command, ctx, nodes }, cbk) {
 
           try {
             decodeTrade({ trade });
-          } catch (err) {
+          } catch {
             return cbk([400, 'ExpectedValidTradeToUpdateTradeDetails']);
           }
 
@@ -107,7 +107,7 @@ function askToUpdateTrade({ command, ctx, nodes }, cbk) {
               return getAnchoredTrade({ lnd, id }, cbk);
             },
             (err, res) => {
-              if (!!err) {
+              if (err) {
                 return cbk(err);
               }
 
@@ -159,7 +159,7 @@ function askToUpdateTrade({ command, ctx, nodes }, cbk) {
 
         // Remove the referenced message
         remove: ['trade', async ({ trade }) => {
-          if (!!trade.error) {
+          if (trade.error) {
             return;
           }
 

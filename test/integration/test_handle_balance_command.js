@@ -35,6 +35,4 @@ test(`Handle balance command`, async () => {
 
     deepEqual(err, null, 'Expected no error');
   }
-
-  return;
 });

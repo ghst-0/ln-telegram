@@ -60,7 +60,7 @@ function handlePendingCommand({ from, id, nodes, reply, working }, cbk) {
 
           return asyncMap(nodes, ({ from, lnd }, cbk) => {
               return getChannels({ lnd }, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(err);
                 }
 
@@ -77,7 +77,7 @@ function handlePendingCommand({ from, id, nodes, reply, working }, cbk) {
                     return getNodeAlias({ id, lnd }, cbk);
                   },
                   (err, nodes) => {
-                    if (!!err) {
+                    if (err) {
                       return cbk(err);
                     }
 
@@ -92,7 +92,7 @@ function handlePendingCommand({ from, id, nodes, reply, working }, cbk) {
         getPending: ['checkAccess', ({}, cbk) => {
           return asyncMap(nodes, ({ from, lnd }, cbk) => {
               return getPendingChannels({ lnd }, (err, res) => {
-                if (!!err) {
+                if (err) {
                   return cbk(err);
                 }
 
@@ -128,12 +128,12 @@ function handlePendingCommand({ from, id, nodes, reply, working }, cbk) {
                     return getNodeAlias({ id, lnd }, cbk);
                   },
                   (err, nodes) => {
-                    if (!!err) {
+                    if (err) {
                       return cbk(err);
                     }
 
                     return getHeight({ lnd }, (err, res) => {
-                      if (!!err) {
+                      if (err) {
                         return cbk(err);
                       }
 

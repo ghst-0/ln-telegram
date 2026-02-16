@@ -4,9 +4,9 @@ import { returnResult } from 'asyncjs-util';
 
 import { icons, formatTokens } from './../interface/index.js';
 
-const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
+const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatCapacity = tokens => formatTokens({tokens}).display;
-const fromName = res => res.alias || res.id.substring(0, 8);
+const fromName = res => res.alias || res.id.slice(0, 8);
 const join = arr => arr.join('\n');
 
 /**
