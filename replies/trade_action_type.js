@@ -7,21 +7,12 @@ const hasTradePrefix = n => n.startsWith(titles.createdTradePrefix);
 const split = n => n.split('\n');
 const tradeQuestions = editQuestions.trade.map(n => editQuestions[n]);
 
-/** Is the message a reply to a created invoice
-
-  {
-    nodes: [{
-      public_key: <Node Identity Public Key Hex String>
-    }]
-    text: <Message Text String>
-  }
-
-  @returns
-  {
-    [type]: <Trade Secret Action Type String>
-  }
-*/
-function tradeActionType({ nodes, text }) {
+/**
+ * Is the message a reply to a created invoice
+ * @param {string} text Message Text
+ * @returns {{type: string}} type: Trade Secret Action Type
+ */
+function tradeActionType({ text }) {
   // Trade messages have a specific structure
   if (!text || !hasTradePrefix(text)) {
     return {};
@@ -40,7 +31,7 @@ function tradeActionType({ nodes, text }) {
   // The second line of a trade should be an encoded open trade secret
   try {
     decodeTrade({ trade });
-  } catch (err) {
+  } catch {
     return {};
   }
 

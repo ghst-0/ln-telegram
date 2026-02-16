@@ -12,19 +12,17 @@ const parseFailure = msg => `⚠️ Unexpected error \`${msg}\`. Try again?`;
 const partialNodeId = (command, data) => data.slice(command.length);
 const split = n => n.split('\n');
 
-/** User pressed button to move invoice to a different node
-
-  {
-    ctx: <Telegram Context Object>
-    nodes: [{
-      from: <Saved Node Name String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Public Key Hex String>
-    }]
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * User pressed button to move invoice to a different node
+ * @param {{}} ctx Telegram Context Object
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function moveInvoiceNode({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

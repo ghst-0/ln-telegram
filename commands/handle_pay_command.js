@@ -17,24 +17,22 @@ const mtokensToTokens = tokens => Number(BigInt(tokens) / BigInt(1e3));
 const pathTimeoutMs = 1000 * 30;
 const pathfindTimeoutMs = 1000 * 60;
 
-/** Initiate payment
-
-  Syntax of command:
-
-  /pay <node_number> <payment_request> <maximum fee tokens>
-
-  {
-    budget: <Max Spendable Tokens Limit Number>
-    from: <Command From User Id Number>
-    reply: <Reply Function>
-    text: <Original Command Text String>
-  }
-
-  @returns via cbk
-  {
-    tokens: <Spent Tokens Number>
-  }
-*/
+/**
+ * Initiate payment
+ * @param {number} budget Max Spendable Tokens Limit Number
+ * @param {number} from Command From User Id
+ * @param {number} [id] Connected User Id
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} reply Reply to Telegram Context Function
+ * @param {string} text Original Command Text
+ * @param {function} cbk Callback function
+ * @returns {Promise<{{tokens: number}}>} via cbk
+ *   tokens: Spent Tokens Number
+ */
 function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

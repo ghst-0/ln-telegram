@@ -8,30 +8,23 @@ const formatCoins = tokens => formatTokens({tokens, none: ''}).display;
 const formatReport = (from, n) => `${from}\`\`\`\n${n}\`\`\``;
 const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
 
-/** Message summarizing liquidity
-
-  {
-    balances: [{
-      closing_balance: <Balance of Tokens Moving Out Of Channels Tokens Number>
-      conflicted_pending: <Conflicting Pending Balance Tokens Number>
-      invalid_pending: <Invalid Pending Balance Tokens Number>
-      offchain_balance: <Balance of Owned Tokens In Channels Tokens Number>
-      offchain_pending: <Total Pending Local Balance Tokens Number>
-      onchain_balance: <Balance of Transaction Outputs Number>
-      onchain_vbytes: <Estimated Virtual Bytes to Spend On-Chain Funds Number>
-    }]
-    nodes: [{
-      from: <From Name String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Public Key Hex String>
-    }]
-  }
-
-  @returns
-  {
-    message: <Message Text String>
-  }
-*/
+/**
+ * Message summarizing liquidity
+ * @param {{}} balances
+ * @param {number} balances.closing_balance Balance of Tokens Moving Out Of Channels Tokens
+ * @param {number} balances.conflicted_pending Conflicting Pending Balance Tokens
+ * @param {number} balances.invalid_pending Invalid Pending Balance Tokens
+ * @param {number} balances.offchain_balance Balance of Owned Tokens In Channels Tokens
+ * @param {number} balances.offchain_pending Total Pending Local Balance Tokens
+ * @param {number} balances.onchain_balance Balance of Transaction Outputs
+ * @param {number} balances.onchain_vbytes Estimated Virtual Bytes to Spend On-Chain Funds
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: From Name,
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @returns {{message: string}} Message Text
+ */
 function fundsSummary({ balances, nodes }) {
   const [, otherNode] = nodes;
 

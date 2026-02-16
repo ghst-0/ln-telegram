@@ -1,20 +1,14 @@
 import invoiceActionType from './invoice_action_type.js';
 import tradeActionType from './trade_action_type.js';
 
-/** Determine the type of a reply action, if any
-
-  {
-    nodes: [{
-      public_key: <Node Public Key Hex String>
-    }]
-    text: <Message Text String>
-  }
-
-  @returns
-  {
-    [type]: <Type String>
-  }
-*/
+/**
+ * Determine the type of a reply action, if any
+ * @param {{public_key: string}[]} nodes List of nodes {
+ *   public_key: Public Key Hex
+ * }
+ * @param {string} text Message Text
+ * @returns {{type?: string}}
+ */
 function replyActionType({ nodes, text }) {
   if (!!invoiceActionType({ nodes, text }).type) {
     return { type: invoiceActionType({ nodes, text }).type };

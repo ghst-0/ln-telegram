@@ -5,18 +5,16 @@ import { tradeEditButtons } from './../messages/index.js';
 
 const {isArray} = Array;
 
-/** User pressed a set trade node button
-
-  {
-    ctx: <Telegram Context Object>
-    nodes: [{
-      from: <Saved Node Name String>
-      public_key: <Saved Node Identity Public Key Hex String>
-    }]
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * User pressed a set trade node button
+ * @param {{}} ctx Telegram Context Object
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function setTradeNode({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

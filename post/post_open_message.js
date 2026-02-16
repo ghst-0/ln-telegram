@@ -10,24 +10,20 @@ const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const markup = {parse_mode: 'MarkdownV2'};
 const textJoiner = '\n';
 
-/** Send channel open message to telegram
-
-  {
-    capacity: <Channel Token Capacity Number>
-    from: <Node From Name String>
-    id: <Connected Telegram User Id String>
-    [is_partner_initiated]: <Channel Partner Opened Channel>
-    is_private: <Channel Is Private Bool>
-    lnd: <Authenticated LND API Object>
-    partner_public_key: <Channel Partner Public Key String>
-    send: <Send Message to Telegram User Id Function>
-  }
-
-  @returns via cbk or Promise
-  {
-    text: <Posted Channel Open Message String>
-  }
-*/
+/**
+ * Send channel open message to telegram
+ * @param {{}} args
+ * @param {number} args.capacityChannel Token Capacity
+ * @param {string} args.fromNode From Name
+ * @param {string} args.idConnected Telegram User Id
+ * @param {*} args.[is_partner_initiated] Channel Partner Opened Channel
+ * @param {boolean} args.is_privateChannel Is Private
+ * @param {{}} args.lndAuthenticated LND API Object
+ * @param {string} args.partner_public_keyChannel Partner Public Key
+ * @param {function} args.send Send Message to Telegram User Id Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<text: string>} via cbk or Promise<text: string> text: Posted Channel Open Message String
+ */
 function postOpenMessage(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

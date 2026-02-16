@@ -19,21 +19,19 @@ import warnUnknownButton from './warn_unknown_button.js';
 const {exit} = process;
 const {isArray} = Array;
 
-/** Respond to a button push on a message
-
-  {
-    bot: <Telegram Bot Object>
-    ctx: <Telegram Context Object>
-    id: <Connected Telegram User Id Number>
-    nodes: [{
-      from: <Saved Node Name String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Public Key Hex String>
-    }]
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Respond to a button push on a message
+ * @param {{}} bot Telegram Bot Object
+ * @param {{}} ctx Telegram Context Object
+ * @param {number} id Connected Telegram User Id
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function handleButtonPush({ bot, ctx, id, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

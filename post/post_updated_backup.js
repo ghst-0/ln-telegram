@@ -4,20 +4,17 @@ import { returnResult } from 'asyncjs-util';
 const date = () => new Date().toISOString().substring(0, 10);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 
-/** Post updated backup to Telegram
-
-  {
-    backup: <Backup File Hex String>
-    id: <Connected User Id Number>
-    node: {
-      alias: <Node Alias String>
-      public_key: <Public Key Hex String>
-    }
-    send: <Send File Function>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Post updated backup to Telegram
+ * @param {string} backup Backup File Hex
+ * @param {number} id Connected User Id
+ * @param {{}} node
+ * @param {string} node.alias Node Alias
+ * @param {string} node.public_key Public Key Hex
+ * @param {function} send Send File Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function postUpdatedBackup({ backup, id, node, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

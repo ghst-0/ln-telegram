@@ -6,20 +6,14 @@ const expectedSpacer = '';
 const hasInvoicePrefix = n => n.startsWith(titles.createdInvoicePrefix);
 const split = n => n.split('\n');
 
-/** Is the message a reply to a created invoice
-
-  {
-    text: <Message Text String>
-    nodes: [{
-      public_key: <Node Identity Public Key Hex String>
-    }]
-  }
-
-  @returns
-  {
-    [type]: <Invoice Action Type String>
-  }
-*/
+/**
+ * Is the message a reply to a created invoice
+ * @param {{public_key: string}[]} nodes List of nodes {
+ *   public_key: Public Key Hex
+ * }
+ * @param {string} text Message Text
+ * @returns {{type: string}|{}} type: Invoice Action Type
+ */
 function invoiceActionType({ nodes, text }) {
   // Invoice messages have a specific structure
   if (!text || !hasInvoicePrefix(text)) {

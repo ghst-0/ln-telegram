@@ -12,26 +12,16 @@ const markup = {parse_mode: 'MarkdownV2'};
 const textJoiner = '\n';
 const {unannounced} = icons;
 
-/** Send channel opening message to telegram
-
-  {
-    from: <Node From Name String>
-    id: <Connected Telegram User Id String>
-    lnd: <Authenticated LND API Object>
-    opening: [{
-      capacity: <Channel Token Capacity Number>
-      [is_partner_initiated]: <Channel Partner Opened Channel>
-      [is_private]: <Channel is Not Announced to Gossip Bool>
-      partner_public_key: <Channel Partner Public Key String>
-    }]
-    send: <Send Message to Telegram User Id Function>
-  }
-
-  @returns via cbk or Promise
-  {
-    text: <Posted Channel Open Message String>
-  }
-*/
+/**
+ * Send channel opening message to telegram
+ * @param {string} from Node From Name
+ * @param {string} id Connected Telegram User Id
+ * @param {{}} lnd Authenticated LND API Object
+ * @param opening
+ * @param {function} send Send Message to Telegram User Id Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<{text:string}>} via cbk or Promise<text:string> text: Posted Channel Open Message
+ */
 function postOpeningMessage({ from, id, lnd, opening, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

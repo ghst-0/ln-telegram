@@ -15,20 +15,16 @@ const {setInvoiceDescription} = callbackCommands;
 const {setInvoiceNode} = callbackCommands;
 const {setInvoiceTokens} = callbackCommands;
 
-/** Create an invoice message
-
-  {
-    [from]: <Invoice From Node String>
-    request: <BOLT 11 Payment Request String>
-  }
-
-  @returns
-  {
-    markup: <Reply Markup Object>
-    mode: <Message Parse Mode String>
-    text: <Message Text String>
-  }
-*/
+/**
+ * Create an invoice message
+ * @param {string} [from] Invoice From Node
+ * @param {string} request BOLT 11 Payment Request
+ * @returns {{markup: InlineKeyboard, mode: string, text: string}} {
+*    markup: Reply Markup Object,
+ *   mode: Message Parse Mode,
+ *   text: Message Text
+ * }
+ */
 function createInvoiceMessage({ from, request }) {
   const markup = new InlineKeyboard();
 

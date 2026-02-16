@@ -10,18 +10,16 @@ const rowsIndex = 2;
 const shortId = key => key.slice(0, 46);
 const switchNode = id => `${callbackCommands.moveInvoiceNode}${id}`;
 
-/** User pressed a set node invoice button
-
-  {
-    ctx: <Telegram Context Object>
-    nodes: [{
-      from: <Saved Node Name String>
-      public_key: <Saved Node Identity Public Key Hex String>
-    }]
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * User pressed a set node invoice button
+ * @param {{}} ctx Telegram Context Object
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function setInvoiceNode({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

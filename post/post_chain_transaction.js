@@ -9,32 +9,41 @@ const {isArray} = Array;
 const joinElements = arr => arr.join(' ');
 const markup = {parse_mode: 'MarkdownV2'};
 
-/** Post chain transaction
-
-  {
-    confirmed: <Transaction is Confirmed Bool>
-    from: <From Node String>
-    id: <Connected User Id Number>
-    nodes: [{
-      public_key: <Node Public Key Hex String>
-    }]
-    send: <Send Message to Telegram Function>
-    transaction: [{
-      [chain_fee]: <Paid Transaction Fee Tokens Number>
-      [received]: <Received Tokens Number>
-      related_channels: [{
-        action: <Channel Action String>
-        [node]: <Channel Peer Alias String>
-        [with]: <Channel Peer Public Key Hex String>
-      }]
-      [sent]: <Sent Tokens Number>
-      [sent_to]: [<Sent to Address String>]
-      [tx]: <Transaction Id Hex String>
-    }]
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Post chain transaction
+ * @param {boolean} confirmed Transaction is Confirmed
+ * @param {string} from From Node
+ * @param {number} id Connected User Id
+ * @param {{public_key: string}[]} nodes List of nodes {
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} send Send Message to Telegram User Function
+ * @param {{
+ *   [chain_fee]: number,
+ *   [received]: number,
+ *   related_channels: {
+ *     action: string,
+ *     node?: string,
+ *     with?: string
+ *   }[],
+ *   [sent]: number,
+ *   [sent_to]: string[],
+ *   [tx]: string
+ * }[]} transaction {
+ *   [chain_fee]: Paid Transaction Fee Tokens,
+ *   [received]: Received Tokens,
+ *   related_channels: [{
+ *     action: Channel Action,
+ *     [node]: Channel Peer Alias,
+ *     [with]: Channel Peer Public Key Hex,
+ *   }]
+ *   [sent]: Sent Tokens,
+ *   [sent_to]: [Sent to Address],
+ *   [tx]: Transaction Id Hex
+ * }[]
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function postChainTransaction({ confirmed, from, id, nodes, send, transaction }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

@@ -6,23 +6,23 @@ import { createTradeMessage } from './../messages/index.js';
 
 const {isArray} = Array;
 
-/** Post a created trade message and listen for incoming trade requests
-
-  {
-    api: <Telegram API Object>
-    description: <Trade Description String>
-    destination: <Trade Invoice Creator Public Key Hex String>
-    expires_at: <Trade Expires at ISO 8601 Date String>
-    id: <Trade Id Hex String>
-    lnd: <Authenticated LND API Object>
-    nodes: [{
-      from: <Saved Node Name>
-      public_key: <Public Key Hex String>
-    }]
-    tokens: <Trade Price Tokens Number>
-    user: <Telegram User Id Number>
-  }
-*/
+/**
+ * Post a created trade message and listen for incoming trade requests
+ * @param {{}} args
+ * @param {{}} args.api Telegram API Object
+ * @param {string} args.description Trade Description
+ * @param {string} args.destination Trade Invoice Creator Public Key Hex
+ * @param {string} args.expires_at Trade Expires at ISO 8601 Date
+ * @param {string} args.id Trade Id Hex
+ * @param {{}} args.lnd Authenticated LND API Object
+ * @param {{from: string, public_key: string}[]} args.nodes
+ *   from: Saved Node Name,
+ *   public_key: Public Key Hex
+ * @param {number} args.tokens Trade Price Tokens
+ * @param {number} args.user Telegram User Id
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>}
+ */
 function postCreatedTrade(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

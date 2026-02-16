@@ -12,14 +12,12 @@ const parseMode = 'MarkdownV2';
 const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
 const title = 'Editing past messages is not supported.';
 
-/** Handle edits of past messages
-
-  {
-    ctx: <Telegram Object>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Handle edits of past messages
+ * @param {{}} ctx Telegram Context Object
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function handleEditedMessage({ ctx }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

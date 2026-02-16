@@ -8,19 +8,19 @@ const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};
 const shortId = id => id.slice(0, 8);
 
-/** Post that nodes have gone offline
-
-  {
-    bot: <Telegram Bot Object>
-    [connected]: <Connected User Id>
-    offline: [{
-      alias: <Node Alias String>
-      id: <Node Identity Public Key Hex String>
-    }]
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Post that nodes have gone offline
+ * @param {{}} bot Telegram Bot Object
+ * @param {number} [connected] Connected User Id
+ * @param {{
+ *  alias: string,
+ *  id: string
+ * }[]} offline
+ *  alias: Node Alias,
+ *  id: Node Identity Public Key Hex
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function postNodesOffline({ bot, connected, offline }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

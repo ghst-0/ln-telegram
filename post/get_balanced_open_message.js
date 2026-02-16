@@ -9,21 +9,21 @@ const formatCapacity = tokens => formatTokens({tokens}).display;
 const fromName = res => res.alias || res.id.substring(0, 8);
 const join = arr => arr.join('\n');
 
-/** Get a message representing a balanced open proposal
-
-  {
-    capacity: <Channel Size Tokens Number>
-    from: <Proposal From Identity Public Key Hex String>
-    lnd: <Authenticated LND API Object>
-    rate: <Chain Tokens Fee Rate Number>
-  }
-
-  @returns via cbk or Promise
-  {
-    icon: <Message Icon String>
-    message: <Message String>
-  }
-*/
+/**
+ * Get a message representing a balanced open proposal
+ * @param {number} capacity Channel Size Tokens
+ * @param {string} from Proposal From Identity Public Key Hex
+ * @param {{}} lnd Authenticated LND API Object
+ * @param {number} rate Chain Tokens Fee Rate
+ * @param {function} cbk Callback function
+ * @returns {Promise<{
+ *   icon: string,
+ *   message: string
+ * }>} via cbk or Promise<{
+ *   icon: Message Icon,
+ *   message: Message
+ * }>
+ */
 function getBalancedOpenMessage({ capacity, from, lnd, rate }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

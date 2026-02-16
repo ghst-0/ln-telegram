@@ -2,27 +2,35 @@ const keyForPair = n => `${n.incoming_channel}:${n.outgoing_channel}`;
 const {keys} = Object;
 const mtokensAsTokens = n => Number(n) / 1e3;
 
-/** Consolidate a set of forwards to combine similar forwards together
-
-  {
-    forwards: [{
-      fee_mtokens: <Forward Fee Millitokens Earned String>
-      incoming_channel: <Standard Format Incoming Channel Id String>
-      mtokens: <Forwarded Millitokens String>
-      outgoing_channel: <Standard Format Outgoing Channel Id String>
-    }]
-  }
-
-  @returns
-  {
-    forwards: [{
-      fee: <Forward Fee Tokens Earned Number>
-      incoming_channel: <Standard Format Incoming Channel Id String>
-      outgoing_channel: <Standard Format Outgoing Channel Id String>
-      tokens: <Forwarded Tokens Number>
-    }]
-  }
-*/
+/**
+ * Consolidate a set of forwards to combine similar forwards together
+ * @param {{
+ *   forwards: {
+ *     fee_mtokens: string
+ *     incoming_channel: string,
+ *     mtokens: string,
+ *     outgoing_channel: string
+ *   }[]
+ * }} forwards {
+ *   fee_mtokens: Forward Fee Millitokens Earned,
+ *   incoming_channel: Standard Format Incoming Channel Id,
+ *   mtokens: Forwarded Millitokens,
+ *   outgoing_channel: Standard Format Outgoing Channel Id
+ * }
+ * @returns {{
+ *   forwards: {
+ *     fee_mtokens: string
+ *     incoming_channel: string,
+ *     outgoing_channel: string,
+ *     tokens: number
+ *   }[]
+ * }} {
+ *   fee: Forward Fee Tokens Earned,
+ *   incoming_channel: Standard Format Incoming Channel Id,
+ *   outgoing_channel: Standard Format Outgoing Channel Id,
+ *   tokens: Forwarded Tokens
+ * }
+ */
 function consolidateForwards({ forwards }) {
   const unique = forwards.reduce((sum, forward) => {
       const fee = mtokensAsTokens(forward.fee_mtokens);

@@ -14,25 +14,25 @@ const markup = {parse_mode: 'MarkdownV2'};
 const {max} = Math;
 const uniq = arr => Array.from(new Set(arr));
 
-/** Check peer liquidity
-
-  Syntax of command:
-
-  /liquidity <peer>
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    nodes: [{
-      from: <From Name String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Public Key Hex String>
-    }]
-    reply: <Reply Function>
-    text: <Original Command Text String>
-    working: <Working Function>
-  }
-*/
+/**
+ * Check peer liquidity
+ * @param {{}} args
+ * @param {number} args.from Command From User Id
+ * @param {nodes: {
+ *   from: string,
+ *   lnd: {},
+ *   public_key: string
+ * }[]} args.nodes {
+ *    from: From Name,
+ *    lnd: Authenticated LND API Object,
+ *    public_key: Public Key Hex
+ * }
+ * @param {function} args.reply Reply Function
+ * @param {string} args.text Original Command Text String
+ * @param {function} args.working Working Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>}
+ */
 function handleLiquidityCommand(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

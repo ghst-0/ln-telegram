@@ -10,22 +10,20 @@ const date = () => new Date().toISOString().substring(0, 10);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');
 const {isArray} = Array;
 
-/** Execute backup command
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    nodes: [{
-      alias: <Node Alias String>
-      lnd: <Authenticated LND gRPC API Object>
-      public_key: <Node Public Key Hex String>
-    }]
-    reply: <Reply Function>
-    send: <Send Document Function>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Execute backup command
+ * @param {number} from Command From User Id
+ * @param {number} id Connected User Id
+ * @param {{alias: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   alias: Node Alias,
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object
+ * }
+ * @param {function} reply Reply Function
+ * @param {function} send Send Document Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function handleBackupCommand({ from, id, nodes, reply, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

@@ -4,18 +4,12 @@ const {round} = Math;
 const roundedTokensType = 'rounded';
 const tokensAsBigUnit = tokens => (tokens / 1e8).toFixed(8);
 
-/** Format tokens for display
-
-  {
-    [none]: <No Value Substitute String>
-    tokens: <Tokens Number>
-  }
-
-  @returns
-  {
-    display: <Formtted Tokens String>
-  }
-*/
+/**
+ * Format tokens for display
+ * @param {string} [none] No Value Substitute
+ * @param {number} tokens Tokens
+ * @returns {{display: string}} Formatted Tokens
+ */
 function formatTokens({ none, tokens }) {
   if (isString(none) && !tokens) {
     return { display: none };

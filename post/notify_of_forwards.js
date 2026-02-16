@@ -18,30 +18,31 @@ const joinAsLines = n => n.join('\n');
 const markup = {parse_mode: 'MarkdownV2'};
 const uniq = arr => Array.from(new Set(arr));
 
-/** Notify Telegram of forwarded payments
-
-  {
-    forwards: [{
-      fee: <Forward Fee Tokens Earned Number>
-      incoming_channel: <Standard Format Incoming Channel Id String>
-      outgoing_channel: <Standard Format Outgoing Channel Id String>
-      tokens: <Forwarded Tokens Number>
-    }]
-    from: <From Node Name String>
-    id: <Connected User Id Number>
-    lnd: <Authenticated LND API Object>
-    node: <From Node Public Key Hex String>
-    nodes: [{
-      public_key: <Node Public Key Hex String>
-    }]
-    send: <Send Message to Telegram User Function>
-  }
-
-  @returns via cbk or Promise
-  {
-    text: <Forward Notify Message Text String>
-  }
-*/
+/**
+ * Notify Telegram of forwarded payments
+ * @param {{
+ *   fee: number,
+ *   incoming_channel: string,
+ *   outgoing_channel: string,
+ *   tokens: number
+ * }[]} forwards
+ *   fee: Forward Fee Tokens Earned,
+ *   incoming_channel: Standard Format Incoming Channel Id,
+ *   outgoing_channel: Standard Format Outgoing Channel Id,
+ *   tokens: Forwarded Tokens
+ * @param {string} from Node From Name
+ * @param {number} id Connected User Id
+ * @param {{}} lnd Authenticated LND API Object
+ * @param {string} node From Node Public Key Hex
+ * @param {{public_key: string}[]} nodes List of nodes {
+ *   public_key: Public Key Hex
+ * }
+ * @param {string} send From Node Public Key Hex
+ * @param {function} cbk Callback function
+ * @returns {Promise<{text: string}>} via cbk or Promise<{
+ *   text: Forward Notify Message Text
+ * }>
+ */
 function notifyOfForwards({ forwards, from, id, lnd, node, nodes, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

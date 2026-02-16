@@ -5,14 +5,12 @@ import { failureMessage } from './../messages/index.js';
 
 const message = '🤖 Unexpected button pushed. This button may no longer be supported?';
 
-/** User pressed an unknown button
-
-  {
-    ctx: <Telegram Context Object>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * User pressed an unknown button
+ * @param {{}} ctx Telegram Context Object
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function warnUnknownButton({ ctx }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

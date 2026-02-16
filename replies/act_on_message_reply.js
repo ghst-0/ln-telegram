@@ -8,21 +8,19 @@ import updateTradeFromReply from './update_trade_from_reply.js';
 
 const {isArray} = Array;
 
-/** Act on a reply
-
-  {
-    api: <Bot API Object>
-    ctx: <Telegram Context Object>
-    id: <Connected User Id Number>
-    nodes: [{
-      lnd: <Authenticated LND API Object>
-      public_key: <Node Identity Public Key Hex String>
-    }]
-    request: <Request Function>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Act on a reply
+ * @param {{}} api Bot API Object
+ * @param {{}} ctx Telegram Context Object
+ * @param {number} id Connected User Id
+ * @param {{lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} request Request Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function actOnMessageReply({ api, ctx, id, nodes, request }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

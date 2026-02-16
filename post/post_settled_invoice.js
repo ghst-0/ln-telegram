@@ -18,48 +18,47 @@ const randomIndex = n => Math.floor(Math.random() * n);
 const sendOptions = {parse_mode: 'MarkdownV2'};
 const uniq = arr => Array.from(new Set(arr));
 
-/** Post settled invoices
-
-  {
-    from: <Invoice From Node String>
-    id: <Connected User Id Number>
-    invoice: {
-      description: <Invoice Description String>
-      id: <Invoice Preimage Hash Hex String>
-      is_confirmed: <Invoice is Settled Bool>
-      payments: [{
-        [confirmed_at]: <Payment Settled At ISO 8601 Date String>
-        created_at: <Payment Held Since ISO 860 Date String>
-        created_height: <Payment Held Since Block Height Number>
-        in_channel: <Incoming Payment Through Channel Id String>
-        is_canceled: <Payment is Canceled Bool>
-        is_confirmed: <Payment is Confirmed Bool>
-        is_held: <Payment is Held Bool>
-        messages: [{
-          type: <Message Type Number String>
-          value: <Raw Value Hex String>
-        }]
-        mtokens: <Incoming Payment Millitokens String>
-        [pending_index]: <Pending Payment Channel HTLC Index Number>
-        tokens: <Payment Tokens Number>
-        [total_mtokens]: <Total Payment Millitokens String>
-      }]
-      received: <Received Tokens Number>
-    }
-    key: <Node Public Key Id Hex String>
-    lnd: <Authenticated LND API Object>
-    [min_rebalance_tokens]: <Minimum Rebalance Tokens To Notify Number>
-    nodes: [{
-      from: <From Node String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Node Identity Public Key Hex String>
-    }]
-    quiz: ({answers: [<String>], correct: <Number>, question: <String>}) => {}
-    send: <Send Message Function> (id, message, options) => {}
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Post settled invoices
+ * @param {{}} args
+ * @param {string} args.from Invoice From Node
+ * @param {string} args.key Node Public Key Id Hex
+ * @param {{}} args.invoice
+ * @param {string} args.invoice.description Invoice Description
+ * @param {string} args.invoice.id Invoice Preimage Hash Hex
+ * @param {boolean} args.invoice.is_confirmed Invoice is Settled
+ * @param {{}[]} args.invoice.payments
+ * @param {string} args.invoice.payments.[confirmed_at] Payment Settled At ISO 8601 Date
+ * @param {string} args.invoice.payments.created_at Payment Held Since ISO 860 Date
+ * @param {number} args.invoice.payments.created_height<Payment Held Since Block Height
+ * @param {string} args.invoice.payments.in_channel Incoming Payment Through Channel Id
+ * @param {boolean} args.invoice.payments.is_canceled Payment is Canceled
+ * @param {boolean} args.invoice.payments.is_confirmed Payment is Confirmed
+ * @param {boolean} args.invoice.payments.is_held Payment is Held
+ * @param {{}[]} args.invoice.payments.messages
+ * @param {string} args.invoice.payments.messages.type <Message Type Number
+ * @param {string} args.invoice.payments.messages.value <Raw Value Hex
+ * @param {string} args.invoice.payments.mtokens Incoming Payment Millitokens
+ * @param {number} args.invoice.payments.[pending_index] Pending Payment Channel HTLC Index
+ * @param {number} args.invoice.payments.tokens Payment Tokens
+ * @param {string} args.invoice.payments.[total_mtokens] Total Payment Millitokens
+ * @param {number} args.invoice.received Received Tokens
+ * @param {{}} args.lnd Authenticated LND API Object
+ * @param {number} args.[min_rebalance_tokens] Minimum Rebalance Tokens To Notify
+ * @param {{
+ *   from: string,
+ *   lnd: {},
+ *   public_key: string
+ * }[]} args.nodes {
+ *   from: From Node
+ *   lnd: Authenticated LND API Object
+ *   public_key: <Node Identity Public Key Hex
+ * }
+ * @param {({answers: string[], correct: number, question: string}) => {}} args.quiz
+ * @param {(id: *, message: *, options: *) => {}} args.send Send Message Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function postSettledInvoice(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

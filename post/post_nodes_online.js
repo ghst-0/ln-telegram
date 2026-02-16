@@ -8,19 +8,17 @@ const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};
 
-/** Post that nodes are now online
-
-  {
-    id: <Connected User Id Number>
-    nodes: [{
-      alias: <Node Alias String>
-      id: <Node Identity Public Key Hex String>
-    }]
-    send: <Send Message to Telegram Function>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Post that nodes are now online
+ * @param {number} id Connected User Id
+ * @param {{alias: {}, public_key: string}[]} nodes List of nodes {
+ *   alias: Node Alias,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} send Send Message to Telegram User Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function postNodesOnline({ id, nodes, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

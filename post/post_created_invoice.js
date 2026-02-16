@@ -13,21 +13,19 @@ const makeKeyboard = () => new InlineKeyboard();
 const parseMode = 'Markdown';
 const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
 
-/** Create and post an invoice
-
-  {
-    ctx: <Telegram Context Object>
-    [description]: <Invoice Description String>
-    destination: <Invoice Destination Public Key Hex String>
-    nodes: [{
-      lnd: <Authenticated LND API Object>
-      public_key: <Node Identity Public Key Hex String>
-    }]
-    [tokens]: <Invoice Tokens Number>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Create and post an invoice
+ * @param {{}} ctx Telegram Context Object
+ * @param {string} description Invoice Description
+ * @param {string} destination Invoice Destination Public Key Hex
+ * @param {{lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {number} [tokens] Invoice Tokens
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function postCreatedInvoice({ ctx, description, destination, nodes, tokens }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

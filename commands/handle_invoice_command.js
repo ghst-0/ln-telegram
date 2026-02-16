@@ -13,20 +13,18 @@ const {isArray} = Array;
 const join = n => n.join(' ');
 const splitArguments = n => n.split(' ');
 
-/** Create invoice
-
-  {
-    ctx: <Telegram Context Object>
-    id: <Connected Id Number>
-    nodes: [{
-      from: <Node Name String>
-      lnd: <Authenticated LND gRPC API Object>
-    }]
-    request: <Request Function>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Create invoice
+ * @param {{}} ctx Telegram Context Object
+ * @param {string} id Connected Id
+ * @param {{from: string, lnd: {}}} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object
+ * }
+ * @param {function} request Request Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function handleInvoiceCommand({ ctx, id, nodes, request }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

@@ -11,24 +11,20 @@ const {isArray} = Array;
 const join = arr => arr.join('\n');
 const markup = {parse_mode: 'MarkdownV2'};
 
-/** Get node info
-
-  Syntax of command:
-
-  /info
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    nodes: [{
-      from: <From Name String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Public Key Hex String>
-    }]
-    remove: <Remove Function>
-    reply: <Reply Function>
-  }
-*/
+/**
+ * Get node info
+ * @param {number} from Command From User Id
+ * @param {number} id Connected User Id
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} remove Remove Function
+ * @param {function} reply Reply to Telegram Context Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>}
+ */
 function handleInfoCommand({ from, id, nodes, remove, reply }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

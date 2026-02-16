@@ -1,15 +1,13 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
-/** Check access to private commands
-
-  {
-    from: <Source User Id Number>
-    id: <Connected User Id Number>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Check access to private commands
+ * @param {number} from Source User Id
+ * @param {number} id Connected User Id
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function checkAccess({ from, id }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

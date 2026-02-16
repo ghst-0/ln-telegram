@@ -12,33 +12,23 @@ const join = arr => arr.join(', ');
 const markup = {parse_mode: 'MarkdownV2'};
 const niceName = node => node.alias || node.id.substring(0, 8);
 
-/** Post settled payment
-
-  {
-    from: <Payment From Node String>
-    id: <Connected User Id Number>
-    lnd: <Authenticated LND API Object>
-    nodes: [<Node Id Public Key Hex String>]
-    payment: {
-      destination: <Payment Destination Public Key Hex String>
-      id: <Payment Hash Hex String>
-      [paths]: [{
-        hops: [{
-          public_key: <Public Key Hex String>
-        }]
-      }]
-      [request]: <Payment BOLT11 Request String>
-      safe_fee: <Safe Paid Fee Tokens Number>
-      safe_tokens: <Safe Paid Tokens Number>
-    }
-    send: <Send Message to Telegram User Function>
-  }
-
-  @returns via cbk or Promise
-  {
-    text: <Settled Payment Message Text String>
-  }
-*/
+/**
+ * Post settled payment
+ * @param {string} from Payment From Node
+ * @param {number} id Connected User Id
+ * @param {{}} lnd Authenticated LND API Object
+ * @param {string[]} nodes List of nodes [Node Id Public Key Hex]
+ * @param {function} send Send Message to Telegram User Function
+ * @param {{}} payment
+ * @param {string} payment.destination Payment Destination Public Key Hex
+ * @param {string} payment.id Payment Hash Hex
+ * @param {{hops: {public_key: string}[]}[]} payment.[paths]
+ * @param {string} payment.[request] Payment BOLT11 Request
+ * @param {number} payment.safe_fee Safe Paid Fee Tokens
+ * @param {number} payment.safe_tokens Safe Paid Tokens
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise<text>: Settled Payment Message Text
+ */
 function postSettledPayment({ from, id, lnd, nodes, payment, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

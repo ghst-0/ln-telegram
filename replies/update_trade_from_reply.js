@@ -20,20 +20,18 @@ const {now} = DateTime;
 const split = n => n.split('\n');
 const toISOString = n => n.setZone('utc').toISO();
 
-/** Update the details of a created trade from reply input
-
-  {
-    api: <Bot API Object>
-    ctx: <Telegram Context Object>
-    id: <Connected User Id Number>
-    nodes: [{
-      lnd: <Authenticated LND API Object>
-      public_key: <Node Identity Public Key Hex String>
-    }]
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Update the details of a created trade from reply input
+ * @param {{}} api Bot API Object
+ * @param {{}} ctx Telegram Context Object
+ * @param {number} id Connected User Id
+ * @param {{lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function updateTradeFromReply({ api, ctx, id, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

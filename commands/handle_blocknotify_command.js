@@ -9,21 +9,26 @@ const delay = 1000 * 60;
 const join = arr => arr.join('. ');
 const network = 'btc';
 
-/** Get notified on a block
-
-  Syntax of command:
-
-  /blocknotify
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    reply: <Reply Function>
-    request: <Request Function>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Get notified on a block
+ *
+ *   Syntax of command:
+ *
+ *   /blocknotify
+ *
+ *   {
+ *     from: <Command From User Id Number>
+ *     id: <Connected User Id Number>
+ *     reply: <Reply Function>
+ *   }
+ *
+ * @param {number} from Command From User Id
+ * @param {number} id Connected User Id
+ * @param {function} reply Reply to Telegram Context Function
+ * @param {function} request Request Function
+ * @param {function} cbk Callback Function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function handleBlocknotifyCommand({ from, id, reply, request }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

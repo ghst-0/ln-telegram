@@ -12,26 +12,20 @@ const {isArray} = Array;
 const mtokensAsTokens = n => Number(n) / 1e3;
 const niceName = node => node.alias || (node.id || '').substring(0, 8);
 
-/** Get a rebalance message
-
-  {
-    fee_mtokens: <Payment Fee Tokens Number>
-    hops: [{
-      public_key: <Forwarding Node Public Key Hex String>
-    }]
-    lnd: <Authenticated LND API Object>
-    payments: [{
-      in_channel: <Incoming Payment Through Channel Id String>
-    }]
-    received_mtokens: <Received Tokens Number>
-  }
-
-  @returns via cbk or Promise
-  {
-    icon: <Message Icon String>
-    message: <Rebalance Message String>
-  }
-*/
+/**
+ * Get a rebalance message
+ * @param {{}} args
+ * @param {number} args.fee_mtokens Payment Fee Tokens
+ * @param {{public_key: string}[]} args.hops public_key: Forwarding Node Public Key Hex
+ * @param {{}} args.lnd Authenticated LND API Object
+ * @param {{in_channel: string}[]} args.payments in_channel: Incoming Payment Through Channel Id
+ * @param {number} args.received_mtokens Received Tokens
+ * @param {function} cbk Callback function
+ * @returns {Promise<{icon: string, message: string}>} via cbk or Promise<{
+ *   icon: Message Icon
+ *   message: Rebalance Message
+ * }>
+ */
 function getRebalanceMessage(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

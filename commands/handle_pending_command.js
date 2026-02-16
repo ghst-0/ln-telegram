@@ -13,22 +13,20 @@ const join = lines => lines.join('\n').trim();
 const markup = {parse_mode: 'MarkdownV2'};
 const uniq = arr => Array.from(new Set(arr));
 
-/** Handle pending command
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    nodes: [{
-      from: <From Name String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Public Key Hex String>
-    }]
-    reply: <Reply to Telegram Context Function>
-    working: <Working Function>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Handle pending command
+ * @param {number} from Command From User Id
+ * @param {number} id Connected User Id
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} reply Reply to Telegram Context Function
+ * @param {function} working Working Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function handlePendingCommand({ from, id, nodes, reply, working }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

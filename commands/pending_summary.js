@@ -11,52 +11,68 @@ const nodeAlias = (alias, id) => `${alias} ${id.substring(0, 8)}`.trim();
 const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
 const uniq = arr => Array.from(new Set(arr));
 
-/** Notify of pending channels and HTLCs
-
-  {
-    count: <Nodes Count Number>
-    htlcs: [{
-      forwarding: [{
-        fee: <Routing Fee Tokens Number>
-        in_peer: <Inbound Peer Public Key Hex String>
-        out_peer: <Outbound Peer Public Key Hex String>
-        tokens: <Routing Tokens Number>
-      }]
-      from: <From Node Named String>
-      nodes: [{
-        alias: <Node Alias String>
-        id: <Public Key Hex String>
-      }]
-      sending: [{
-        out_peer: <Outbound Peer Public Key Hex String>
-      }]
-    }]
-    pending: [{
-      closing: [{
-        partner_public_key: <Peer Public Key Hex String>
-        pending_balance: <Pending Balance Tokens Number>
-        timelock_expiration: <Funds Locked Until Height Number>
-      }]
-      from: <From Node Named String>
-      height: <Current Block Height Number>
-      nodes: [{
-        alias: <Node Alias String>
-        id: <Public Key Hex String>
-      }]
-      opening: [{
-        is_partner_initiated: <Opening Channel is Peer Initiated Bool>
-        local_balance: <Opening Channel Local Balance Tokens Number>
-        partner_public_key: <Opening Channel With Public Key Hex String>
-        remote_balance: <Opening Channel Remote Balance Tokens Number>
-        transaction_fee: <Commitment Transaction Fee Tokens Number>
-        transaction_id: <Funding Transaction Id Hex String>
-      }]
-    }]
-  }
-
-  @returns
-  <Pending Item String>
-*/
+/**
+ * Notify of pending channels and HTLCs
+ * @param {number} count Nodes Count
+ * @param {{
+ *   forwarding: {
+ *     fee: number
+ *     in_peer: string
+ *     out_peer: string
+ *     tokens: number
+ *   }[],
+ *   from: string
+ *   nodes: {
+ *     alias: string
+ *     id: string
+ *   }[],
+ *   sending: {
+ *     out_peer: string
+ *   }[]
+ * }[]} htlcs
+ * @param {{
+ *   closing: {
+ *     partner_public_key: string,
+ *     pending_balance: number,
+ *     timelock_expiration: number
+ *   }[],
+ *   from: string,
+ *   height: number
+ *   nodes: {
+ *     alias: string,
+ *     id: string
+ *   }[],
+ *   opening: {
+ *     is_partner_initiated: boolean,
+ *     local_balance: number,
+ *     partner_public_key: string,
+ *     remote_balance: number,
+ *     transaction_fee: number,
+ *     transaction_id: string
+ *    }[]
+ * }[]} pending {
+ *   closing: {
+ *     partner_public_key: Peer Public Key Hex,
+ *     pending_balance: Pending Balance Tokens,
+ *     timelock_expiration: Funds Locked Until Height
+ *   },
+ *   from: From Node Named,
+ *   height: Current Block Height,
+ *   nodes: {
+ *     alias: Node Alias,
+ *     id: Public Key Hex
+ *   },
+ *   opening: {
+ *     is_partner_initiated: Opening Channel is Peer Initiated,
+ *     local_balance: Opening Channel Local Balance Tokens,
+ *     partner_public_key: Opening Channel With Public Key Hex,
+ *     remote_balance: Opening Channel Remote Balance Tokens,
+ *     transaction_fee: Commitment Transaction Fee Tokens,
+ *     transaction_id: Funding Transaction Id Hex
+ *   }
+ * }
+ * @returns {string[]} Pending Item
+ */
 function pendingSummary({ count, htlcs, pending }) {
   // Pending closing and opening channels
   const channels = pending.map(node => {

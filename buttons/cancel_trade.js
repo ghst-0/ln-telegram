@@ -11,17 +11,15 @@ const failure = msg => `⚠️ Unexpected error \`${msg}\`. Try again?`;
 const {isArray} = Array;
 const split = n => n.split('\n');
 
-/** Cancel an open trade
-
-  {
-    ctx: <Telegram Context Object>
-    nodes: [{
-      lnd: <Authenticated LND API Object>
-    }]
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Cancel an open trade
+ * @param {{}} ctx Telegram Context Object
+ * @param {{lnd: object}[]} nodes List of nodes {
+ *   lnd: Authenticated LND API Object
+ * }
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function cancelTrade({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

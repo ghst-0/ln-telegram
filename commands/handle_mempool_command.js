@@ -17,17 +17,15 @@ const vbytesLimit = 1e6;
 const virtualBlocksLimit = 6;
 const waitTimeForBlock = n => `${n * 10} min`;
 
-/** Handle the mempool command
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    reply: <Reply Function>
-    request: <Request Function>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Handle the mempool command
+ * @param {number} from Command From User Id
+ * @param {number} id Connected User Id
+ * @param {function} reply Reply to Telegram Context Function
+ * @param {function} request Request Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function handleMempoolCommand({ from, id, reply, request }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

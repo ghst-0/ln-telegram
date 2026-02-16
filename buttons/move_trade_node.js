@@ -13,17 +13,15 @@ const {isArray} = Array;
 const partialNodeId = (command, data) => data.slice(command.length);
 const split = n => n.split('\n');
 
-/** User pressed button to update created trade
-
-  {
-    ctx: <Telegram Context Object>
-    nodes: [{
-      public_key: <Public Key Hex String>
-    }]
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * User pressed button to update created trade
+ * @param {{}} ctx Telegram Context Object
+ * @param {[{public_key: string}]} nodes List of nodes {
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function moveTradeNode({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

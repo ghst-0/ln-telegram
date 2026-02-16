@@ -1,17 +1,13 @@
 import replyActionType from './reply_action_type.js';
 
-/** Determine if a message is a contextual reply that requires a reply action
-
-  {
-    ctx: <Telegram Context Object>
-    nodes: [{
-      public_key: <Node Public Key Hex String>
-    }]
-  }
-
-  @returns
-  <Message is a Reply to Message Action Bool>
-*/
+/**
+ * Determine if a message is a contextual reply that requires a reply action
+ * @param {{}} ctx Telegram Context Object
+ * @param {{public_key: string}[]} nodes List of nodes {
+ *   public_key: Public Key Hex
+ * }
+ * @returns {boolean} Message is a Reply to Message Action
+ */
 function isMessageReplyAction({ ctx, nodes }) {
   if (!ctx || !ctx.update || !ctx.update.message) {
     return false;

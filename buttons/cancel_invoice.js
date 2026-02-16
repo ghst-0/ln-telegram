@@ -1,14 +1,12 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
-/** User pressed a cancel invoice button
-
-  {
-    ctx: <Telegram Context Object>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * User pressed a cancel invoice button
+ * @param {{}} ctx Telegram Context Object
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function cancelInvoice({ ctx }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

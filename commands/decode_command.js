@@ -3,27 +3,22 @@ import { returnResult } from 'asyncjs-util';
 
 const {isArray} = Array;
 
-/** Decode the command text
-
-  {
-    help: {
-      select_node_text: <Select Node Help String>
-      syntax_example_text: <Syntax Example String>
-    }
-    nodes: [{
-      from: <Node Identification String>
-      lnd: <Authenticated LND gRPC API Object>
-    }]
-    reply: <Reply Function>
-    text: <Original Command Text String>
-  }
-
-  @returns via cbk or Promise
-  {
-    lnd: <Authenticated LND gRPC API Object>
-    params: [<Parameter String>]
-  }
-*/
+/**
+ * Decode the command text
+ * @param {{}} help
+ * @param {string} help.select_node_text Select Node Help
+ * @param {string} help.syntax_example_text Syntax Example
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object
+ * }
+ * @param {function} reply Reply Function
+ * @param {string} text Original Command Text
+ * @param {function} cbk Callback function
+ * @returns {Promise<{lnd: {}, params: string[]}>} via cbk or Promise
+ *   lnd: <Authenticated LND gRPC API Object>
+ *   params: [<Parameter>]
+ */
 function decodeCommand({ help, nodes, reply, text }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

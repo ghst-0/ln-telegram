@@ -10,19 +10,17 @@ const latestVersion = n => `${interaction.bot} Latest version: ${n}`;
 const ok = 200;
 const url = n => `https://registry.npmjs.org/${n}/latest`;
 
-/** Handle the mempool command
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    named: <Name To Look Up String>
-    reply: <Reply Function>
-    request: <Request Function>
-    version: <Current Version String>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Handle the mempool command
+ * @param {number} from Command From User Id
+ * @param {number} id Connected User Id
+ * @param {string} named Name To Look Up
+ * @param {function} reply Reply to Telegram Context Function
+ * @param {function} request Request Function
+ * @param {string} version Current Version
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function handleVersionCommand({ from, id, named, reply, request, version }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

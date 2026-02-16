@@ -21,32 +21,38 @@ const short = n => n.slice(0, 32);
 const signatureType = '34349337';
 const sort = (a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0);
 
-/** Get received message
-
-  {
-    description: <Invoice Description String>
-    lnd: <Authenticated LND API Object>
-    payments: [{
-      messages: [{
-        type: <Message Record TLV Type String>
-        value: <Message Record Value Hex String>
-      }]
-    }]
-    received: <Received Tokens Number>
-    via: {
-      alias: <Alias String>
-      id: <Identity String>
-    }
-  }
-
-  @returns via cbk or Promise
-  {
-    [icon]: <Message Icon String>
-    [message]: <Embedded Message Payment Received String>
-    [quiz]: [<Quiz Answer String>]
-    [title]: <Sender Message String>
-  }
-*/
+/**
+ * Get received message
+ * @param {string} description Invoice Description String
+ * @param {{}} lnd Authenticated LND API Object
+ * @param {{
+ *   messages: {
+ *     type: string,
+ *     value: string
+ *   }[]
+ * }[]} payments payments: {
+ *   messages: {
+ *     type: Message Record TLV Type String
+ *     value: Message Record Value Hex String
+ *   }
+ * }
+ * @param {number} received Received Tokens Number
+ * @param {{}} via
+ * @param {string} via.alias Alias
+ * @param {string} via.id Identity
+ * @param {function} cbk Callback function
+ * @returns {Promise<{
+ *   [icon]: string,
+ *   [message]: string,
+ *   [quiz]: string[],
+ *   [title]: string
+ * }>} via cbk or Promise<{
+ *   [icon]: Message Icon ,
+ *   [message]: Embedded Message Payment Received,
+ *   [quiz]: Quiz Answer Strings,
+ *   [title]: Sender Message
+ * }>
+ */
 function getReceivedMessage({ description, lnd, payments, received, via }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

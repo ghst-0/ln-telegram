@@ -5,15 +5,15 @@ const api = 'https://api.telegram.org';
 const ok = 200;
 const parseMode = 'markdown';
 
-/** Send message to Telegram
-
-  {
-    id: <Chat Id String>
-    key: <API Key String>
-    request: <Request Method Function>
-    text: <Message Text String>
-  }
-*/
+/**
+ * Send message to Telegram
+ * @param {string} id Chat Id
+ * @param {string} key API Key
+ * @param {function} request Request Function
+ * @param {string} text Message Text
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>}
+ */
 function sendMessage({ id, key, request, text }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

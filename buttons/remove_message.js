@@ -1,14 +1,12 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
-/** User pressed a remove message button
-
-  {
-    ctx: <Telegram Context Object>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * User pressed a remove message button
+ * @param {{}} ctx Telegram Context Object
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function removeMessage({ ctx }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

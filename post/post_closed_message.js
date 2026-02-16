@@ -10,26 +10,22 @@ const escape = text => text.replace(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const markup = {parse_mode: 'MarkdownV2'};
 const textJoiner = '\n';
 
-/** Post a channel closed message for Telegram
-
-  {
-    capacity: <Closed Channel Capacity Tokens Number>
-    from: <Node From String>
-    id: <Connected Telegram User Id String>
-    is_breach_close: <Is Breach Close Bool>
-    is_cooperative_close: <Is Cooperative Close Bool>
-    is_local_force_close: <Is Local Force Close Bool>
-    is_remote_force_close: <Is Remote Force close Bool>
-    lnd: <Authenticated LND API Object>
-    partner_public_key: <Partner Public Key Hex String>
-    send: <Send Message to Telegram User Function>
-  }
-
-  @returns via cbk or Promise
-  {
-    text: <Channel Close Message Text String>
-  }
-*/
+/**
+ * Post a channel closed message for Telegram
+ * @param {{}} args
+ * @param {number} args.capacity Closed Channel Capacity Tokens
+ * @param {string} args.from Node From
+ * @param {string} args.id Connected Telegram User Id
+ * @param {boolean} args.is_breach_close Is Breach Close
+ * @param {boolean} args.is_cooperative_close Is Cooperative Close
+ * @param {boolean} args.is_local_force_close Is Local Force Close
+ * @param {boolean} args.is_remote_force_close Is Remote Force Close
+ * @param {{}} args.lnd Authenticated LND API Object
+ * @param {string} args.partner_public_key Partner Public Key Hex
+ * @param {function} args.send Send Message to Telegram User Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise<string> Channel Close Message Text
+ */
 function postClosedMessage(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

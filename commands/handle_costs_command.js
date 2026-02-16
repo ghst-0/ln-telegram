@@ -19,25 +19,21 @@ const sumOf = arr => arr.reduce((sum, n) => sum + n, BigInt(Number()));
 const tokFromMtok = mtok => Number(BigInt(mtok) / BigInt(1e3));
 const weekMs = 1000 * 60 * 60 * 24 * 7;
 
-/** Check node costs
-
-  Syntax of command:
-
-  /costs
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    nodes: [{
-      from: <From Name String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Public Key Hex String>
-    }]
-    reply: <Reply Function>
-    request: <Request Function>
-    working: <Working Function>
-  }
-*/
+/**
+ * Check node costs
+ * @param {number} from Command From User Id
+ * @param {number} id Connected User Id
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} reply Reply to Telegram Context Function
+ * @param {function} request Request Function
+ * @param {function} working Working Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>}
+ */
 function handleCostsCommand({ from, id, nodes, reply, request, working }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

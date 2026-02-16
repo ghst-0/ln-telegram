@@ -6,23 +6,24 @@ import { settleTradeMessage } from './../messages/index.js';
 
 const {isArray} = Array;
 
-/** Post a settled trade message
-
-  {
-    api: <Telegram API Object>
-    description: <Trade Description String>
-    destination: <Trade Invoice Creator Public Key Hex String>
-    lnd: <Authenticated LND API Object>
-    nodes: [{
-      from: <Saved Node Name>
-      public_key: <Public Key Hex String>
-    }]
-    tokens: <Trade Price Tokens Number>
-    user: <Telegram User Id Number>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Post a settled trade message
+ * @param {{}} args.api Telegram API Object
+ * @param {string} args.description Trade Description
+ * @param {string} args.destination Trade Invoice Creator Public Key Hex
+ * @param {{}} args.lnd Authenticated LND API Object
+ * @param {{
+ *   from: string,
+ *   public_key: string
+ * }[]} args.nodes {
+ *   from: Saved Node Name,
+ *   public_key: <Public Key Hex
+ * }
+ * @param {number} tokens Trade Price Tokens
+ * @param {number} user Telegram User Id
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function postSettledTrade(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

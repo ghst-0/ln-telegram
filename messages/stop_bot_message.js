@@ -8,18 +8,15 @@ const {stopBotCancelButtonLabel} = labels;
 const {stopBotConfirmButtonLabel} = labels;
 const mode = 'MarkdownV2';
 
-/** Create a stop bot message
-
-  {}
-
-  @returns
-  {
-    markup: <Reply Markup Object>
-    mode: <Message Parse Mode String>
-    text: <Message Text String>
-  }
-*/
-function stopBotMessage(args) {
+/**
+ * Create a stop bot message
+ * @returns {{markup: InlineKeyboard, mode: string, text: string}} {
+ *   markup: Reply Markup Object,
+ *   mode: Message Parse Mode,
+ *   text: Message Text
+ * }
+ */
+function stopBotMessage() {
   const markup = new InlineKeyboard();
 
   markup.text(stopBotCancelButtonLabel, terminateBot);

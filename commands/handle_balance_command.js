@@ -9,24 +9,39 @@ import { fundsSummary } from './../messages/index.js';
 const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};
 
-/** See the balance of funds
-
-  Syntax of command:
-
-  /balance
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    nodes: [{
-      from: <From Name String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Public Key Hex String>
-    }]
-    reply: <Reply Function>
-    working: <Working Function>
-  }
-*/
+/**
+ * See the balance of funds
+ *
+ *  Syntax of command:
+ *
+ *   /balance
+ *
+ *   {
+ *     from: <Command From User Id Number>
+ *     id: <Connected User Id Number>
+ *     nodes: [{
+ *       from: <From Name String>
+ *       lnd: <Authenticated LND API Object>
+ *       public_key: <Public Key Hex String>
+ *     }]
+ *     reply: <Reply Function>
+ *     working: <Working Function>
+ *   }
+ *
+ * @param {{
+ *   from: string,
+ *   id: string,
+ *   nodes: [{
+ *     from: string,
+ *     lnd: {},
+ *     public_key: string
+ *   }],
+ *   reply: function,
+ *   working: function}
+ * } args
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>}
+ */
 function handleBalanceCommand(args, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

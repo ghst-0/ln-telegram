@@ -1,44 +1,60 @@
 const flatten = arr => [].concat(...arr);
 
-/** Derive pending forwards frrom a list of pending payments
-
-  {
-    channels: [{
-      id: <Channel Id String>
-      partner_public_key: <Peer Public Key Hex String>
-      pending_payments: [{
-        id: <Payment Preimage Hash Hex String>
-        [in_channel]: <Forward Inbound From Channel Id String>
-        [in_payment]: <Payment Index on Inbound Channel Number>
-        [is_forward]: <Payment is a Forward Bool>
-        is_outgoing: <Payment Is Outgoing Bool>
-        [out_channel]: <Forward Outbound To Channel Id String>
-        [out_payment]: <Payment Index on Outbound Channel Number>
-        [payment]: <Payment Attempt Id Number>
-        timeout: <Chain Height Expiration Number>
-        tokens: <Payment Tokens Number>
-      }]
-    }]
-  }
-
-  @returns
-  {
-    forwarding: [{
-      fee: <Routing Fee Tokens Number>
-      in_peer: <Forwarding From Peer Public Key Hex String>
-      out_peer: <Forwarding to Peer Public Key Hex String>
-      payment: <Forwarding Payment Hash Hex String>
-      timeout: <Chain Height Expiration Number>
-      tokens: <Forwarding Tokens Amount Number>
-    }]
-    sending: [{
-      out_channel: <Sending Out Channel Id String>
-      out_peer: <Sending Out Peer Public Key Hex String>
-      timeout: <Sending Timeout Block Height Number>
-      tokens: <Sending Tokens Amount Number>
-    }]
-  }
-*/
+/**
+ * Derive pending forwards from a list of pending payments
+ * @param {{
+ *   id: string,
+ *   partner_public_key: string,
+ *   pending_payments: [{
+ *     id: string
+ *     [in_channel]: string,
+ *     [in_payment]: number,
+ *     [is_forward]: boolean,
+ *     is_outgoing: boolean,
+ *     [out_channel]: string,
+ *     [out_payment]: number,
+ *     [payment]: number,
+ *     timeout: number,
+ *     tokens: number
+ *   }]
+ * }[]} channels {
+ *   id: Channel Id,
+ *   partner_public_key: Peer Public Key Hex,
+ *   pending_payments: {
+ *     id: Payment Preimage Hash Hex,
+ *     [in_channel]: Forward Inbound From Channel Id,
+ *     [in_payment]: Payment Index on Inbound Channel,
+ *     [is_forward]: Payment is a Forward,
+ *     is_outgoing: Payment Is Outgoing,
+ *     [out_channel]: Forward Outbound To Channel Id,
+ *     [out_payment]: Payment Index on Outbound Channel,
+ *     [payment]: Payment Attempt Id,
+ *     timeout: Chain Height Expiration,
+ *     tokens: Payment Tokens
+ *   }[]
+ * }
+ * @returns {{
+ *   forwarding: {
+ *     fee: number,
+ *     in_peer: string,
+ *     out_peer: string,
+ *     payment: string,
+ *     timeout: number,
+ *     tokens: number
+ *   }[],
+ *   sending: {
+ *     out_channel: string,
+ *     out_peer: string,
+ *     timeout: number,
+ *     tokens: number
+ *   }[]
+ * }} {
+ *   out_channel: Sending Out Channel Id,
+ *   out_peer: Sending Out Peer Public Key Hex,
+ *   timeout: Sending Timeout Block Height,
+ *   tokens: Sending Tokens Amount
+ * }
+ */
 function pendingPayments({ channels }) {
   // Collect all the outbound type HTLCs
   const sending = flatten(channels.map(channel => {

@@ -4,17 +4,14 @@ import { returnResult } from 'asyncjs-util';
 import { checkAccess } from './../authentication/index.js';
 import { stopBotMessage } from './../messages/index.js';
 
-/** Execute stop command to stop the bot
-
-  {
-    from: <Command From User Id Number>
-    id: <Connected User Id Number>
-    quit: <Stop Bot Function>
-    reply: <Reply Function>
-  }
-
-  @returns via cbk or Promise
-*/
+/**
+ * Execute stop command to stop the bot
+ * @param {number} from Command From User Id
+ * @param {number} id Connected User Id
+ * @param {function} reply Reply to Telegram Context Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>} via cbk or Promise
+ */
 function handleStopCommand({ from, id, reply }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

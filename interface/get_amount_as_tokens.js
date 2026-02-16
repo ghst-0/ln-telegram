@@ -13,19 +13,14 @@ const networks = {btc: 'BTC', btcregtest: 'BTC', btctestnet: 'BTC'};
 const rateAsTokens = rate => 1e10 / rate;
 const symbols = ['EUR', 'USD'];
 
-/** Get the tokens value for an amount string
-
-  {
-    [amount]: <Amount String>
-    [lnd]: <Authenticated LND API Object>
-    [request]: <Request Function>
-  }
-
-  @returns via cbk or Promise
-  {
-    tokens: <Amount Number>
-  }
-*/
+/**
+ * Get the tokens value for an amount string
+ * @param {string} [amount] Amount
+ * @param {{}} [lnd] Authenticated LND API Object
+ * @param {function} [request] Request Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<tokens: string>} tokens: <Amount>
+ */
 function getAmountAsTokens({ amount, lnd, request }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

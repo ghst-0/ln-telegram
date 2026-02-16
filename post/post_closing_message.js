@@ -12,29 +12,24 @@ const joinLines = lines => lines.filter(n => !!n).join('\n');
 const markup = {parse_mode: 'MarkdownV2'};
 const uniq = arr => Array.from(new Set(arr));
 
-/** Send channel closing message to telegram
-
-  {
-    from: <Node From Name String>
-    id: <Connected Telegram User Id String>
-    lnd: <Authenticated LND API Object>
-    closing: [{
-      capacity: <Channel Token Capacity Number>
-      partner_public_key: <Channel Partner Public Key String>
-      transaction_id: <Channel Transaction Id Hex String>
-      transaction_vout: <Channel Transaction Output Index Number>
-    }]
-    nodes: [{
-      public_key: <Node Public Key Hex String>
-    }]
-    send: <Send Message to Telegram User Id Function>
-  }
-
-  @returns via cbk or Promise
-  {
-    text: <Posted Channel Closing Message String>
-  }
-*/
+/**
+ * Send channel closing message to telegram
+ * @param {{}} closing
+ * @param {number} closing.capacity Channel Token Capacity
+ * @param {string} closing.partner_public_key Channel Partner Public Key
+ * @param {string} closing.transaction_id Channel Transaction Id Hex
+ * @param {number} closing.transaction_vout Channel Transaction Output Index
+ * @param {string} from Node From Name
+ * @param {string} id Connected Telegram User Id
+ * @param {{}} lnd Authenticated LND API Object
+ * @param {{}} nodes List of nodes
+ * @param {{public_key: string}[]} nodes List of nodes {
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} send Send Message to Telegram User Id Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<string>} via cbk or Promise<string> Posted Channel Closing Message String
+ */
 function postClosingMessage({ closing, from, id, lnd, nodes, send }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

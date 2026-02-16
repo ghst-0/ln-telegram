@@ -10,29 +10,26 @@ const join = arr => arr.filter(n => !!n).join('\n');
 const mode = 'MarkdownV2';
 const titlePrefix = titles.createdTradePrefix;
 
-/** Created trade message
-
-  {
-    [from]: <Invoice From Node String>
-    description: <Trade Description String>
-    expires_at: <Trade Expires at ISO 8601 Date String>
-    id: <Trade Id Hex String>
-    destination: <Trade Destination Public Key Hex String>
-    network: <Network Name String>
-    nodes: [{
-      from: <Saved Node Name>
-      public_key: <Public Key Hex String>
-    }]
-    tokens: <Trade Price Number>
-  }
-
-  @returns
-  {
-    markup: <Reply Markup Object>
-    mode: <Message Parse Mode String>
-    text: <Message Text String>
-  }
-*/
+/**
+ * Created trade message
+ * @param {{}} args
+ * @param {string} args.from Invoice From Node
+ * @param {string} args.description Trade Description
+ * @param {string} args.expires_at Trade Expires at ISO 8601 Date
+ * @param {string} args.id Trade Id Hex
+ * @param {string} args.destination Trade Destination Public Key Hex
+ * @param {string} args.network Network Name
+ * @param {{from: string, public_key: string}[]} args.nodes {
+ *   from: Saved Node Name,
+ *   public_key: Public Key Hex
+ * }
+ * @param {number} args.tokens Trade Price
+ * @returns {{markup: {}, mode: string, text: string}} {
+ *     markup: Reply Markup Object,
+ *     mode: Message Parse Mode,
+ *     text: Message Text
+ *   }
+ */
 function createTradeMessage(args) {
   const expiry = escape(fromISO(args.expires_at).toLocaleString());
   const { markup } = tradeEditButtons({ nodes: args.nodes });

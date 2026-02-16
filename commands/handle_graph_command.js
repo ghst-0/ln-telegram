@@ -41,7 +41,7 @@ const socketHost = n => n.split(':').slice(0, -1).join(':');
 const torV3Match = /[a-z2-7]{56}.onion/i;
 const uniq = arr => Array.from(new Set(arr));
 
-/** Get details about a node in the graph
+/**
 
   Syntax of command:
 
@@ -49,7 +49,6 @@ const uniq = arr => Array.from(new Set(arr));
 
   {
     from: <Command From User Id Number>
-    id: <Connected User Id Number>
     nodes: [{
       from: <From Name String>
       lnd: <Authenticated LND API Object>
@@ -57,9 +56,24 @@ const uniq = arr => Array.from(new Set(arr));
     }]
     reply: <Reply Function>
     text: <Original Command Text String>
-    working: <Working Function>
   }
 */
+/**
+ * Get details about a node in the graph
+ * @param {number} from Command From User Id
+ * @param {number} id Connected User Id
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: Saved Node Name,
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {function} remove Remove Function
+ * @param {function} reply Reply to Telegram Context Function
+ * @param {string} text Original Command Text
+ * @param {function} working Working Function
+ * @param {function} cbk Callback function
+ * @returns {Promise<unknown>}
+ */
 function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, cbk) {
   return new Promise((resolve, reject) => {
     return asyncAuto({

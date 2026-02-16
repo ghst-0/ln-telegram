@@ -6,21 +6,16 @@ const nodeLabel = named => `Node: ${named}`;
 const shortId = key => key.slice(0, 46);
 const switchNode = id => `${callbackCommands.moveTradeNode}${id}`;
 
-/** Create a keyboard with trade edit buttons
-
-  {
-    is_selecting: <Is Selecting A Node to Move To Bool>
-    nodes: [{
-      from: <Node Name String>
-      public_key: <Node Identity Public Key Hex String>
-    }]
-  }
-
-  @returns
-  {
-    markup: <Keyboard Markup Object>
-  }
-*/
+/**
+ * Create a keyboard with trade edit buttons
+ * @param {{}} args
+ * @param {boolean} args.is_selecting
+ * @param {{from: string, public_key: string}[]} args.nodes {
+ *   from: Node Name,
+ *   public_key: Node Identity Public Key Hex
+ * }
+ * @returns {{markup: InlineKeyboard}} Keyboard Markup Object
+ */
 function tradeEditButtons(args) {
   const markup = new InlineKeyboard();
   const [, otherNode] = args.nodes;

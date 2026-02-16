@@ -12,33 +12,35 @@ const noFrom = '';
 const peerTitle = (query, k) => `*Liquidity with ${query} ${k}:*\n\n`;
 const shortId = key => key.substring(0, 8);
 
-/** Message summarizing liquidity
-
-  {
-    [alias]: <Alias String>
-    inbound: [{
-      balance: <Balance Tokens Number>
-      [fee_rate]: Fee Rate Number>
-      public_key: <Public Key Hex String>
-    }]
-    nodes: [{
-      from: <From Name String>
-      lnd: <Authenticated LND API Object>
-      public_key: <Public Key Hex String>
-    }]
-    outbound: [{
-      balance: <Balance Tokens Number>
-      [fee_rate]: Fee Rate Number>
-      public_key: <Public Key Hex String>
-    }]
-    [peer]: <Peer Public Key Hex String>
-  }
-
-  @returns
-  {
-    message: <Message Text String>
-  }
-*/
+/**
+ * Message summarizing liquidity
+ * @param {string} alias Alias
+ * @param {{
+ *   balance: number,
+ *   [fee_rate]: number,
+ *   public_key: string
+ * }[]} inbound {
+ *   balance: Balance Tokens,
+ *   fee_rate: Fee Rate,
+ *   public_key: Public Key Hex
+ * }
+ * @param {{from: string, lnd: {}, public_key: string}[]} nodes List of nodes {
+ *   from: From Name,
+ *   lnd: Authenticated LND API Object,
+ *   public_key: Public Key Hex
+ * }
+ * @param {{
+ *   balance: number,
+ *   [fee_rate]: number,
+ *   public_key: string
+ * }[]} outbound {
+ *   balance: Balance Tokens,
+ *   fee_rate: Fee Rate,
+ *   public_key: Public Key Hex
+ * }
+ * @param {string} peer Peer Public Key Hex
+ * @returns {{message: string}} Message Text
+ */
 function liquiditySummary({ alias, inbound, nodes, outbound, peer }) {
   const [, otherNode] = nodes;
 
