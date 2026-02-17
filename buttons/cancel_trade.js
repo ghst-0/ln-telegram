@@ -90,7 +90,7 @@ function cancelTrade({ ctx, nodes }, cbk) {
         postFailure: ['cancel', 'trade', async ({ cancel, trade }) => {
           // Exit early when there was no failure
           if (!cancel.error && !trade.error) {
-            return await ctx.deleteMessage();
+            await ctx.deleteMessage();
           }
 
           const [, message] = cancel.error || trade.error;

@@ -280,7 +280,7 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
       },
       (err, res) => {
         if (isArray(err)) {
-          const [code, message, context] = err;
+          const [message, context] = err;
 
           // Setting text means that the payment definitively failed
           let text;

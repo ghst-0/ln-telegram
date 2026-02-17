@@ -74,7 +74,7 @@ function setInvoiceNode({ ctx, nodes }, cbk) {
           }
 
           // Post the original message but with move node buttons
-          return await ctx.editMessageText(
+          await ctx.editMessageText(
             ctx.update.callback_query.message.text,
             {
               entities: ctx.update.callback_query.message.entities,

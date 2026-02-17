@@ -163,7 +163,7 @@ function askToUpdateTrade({ command, ctx, nodes }, cbk) {
             return;
           }
 
-          return await ctx.deleteMessage();
+          await ctx.deleteMessage();
         }]
       },
       returnResult({ reject, resolve }, cbk));

@@ -91,7 +91,7 @@ function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
                       token = res.next || false;
 
                       // Stop paging when there is an invoice older than the start
-                      if (res.invoices.find(n => n.created_at < after)) {
+                      if (res.invoices.some(n => n.created_at < after)) {
                         token = false;
                       }
 

@@ -36,7 +36,7 @@ function setTradeNode({ ctx, nodes }, cbk) {
           const { markup } = tradeEditButtons({ nodes, is_selecting: true });
 
           // Post the original message but with updated buttons
-          return await ctx.editMessageText(
+          await ctx.editMessageText(
             ctx.update.callback_query.message.text,
             {
               entities: ctx.update.callback_query.message.entities,
