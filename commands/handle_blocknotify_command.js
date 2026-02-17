@@ -31,7 +31,7 @@ const network = 'btc';
  */
 function handleBlocknotifyCommand({ from, id, reply, request }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

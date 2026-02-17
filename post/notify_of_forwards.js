@@ -45,7 +45,7 @@ const uniq = arr => Array.from(new Set(arr));
  */
 function notifyOfForwards({ forwards, from, id, lnd, node, nodes, send }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!isArray(forwards)) {

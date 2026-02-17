@@ -24,7 +24,7 @@ const {unannounced} = icons;
  */
 function postOpeningMessage({ from, id, lnd, opening, send }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

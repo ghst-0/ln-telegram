@@ -17,7 +17,7 @@ const {isArray} = Array;
  */
 function setTradeNode({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!ctx) {

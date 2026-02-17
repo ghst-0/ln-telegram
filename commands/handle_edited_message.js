@@ -20,7 +20,7 @@ const title = 'Editing past messages is not supported.';
  */
 function handleEditedMessage({ ctx }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!ctx) {

@@ -28,7 +28,7 @@ const waitTimeForBlock = n => `${n * 10} min`;
  */
 function handleMempoolCommand({ from, id, reply, request }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

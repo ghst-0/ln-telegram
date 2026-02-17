@@ -23,7 +23,7 @@ const shortId = id => id.slice(0, 8);
  */
 function postNodesOffline({ bot, connected, offline }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!bot) {

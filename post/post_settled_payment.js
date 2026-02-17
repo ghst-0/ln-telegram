@@ -31,7 +31,7 @@ const niceName = node => node.alias || node.id.slice(0, 8);
  */
 function postSettledPayment({ from, id, lnd, nodes, payment, send }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

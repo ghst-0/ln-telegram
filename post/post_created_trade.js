@@ -25,7 +25,7 @@ const {isArray} = Array;
  */
 function postCreatedTrade(args, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!args.api) {

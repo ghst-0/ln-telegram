@@ -27,7 +27,7 @@ const split = n => n.split('\n');
  */
 function updateInvoiceFromReply({ api, ctx, id, nodes, request }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!api) {

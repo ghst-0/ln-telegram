@@ -23,7 +23,7 @@ const {isArray} = Array;
  */
 function actOnMessageReply({ api, ctx, id, nodes, request }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!api) {

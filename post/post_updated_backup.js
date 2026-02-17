@@ -17,7 +17,7 @@ const hexAsBuffer = hex => Buffer.from(hex, 'hex');
  */
 function postUpdatedBackup({ backup, id, node, send }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!backup) {

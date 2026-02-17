@@ -26,7 +26,7 @@ const {isArray} = Array;
  */
 function handleBackupCommand({ from, id, nodes, reply, send }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

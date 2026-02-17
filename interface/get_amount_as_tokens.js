@@ -23,7 +23,7 @@ const symbols = ['EUR', 'USD'];
  */
 function getAmountAsTokens({ amount, lnd, request }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         validate: cbk => {
           if (!!amount && isNumber(amount) && !isInteger(Number(amount))) {
             return cbk([400, 'ExpectedIntegerAmountToParseAmount']);

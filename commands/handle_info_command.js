@@ -27,7 +27,7 @@ const markup = {parse_mode: 'MarkdownV2'};
  */
 function handleInfoCommand({ from, id, nodes, remove, reply }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

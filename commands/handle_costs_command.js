@@ -36,7 +36,7 @@ const weekMs = 1000 * 60 * 60 * 24 * 7;
  */
 function handleCostsCommand({ from, id, nodes, reply, request, working }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

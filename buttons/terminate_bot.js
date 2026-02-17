@@ -17,7 +17,7 @@ const shutdownMessage = `${icons.bot} Bot shutting down...`
  */
 function terminateBot({ bot, ctx, exit }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!bot) {

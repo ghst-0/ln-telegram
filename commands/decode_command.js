@@ -21,7 +21,7 @@ const {isArray} = Array;
  */
 function decodeCommand({ help, nodes, reply, text }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!help) {

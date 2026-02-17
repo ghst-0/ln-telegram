@@ -32,7 +32,7 @@ const uniq = arr => Array.from(new Set(arr));
  */
 function postClosingMessage({ closing, from, id, lnd, nodes, send }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!isArray(closing)) {

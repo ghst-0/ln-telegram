@@ -28,7 +28,7 @@ const removeMessageKeyboard = kb => kb.text('OK', 'remove-message');
  */
 function postCreatedInvoice({ ctx, description, destination, nodes, tokens }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!ctx) {

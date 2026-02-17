@@ -22,7 +22,7 @@ const switchNode = id => `${callbackCommands.moveInvoiceNode}${id}`;
  */
 function setInvoiceNode({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!ctx) {

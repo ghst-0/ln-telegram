@@ -35,7 +35,7 @@ const pathfindTimeoutMs = 1000 * 60;
  */
 function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!budget) {

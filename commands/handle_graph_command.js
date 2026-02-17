@@ -76,7 +76,7 @@ const uniq = arr => Array.from(new Set(arr));
  */
 function handleGraphCommand({ from, id, nodes, remove, reply, text, working }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

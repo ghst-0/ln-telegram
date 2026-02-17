@@ -29,7 +29,7 @@ const uniq = arr => Array.from(new Set(arr));
  */
 function handlePendingCommand({ from, id, nodes, reply, working }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

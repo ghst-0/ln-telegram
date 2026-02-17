@@ -55,7 +55,7 @@ const sort = (a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0);
  */
 function getReceivedMessage({ description, lnd, payments, received, via }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (description === undefined) {

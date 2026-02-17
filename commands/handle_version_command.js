@@ -23,7 +23,7 @@ const url = n => `https://registry.npmjs.org/${n}/latest`;
  */
 function handleVersionCommand({ from, id, named, reply, request, version }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

@@ -13,7 +13,7 @@ const message = '🤖 Unexpected button pushed. This button may no longer be sup
  */
 function warnUnknownButton({ ctx }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!ctx) {

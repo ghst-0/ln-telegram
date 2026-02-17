@@ -28,7 +28,7 @@ const split = n => n.split('\n');
  */
 function setInvoiceTokens({ ctx, nodes }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!ctx) {

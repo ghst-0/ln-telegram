@@ -26,7 +26,7 @@ const textJoiner = '\n';
  */
 function postOpenMessage(args, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (args.capacity === undefined) {

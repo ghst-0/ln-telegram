@@ -26,7 +26,7 @@ const join = arr => arr.join('\n');
  */
 function getBalancedOpenMessage({ capacity, from, lnd, rate }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!capacity) {

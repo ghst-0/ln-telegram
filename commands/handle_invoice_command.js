@@ -27,7 +27,7 @@ const splitArguments = n => n.split(' ');
  */
 function handleInvoiceCommand({ ctx, id, nodes, request }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!ctx) {

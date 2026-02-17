@@ -46,7 +46,7 @@ const markup = {parse_mode: 'MarkdownV2'};
  */
 function postChainTransaction({ confirmed, from, id, nodes, send, transaction }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!from) {

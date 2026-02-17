@@ -21,7 +21,7 @@ const markup = {parse_mode: 'MarkdownV2'};
  */
 function postNodesOnline({ id, nodes, send }, cbk) {
   return new Promise((resolve, reject) => {
-    return asyncAuto({
+    asyncAuto({
         // Check arguments
         validate: cbk => {
           if (!id) {
