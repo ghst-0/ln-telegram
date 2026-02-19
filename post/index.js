@@ -2,7 +2,6 @@ import notifyOfForwards from './notify_of_forwards.js';
 import postChainTransaction from './post_chain_transaction.js';
 import postClosedMessage from './post_closed_message.js';
 import postClosingMessage from './post_closing_message.js';
-import postCreatedInvoice from './post_created_invoice.js';
 import postNodesOffline from './post_nodes_offline.js';
 import postNodesOnline from './post_nodes_online.js';
 import postOpenMessage from './post_open_message.js';
@@ -17,7 +16,6 @@ export {
   postChainTransaction,
   postClosedMessage,
   postClosingMessage,
-  postCreatedInvoice,
   postNodesOffline,
   postNodesOnline,
   postOpenMessage,

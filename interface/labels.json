@@ -1,12 +1,4 @@
 {
-  "invoiceMessageCancelButtonLabel": "🗑",
-  "invoiceMessageDescriptionButtonLabel": "Set Memo",
-  "invoiceMessageNodeButtonLabel": "Node...",
-  "invoiceMessageSetTokensButtonLabel": "Amount...",
   "stopBotCancelButtonLabel": "Confirm, Stop Bot",
-  "stopBotConfirmButtonLabel": "Cancel",
-  "tradeMessageCancelButtonLabel": "🗑",
-  "tradeMessageDescriptionButtonLabel": "Set Description",
-  "tradeMessageExpiresAtLabel": "Expiry...",
-  "tradeMessageNodeButtonLabel": "Node..."
+  "stopBotConfirmButtonLabel": "Cancel"
 }
