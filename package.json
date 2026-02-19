@@ -12,7 +12,6 @@
     "async": "3.2.6",
     "asyncjs-util": "1.2.12",
     "bolt07": "1.9.4",
-    "goldengate": "14.0.11",
     "grammy": "1.40.0",
     "ln-accounting": "workspace:*",
     "ln-service": "workspace:*",
