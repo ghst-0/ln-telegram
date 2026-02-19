@@ -11,7 +11,6 @@ import handleMempoolCommand from './handle_mempool_command.js';
 import handlePayCommand from './handle_pay_command.js';
 import handlePendingCommand from './handle_pending_command.js';
 import handleStartCommand from './handle_start_command.js';
-import handleStopCommand from './handle_stop_command.js';
 import handleVersionCommand from './handle_version_command.js';
 
 export {
@@ -28,6 +27,5 @@ export {
   handlePayCommand,
   handlePendingCommand,
   handleStartCommand,
-  handleStopCommand,
   handleVersionCommand,
 };

@@ -11,7 +11,6 @@ import {
   handlePayCommand,
   handlePendingCommand,
   handleStartCommand,
-  handleStopCommand,
   handleVersionCommand
 } from './commands/index.js';
 import {
@@ -42,7 +41,6 @@ export {
   handlePayCommand,
   handlePendingCommand,
   handleStartCommand,
-  handleStopCommand,
   handleVersionCommand,
   notifyOfForwards,
   postChainTransaction,
