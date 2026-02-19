@@ -1,9 +1,4 @@
 import {
-  actOnMessageReply,
-  isMessageReplyAction,
-  updateInvoiceFromReply
-} from './replies/index.js';
-import {
   handleBackupCommand,
   handleBalanceCommand,
   handleConnectCommand,
@@ -40,7 +35,6 @@ import {
 } from './post/index.js';
 
 export {
-  actOnMessageReply,
   handleBackupCommand,
   handleBalanceCommand,
   handleButtonPush,
@@ -58,7 +52,6 @@ export {
   handleStartCommand,
   handleStopCommand,
   handleVersionCommand,
-  isMessageReplyAction,
   notifyOfForwards,
   postChainTransaction,
   postClosedMessage,
@@ -72,6 +65,5 @@ export {
   postSettledPayment,
   postSettledTrade,
   postUpdatedBackup,
-  sendMessage,
-  updateInvoiceFromReply
+  sendMessage
 };
