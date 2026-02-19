@@ -1,15 +1,31 @@
-import { DateTime } from 'luxon';
-
 import { formatTokens, icons } from './../interface/index.js';
 
-const asRelative = n => n.toRelative({locale: 'en'});
 const blocksAsEpoch = blocks => Date.now() + blocks * 1000 * 60 * 10;
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const flatten = arr => [].concat(...arr);
-const fromNow = ms => ms ? DateTime.fromMillis(ms) : undefined;
 const nodeAlias = (alias, id) => `${alias} ${id.slice(0, 8)}`.trim();
 const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
 const uniq = arr => Array.from(new Set(arr));
+
+
+const units = {
+  year  : 24 * 60 * 60 * 1000 * 365,
+  month : 24 * 60 * 60 * 1000 * 365/12,
+  day   : 24 * 60 * 60 * 1000,
+  hour  : 60 * 60 * 1000,
+  minute: 60 * 1000,
+  second: 1000
+}
+
+const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' })
+
+const getRelativeTime = (d1, d2 = new Date()) => {
+  const elapsed = d1 - d2
+  for (let u in units)
+    if (Math.abs(elapsed) > units[u] || u === 'second')
+      return rtf.format(Math.round(elapsed / units[u]), u)
+}
+
 
 /**
  * Notify of pending channels and HTLCs
@@ -107,7 +123,7 @@ function pendingSummary({ count, htlcs, pending }) {
         const waiting = `${ icons.closing } Waiting`;
 
         const peer = node.nodes.find(n => n.id === peerId);
-        const time = escape(asRelative(fromNow(blocksAsEpoch(waitBlocks))));
+        const time = getRelativeTime(blocksAsEpoch(waitBlocks));
 
         const action = `recover ${ escape(funds) } ${ time } from closing channel`;
         const alias = nodeAlias(peer.alias, peer.id);

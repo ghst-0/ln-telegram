@@ -16,7 +16,6 @@
     "ln-accounting": "workspace:*",
     "ln-service": "workspace:*",
     "ln-sync": "workspace:*",
-    "luxon": "3.7.2",
     "table": "6.9.0"
   },
   "description": "Lightning Network Telegram bot commands",
