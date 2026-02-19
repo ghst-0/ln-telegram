@@ -5,7 +5,6 @@ import handleConnectCommand from './handle_connect_command.js';
 import handleCostsCommand from './handle_costs_command.js';
 import handleEarningsCommand from './handle_earnings_command.js';
 import handleEditedMessage from './handle_edited_message.js';
-import handleGraphCommand from './handle_graph_command.js';
 import handleInfoCommand from './handle_info_command.js';
 import handleInvoiceCommand from './handle_invoice_command.js';
 import handleLiquidityCommand from './handle_liquidity_command.js';
@@ -24,7 +23,6 @@ export {
   handleCostsCommand,
   handleEarningsCommand,
   handleEditedMessage,
-  handleGraphCommand,
   handleInfoCommand,
   handleInvoiceCommand,
   handleLiquidityCommand,
