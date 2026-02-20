@@ -21,7 +21,7 @@
   "description": "Lightning Network Telegram bot commands",
   "devDependencies": {
     "ln-docker-daemons": "6.0.28",
-    "oxlint": "^1.48.0"
+    "oxlint": "^1.49.0"
   },
   "engines": {
     "node": ">=18"
