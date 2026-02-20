@@ -54,7 +54,7 @@ function handleMempoolCommand({ from, id, reply, request }, cbk) {
           reply(interaction.requesting_mempool);
 
           return request({ url, json: true }, (err, r, mempool) => {
-            if (!!err || !r || r.statusCode !== ok || !isArray(mempool)) {
+            if (err || !r || r.statusCode !== ok || !isArray(mempool)) {
               return cbk(null, { err: [503, 'ExpectedResponseFromMempoolSpace'] });
             }
 

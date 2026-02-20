@@ -57,7 +57,7 @@ function handleVersionCommand({ from, id, named, reply, request, version }, cbk)
           reply(currentVersion(version));
 
           return request({ json: true, url: url(named) }, (err, r, pkg) => {
-            if (!!err || !r || r.statusCode !== ok || !pkg || !pkg.version) {
+            if (err || !r || r.statusCode !== ok || !pkg || !pkg.version) {
               reply(failedToGetLatestVersion);
 
               return cbk();
