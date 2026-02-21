@@ -3,7 +3,7 @@ import { getChannels } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { formatTokens, icons } from './../interface/index.js';
+import { formatTokens, icons } from '../interface/index.js';
 
 const asPercent = (fee, tokens) => (fee / tokens * 100).toFixed(2);
 const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed(0);

@@ -1,4 +1,4 @@
-import { formatTokens } from './../interface/index.js';
+import { formatTokens } from '../interface/index.js';
 
 const join = arr => arr.filter(n => !!n).join('\n');
 const markup = undefined;

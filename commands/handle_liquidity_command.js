@@ -4,9 +4,9 @@ import { findKey, getLiquidity, getNodeAlias } from 'ln-sync';
 import { getChannel, getChannels } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from './../authentication/index.js';
-import interaction from './../interaction.json' with { type: 'json' };
-import { liquiditySummary } from './../messages/index.js';
+import { checkAccess } from '../authentication/index.js';
+import interaction from '../interaction.json' with { type: 'json' };
+import { liquiditySummary } from '../messages/index.js';
 
 const defaultAlias = '';
 const {isArray} = Array;

@@ -3,7 +3,7 @@ import { getIdentity, verifyBytesSignature } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { formatTokens, icons } from './../interface/index.js';
+import { formatTokens, icons } from '../interface/index.js';
 
 const bufFromHex = hex => Buffer.from(hex, 'hex');
 const dash = ' - ';

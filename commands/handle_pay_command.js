@@ -2,10 +2,10 @@ import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 import { getNode, getPayment, parsePaymentRequest, payViaRoutes, subscribeToProbeForRoute } from 'ln-service';
 
-import { checkAccess } from './../authentication/index.js';
+import { checkAccess } from '../authentication/index.js';
 import decodeCommand from './decode_command.js';
-import { icons } from './../interface/index.js';
-import interaction from './../interaction.json' with { type: 'json' };
+import { icons } from '../interface/index.js';
+import interaction from '../interaction.json' with { type: 'json' };
 
 const {ceil} = Math;
 const cltvDeltaBuffer = 3;

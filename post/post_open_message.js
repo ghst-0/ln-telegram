@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { getPeerLiquidity } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { formatTokens } from './../interface/index.js';
+import { formatTokens } from '../interface/index.js';
 
 const detailsJoiner = ' ';
 const displayAmount = tokens => formatTokens({tokens}).display;

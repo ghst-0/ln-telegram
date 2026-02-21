@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { rejects } from 'node:assert/strict';
 
-import { handleEarningsCommand } from './../../index.js';
+import { handleEarningsCommand } from '../../index.js';
 
 const tests = [
   {

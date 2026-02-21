@@ -4,7 +4,7 @@ import asyncMap from 'async/map.js';
 import { getBackups } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from './../authentication/index.js';
+import { checkAccess } from '../authentication/index.js';
 
 const date = () => new Date().toISOString().slice(0, 10);
 const hexAsBuffer = hex => Buffer.from(hex, 'hex');

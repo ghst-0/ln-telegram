@@ -2,8 +2,8 @@ import asyncAuto from 'async/auto.js';
 import { table as renderTable, getBorderCharacters } from 'table';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from './../authentication/index.js';
-import interaction from './../interaction.json' with { type: 'json' };
+import { checkAccess } from '../authentication/index.js';
+import interaction from '../interaction.json' with { type: 'json' };
 
 const border = getBorderCharacters('void');
 const feeAsRate = medianFee => `~${Math.ceil(medianFee)}/vByte`;

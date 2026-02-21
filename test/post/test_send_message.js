@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { rejects } from 'node:assert/strict';
 
-import sendMessage from './../../post/send_message.js';
+import sendMessage from '../../post/send_message.js';
 
 const tests = [
   {

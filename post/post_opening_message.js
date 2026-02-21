@@ -3,7 +3,7 @@ import asyncMap from 'async/map.js';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { icons, formatTokens } from './../interface/index.js';
+import { icons, formatTokens } from '../interface/index.js';
 
 const elementJoiner = ' ';
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');

@@ -1,8 +1,8 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
-import interaction from './../interaction.json' with { type: 'json' };
-import { checkAccess } from './../authentication/index.js';
+import interaction from '../interaction.json' with { type: 'json' };
+import { checkAccess } from '../authentication/index.js';
 
 const failedToGetLatestVersion = `${interaction.bot} Failed to get latest version information from NPM`;
 const currentVersion = n => `${interaction.bot} Running version: ${n}`;

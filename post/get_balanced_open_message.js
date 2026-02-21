@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { icons, formatTokens } from './../interface/index.js';
+import { icons, formatTokens } from '../interface/index.js';
 
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatCapacity = tokens => formatTokens({tokens}).display;

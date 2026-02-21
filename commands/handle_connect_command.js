@@ -1,4 +1,4 @@
-import interaction from './../interaction.json' with { type: 'json' };
+import interaction from '../interaction.json' with { type: 'json' };
 
 /**
  * Handle connect command

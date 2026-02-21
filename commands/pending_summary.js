@@ -1,4 +1,4 @@
-import { formatTokens, icons } from './../interface/index.js';
+import { formatTokens, icons } from '../interface/index.js';
 
 const blocksAsEpoch = blocks => Date.now() + blocks * 1000 * 60 * 10;
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');

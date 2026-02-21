@@ -2,7 +2,7 @@ import test from 'node:test';
 import { deepEqual } from 'node:assert/strict';
 import { setupChannel, spawnLightningCluster } from 'ln-docker-daemons';
 
-import { handleBalanceCommand } from './../../index.js';
+import { handleBalanceCommand } from '../../index.js';
 
 const size = 2;
 

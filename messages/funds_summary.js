@@ -1,6 +1,6 @@
 import { table as renderTable, getBorderCharacters } from 'table';
 
-import { formatTokens, icons } from './../interface/index.js';
+import { formatTokens, icons } from '../interface/index.js';
 
 const border = getBorderCharacters('void');
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');

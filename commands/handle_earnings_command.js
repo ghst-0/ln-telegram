@@ -7,8 +7,8 @@ import { table as renderTable, getBorderCharacters } from 'table';
 import { getInvoices, getPayment, getForwards } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from './../authentication/index.js';
-import { formatTokens } from './../interface/index.js';
+import { checkAccess } from '../authentication/index.js';
+import { formatTokens } from '../interface/index.js';
 
 const border = getBorderCharacters('void');
 const dayMs = 1000 * 60 * 60 * 24;

@@ -1,8 +1,8 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import { chanInfoResponse, listChannelsResponse, getNodeInfoResponse, pendingChannelsResponse } from './../fixtures/index.js';
-import postClosedMessage from './../../post/post_closed_message.js';
+import { chanInfoResponse, listChannelsResponse, getNodeInfoResponse, pendingChannelsResponse } from '../fixtures/index.js';
+import postClosedMessage from '../../post/post_closed_message.js';
 
 const pubKey = '000000000000000000000000000000000000000000000000000000000000000000';
 

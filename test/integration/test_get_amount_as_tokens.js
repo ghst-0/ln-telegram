@@ -3,7 +3,7 @@ import { deepEqual } from 'node:assert/strict';
 
 import { spawnLightningCluster } from 'ln-docker-daemons';
 
-import { getAmountAsTokens } from './../../interface/index.js';
+import { getAmountAsTokens } from '../../interface/index.js';
 
 // Get amount as tokens
 test(`Get an amount as tokens`, async () => {

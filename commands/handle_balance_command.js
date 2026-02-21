@@ -3,8 +3,8 @@ import asyncMap from 'async/map.js';
 import { getNodeFunds } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from './../authentication/index.js';
-import { fundsSummary } from './../messages/index.js';
+import { checkAccess } from '../authentication/index.js';
+import { fundsSummary } from '../messages/index.js';
 
 const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};

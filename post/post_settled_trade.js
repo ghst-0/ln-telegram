@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { settleTradeMessage } from './../messages/index.js';
+import { settleTradeMessage } from '../messages/index.js';
 
 const {isArray} = Array;
 

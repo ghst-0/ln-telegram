@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { InlineKeyboard } from 'grammy';
 import { returnResult } from 'asyncjs-util';
 
-import { icons } from './../interface/index.js';
+import { icons } from '../interface/index.js';
 
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const makeKeyboard = () => new InlineKeyboard();

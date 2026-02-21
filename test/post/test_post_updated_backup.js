@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { rejects } from 'node:assert/strict';
 
-import { postUpdatedBackup } from './../../post/index.js';
+import { postUpdatedBackup } from '../../post/index.js';
 
 const makeArgs = overrides => {
   const args = {

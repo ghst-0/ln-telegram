@@ -4,7 +4,7 @@ import asyncRetry from 'async/retry.js';
 import { getNode } from 'lightning';
 import { setupChannel, spawnLightningCluster } from 'ln-docker-daemons';
 
-import { handleLiquidityCommand } from './../../index.js';
+import { handleLiquidityCommand } from '../../index.js';
 
 const interval = 10;
 const size = 2;

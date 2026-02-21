@@ -5,8 +5,8 @@ import { getChainTransactions } from 'ln-accounting';
 import { getRebalancePayments } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from './../authentication/index.js';
-import { formatTokens } from './../interface/index.js';
+import { checkAccess } from '../authentication/index.js';
+import { formatTokens } from '../interface/index.js';
 
 const border = getBorderCharacters('void');
 const dayMs = 1000 * 60 * 60 * 24;

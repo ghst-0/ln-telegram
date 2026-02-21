@@ -4,7 +4,7 @@ import { getChannels, getHeight, getPendingChannels } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from './../authentication/index.js';
+import { checkAccess } from '../authentication/index.js';
 import pendingPayments from './pending_payments.js';
 import pendingSummary from './pending_summary.js';
 

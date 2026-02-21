@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual, throws } from 'node:assert/strict';
 
-import pendingPayments from './../../commands/pending_payments.js';
+import pendingPayments from '../../commands/pending_payments.js';
 
 const makeArgs = overrides => {
   const args = {

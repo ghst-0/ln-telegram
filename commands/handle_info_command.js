@@ -3,8 +3,8 @@ import asyncMap from 'async/map.js';
 import { getWalletInfo } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from './../authentication/index.js';
-import { icons } from './../interface/index.js';
+import { checkAccess } from '../authentication/index.js';
+import { icons } from '../interface/index.js';
 
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;

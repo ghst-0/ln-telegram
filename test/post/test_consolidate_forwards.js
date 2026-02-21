@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual } from 'node:assert/strict';
 
-import method from './../../post/consolidate_forwards.js';
+import method from '../../post/consolidate_forwards.js';
 
 const tests = [
   {
