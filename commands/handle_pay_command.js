@@ -11,7 +11,7 @@ const {ceil} = Math;
 const cltvDeltaBuffer = 3;
 const defaultMaxTokensMultiplier = 1.01;
 const {isArray} = Array;
-const isNumber = n => !Number.isNaN(n);
+const isNumber = n => !isNaN(n);
 const {min} = Math;
 const mtokensToTokens = tokens => Number(BigInt(tokens) / BigInt(1e3));
 const pathTimeoutMs = 1000 * 30;

@@ -96,10 +96,11 @@ function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
                       }
 
                       // Collect invoices that confirmed after the start
-                      res.invoices
+                      for (const n1 of res.invoices
                         .filter(n => !!n.confirmed_at)
-                        .filter(n => n.confirmed_at >= after)
-                        .forEach(n => invoices.push(n));
+                        .filter(n => n.confirmed_at >= after)) {
+                        invoices.push(n1)
+                      }
 
                       return cbk();
                     });

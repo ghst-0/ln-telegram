@@ -38,7 +38,9 @@ const makeTransaction = overrides => {
     sent_to: ['address'],
   };
 
-  Object.keys(overrides).forEach(k => tx[k] = overrides[k]);
+  for (const k of Object.keys(overrides)) {
+    tx[k] = overrides[k]
+  }
 
   return tx;
 };
