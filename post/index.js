@@ -8,7 +8,6 @@ import postOpenMessage from './post_open_message.js';
 import postOpeningMessage from './post_opening_message.js';
 import postSettledPayment from './post_settled_payment.js';
 import postSettledTrade from './post_settled_trade.js';
-import postUpdatedBackup from './post_updated_backup.js';
 import sendMessage from './send_message.js';
 
 export {
@@ -22,6 +21,5 @@ export {
   postOpeningMessage,
   postSettledPayment,
   postSettledTrade,
-  postUpdatedBackup,
   sendMessage,
 };

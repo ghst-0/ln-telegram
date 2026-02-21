@@ -1,4 +1,3 @@
-import handleBackupCommand from './handle_backup_command.js';
 import handleBalanceCommand from './handle_balance_command.js';
 import handleConnectCommand from './handle_connect_command.js';
 import handleCostsCommand from './handle_costs_command.js';
@@ -13,7 +12,6 @@ import handleStartCommand from './handle_start_command.js';
 import handleVersionCommand from './handle_version_command.js';
 
 export {
-  handleBackupCommand,
   handleBalanceCommand,
   handleConnectCommand,
   handleCostsCommand,

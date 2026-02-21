@@ -1,5 +1,4 @@
 import {
-  handleBackupCommand,
   handleBalanceCommand,
   handleConnectCommand,
   handleCostsCommand,
@@ -24,12 +23,10 @@ import {
   postOpeningMessage,
   postSettledPayment,
   postSettledTrade,
-  postUpdatedBackup,
   sendMessage
 } from './post/index.js';
 
 export {
-  handleBackupCommand,
   handleBalanceCommand,
   handleConnectCommand,
   handleCostsCommand,
@@ -52,6 +49,5 @@ export {
   postOpeningMessage,
   postSettledPayment,
   postSettledTrade,
-  postUpdatedBackup,
   sendMessage
 };
