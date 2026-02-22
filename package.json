@@ -11,7 +11,7 @@
     "@alexbosworth/fiat": "2.0.0",
     "async": "3.2.6",
     "asyncjs-util": "1.2.12",
-    "bolt07": "1.9.4",
+    "bolt07": "workspace:*",
     "ln-accounting": "workspace:*",
     "ln-service": "workspace:*",
     "ln-sync": "workspace:*",
@@ -19,7 +19,7 @@
   },
   "description": "Lightning Network Telegram bot commands",
   "devDependencies": {
-    "ln-docker-daemons": "6.0.28",
+    "ln-docker-daemons": "workspace:*",
     "oxlint": "^1.49.0"
   },
   "engines": {
