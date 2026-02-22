@@ -8,9 +8,9 @@
   },
   "type": "module",
   "dependencies": {
-    "@alexbosworth/fiat": "2.0.0",
+    "@alexbosworth/fiat": "workspace*",
     "async": "3.2.6",
-    "asyncjs-util": "1.2.12",
+    "asyncjs-util": "workspace*",
     "bolt07": "workspace:*",
     "ln-accounting": "workspace:*",
     "ln-service": "workspace:*",
