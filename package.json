@@ -23,7 +23,7 @@
     "oxlint": "^1.49.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "keywords": [
     "lightning",
