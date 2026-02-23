@@ -1,6 +1,6 @@
 import asyncAuto from 'async/auto.js';
 import { getNetwork } from 'ln-sync';
-import { getPrices } from '@alexbosworth/fiat';
+import { getPrices } from 'fiat';
 import { parseAmount } from 'ln-accounting';
 import { returnResult } from 'asyncjs-util';
 
