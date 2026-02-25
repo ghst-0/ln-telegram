@@ -2,9 +2,9 @@ import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 import { getNode, getPayment, parsePaymentRequest, payViaRoutes, subscribeToProbeForRoute } from 'ln-service';
 
-import { checkAccess } from '../authentication/index.js';
-import decodeCommand from './decode_command.js';
-import { icons } from '../interface/index.js';
+import { checkAccess } from '../authentication/check_access.js';
+import { decodeCommand } from './decode_command.js';
+import { icons } from '../interface/icons.json' with { type: 'json' };
 import interaction from '../interaction.json' with { type: 'json' };
 
 const {ceil} = Math;
@@ -33,7 +33,7 @@ const pathfindTimeoutMs = 1000 * 60;
  * @returns {Promise<{tokens: number}>} via cbk
  *   tokens: Spent Tokens Number
  */
-function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
+const handlePayCommand = ({ budget, from, id, nodes, reply, text }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -348,4 +348,4 @@ function handlePayCommand({ budget, from, id, nodes, reply, text }, cbk) {
   });
 }
 
-export default handlePayCommand;
+export { handlePayCommand };

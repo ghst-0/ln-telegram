@@ -19,7 +19,7 @@ const {isArray} = Array;
  *   lnd: <Authenticated LND gRPC API Object>
  *   params: [<Parameter>]
  */
-function decodeCommand({ help, nodes, reply, text }, cbk) {
+const decodeCommand = ({ help, nodes, reply, text }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -80,4 +80,4 @@ function decodeCommand({ help, nodes, reply, text }, cbk) {
   });
 }
 
-export default decodeCommand;
+export { decodeCommand };

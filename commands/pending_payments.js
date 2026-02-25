@@ -55,7 +55,7 @@ const flatten = arr => [].concat(...arr);
  *   tokens: Sending Tokens Amount
  * }
  */
-function pendingPayments({ channels }) {
+const pendingPayments = ({ channels }) => {
   // Collect all the outbound type HTLCs
   const sending = flatten(channels.map(channel => {
     return (channel.pending_payments || [])
@@ -114,4 +114,4 @@ function pendingPayments({ channels }) {
   return { forwarding, sending };
 }
 
-export default pendingPayments;
+export { pendingPayments };

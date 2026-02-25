@@ -1,8 +1,8 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import { nodeInfoResult } from '../fixtures/index.js';
-import { postSettledPayment } from '../../index.js';
+import nodeInfoResult from '../fixtures/node_info_result.json' with { type: 'json' };
+import { postSettledPayment } from '../../post/post_settled_payment.js';
 
 const makeArgs = overrides => {
   const args = {

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { postChainTransaction } from '../../index.js';
+import { postChainTransaction } from '../../post/post_chain_transaction.js';
 
 const makeTransaction = overrides => {
   const tx = {

@@ -1,11 +1,11 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { postNodesOffline } from '../../index.js';
+import { postNodesOffline } from '../../post/post_nodes_offline.js';
 
 const makeArgs = overrides => {
   const args = {
-    bot: {api: {sendMessage: () => new Promise(resolve => resolve())}},
+    bot: {api: {sendMessage: () => new Promise(resolve => {resolve()})}},
     connected: 1,
     offline: [{
       alias: 'alias',

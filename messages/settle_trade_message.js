@@ -1,4 +1,4 @@
-import { formatTokens } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
 
 const join = arr => arr.filter(n => !!n).join('\n');
 const markup = undefined;
@@ -18,7 +18,7 @@ const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
  *   mode: Message Parse Mode
  *   text: Message Text
  */
-function settleTradeMessage(args) {
+const settleTradeMessage = (args) => {
   const memo = args.description ? `“${ escape(args.description) }”` : '';
   const to = `${ escape(args.alias) } \`${ args.to }\``.trim();
 
@@ -31,4 +31,4 @@ function settleTradeMessage(args) {
   return { markup, mode, text };
 }
 
-export default settleTradeMessage;
+export { settleTradeMessage };

@@ -1,7 +1,7 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
-import { icons } from '../interface/index.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const commaJoin = arr => arr.join(', ');
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -19,7 +19,7 @@ const markup = {parse_mode: 'MarkdownV2'};
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise
  */
-function postNodesOnline({ id, nodes, send }, cbk) {
+const postNodesOnline = ({ id, nodes, send }, cbk)  => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -55,4 +55,4 @@ function postNodesOnline({ id, nodes, send }, cbk) {
   });
 }
 
-export default postNodesOnline;
+export { postNodesOnline };

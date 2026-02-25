@@ -1,6 +1,7 @@
 import { table as renderTable, getBorderCharacters } from 'table';
 
-import { formatTokens, icons } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const border = getBorderCharacters('void');
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -25,7 +26,7 @@ const sumOf = arr => arr.reduce((sum, n) => sum + n, Number());
  * }
  * @returns {{message: string}} Message Text
  */
-function fundsSummary({ balances, nodes }) {
+const fundsSummary = ({ balances, nodes }) => {
   const [, otherNode] = nodes;
 
   const total = sumOf(nodes.map((_, i) => {
@@ -97,4 +98,4 @@ function fundsSummary({ balances, nodes }) {
   return { message: `${ icon }${ header }${ table.join('') }` };
 }
 
-export default fundsSummary;
+export { fundsSummary };

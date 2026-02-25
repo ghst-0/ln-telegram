@@ -31,7 +31,7 @@ const mtokensAsTokens = n => Number(n) / 1e3;
  *   tokens: Forwarded Tokens
  * }
  */
-function consolidateForwards({ forwards }) {
+const consolidateForwards = ({ forwards }) => {
   const unique = forwards.reduce((sum, forward) => {
       const fee = mtokensAsTokens(forward.fee_mtokens);
       const tokens = mtokensAsTokens(forward.mtokens);
@@ -51,4 +51,4 @@ function consolidateForwards({ forwards }) {
   return { forwards: keys(unique).map(key => unique[key]) };
 }
 
-export default consolidateForwards;
+export { consolidateForwards };

@@ -1,6 +1,7 @@
 import { table as renderTable, getBorderCharacters } from 'table';
 
-import { formatTokens, icons } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const border = getBorderCharacters('void');
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -41,7 +42,7 @@ const shortId = key => key.slice(0, 8);
  * @param {string} peer Peer Public Key Hex
  * @returns {{message: string}} Message Text
  */
-function liquiditySummary({ alias, inbound, nodes, outbound, peer }) {
+const liquiditySummary = ({ alias, inbound, nodes, outbound, peer }) => {
   const [, otherNode] = nodes;
 
   const header = peer ? peerTitle(escape(alias), shortId(peer)) : head;
@@ -80,4 +81,4 @@ function liquiditySummary({ alias, inbound, nodes, outbound, peer }) {
   return { message: `${ icon }${ header }${ table.join('') }` };
 }
 
-export default liquiditySummary;
+export { liquiditySummary };

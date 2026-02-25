@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { getPeerLiquidity } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { formatTokens } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
 
 const detailsJoiner = ' ';
 const displayAmount = tokens => formatTokens({tokens}).display;
@@ -24,7 +24,7 @@ const textJoiner = '\n';
  * @param {function} cbk Callback function
  * @returns {Promise<text: string>} via cbk or Promise<text: string> text: Posted Channel Open Message String
  */
-function postOpenMessage(args, cbk) {
+const postOpenMessage = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -99,4 +99,4 @@ function postOpenMessage(args, cbk) {
   });
 }
 
-export default postOpenMessage;
+export { postOpenMessage };

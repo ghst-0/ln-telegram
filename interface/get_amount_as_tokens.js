@@ -21,7 +21,7 @@ const symbols = ['EUR', 'USD'];
  * @param {function} cbk Callback function
  * @returns {Promise<tokens: string>} tokens: <Amount>
  */
-function getAmountAsTokens({ amount, lnd, request }, cbk) {
+const getAmountAsTokens = ({ amount, lnd, request }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         validate: cbk => {
@@ -122,4 +122,4 @@ function getAmountAsTokens({ amount, lnd, request }, cbk) {
   });
 }
 
-export default getAmountAsTokens;
+export { getAmountAsTokens };

@@ -3,7 +3,8 @@ import { getIdentity, verifyBytesSignature } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { formatTokens, icons } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const bufFromHex = hex => Buffer.from(hex, 'hex');
 const dash = ' - ';
@@ -53,7 +54,7 @@ const sort = (a, b) => (a < b) ? -1 : ((a > b) ? 1 : 0);
  *   [title]: Sender Message
  * }>
  */
-function getReceivedMessage({ description, lnd, payments, received, via }, cbk) {
+const getReceivedMessage = ({ description, lnd, payments, received, via }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -239,4 +240,4 @@ function getReceivedMessage({ description, lnd, payments, received, via }, cbk) 
   });
 }
 
-export default getReceivedMessage;
+export { getReceivedMessage };

@@ -7,8 +7,8 @@ import { table as renderTable, getBorderCharacters } from 'table';
 import { getInvoices, getPayment, getForwards } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from '../authentication/index.js';
-import { formatTokens } from '../interface/index.js';
+import { checkAccess } from '../authentication/check_access.js';
+import { formatTokens } from '../interface/format_tokens.js';
 
 const border = getBorderCharacters('void');
 const dayMs = 1000 * 60 * 60 * 24;
@@ -41,7 +41,7 @@ const weekMs = 1000 * 60 * 60 * 24 * 7;
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>}
  */
-function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
+const handleEarningsCommand = ({ from, id, nodes, reply, working }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -234,4 +234,4 @@ function handleEarningsCommand({ from, id, nodes, reply, working }, cbk) {
   });
 }
 
-export default handleEarningsCommand;
+export { handleEarningsCommand };

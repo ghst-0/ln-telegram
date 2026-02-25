@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { table as renderTable, getBorderCharacters } from 'table';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from '../authentication/index.js';
+import { checkAccess } from '../authentication/check_access.js';
 import interaction from '../interaction.json' with { type: 'json' };
 
 const border = getBorderCharacters('void');
@@ -26,7 +26,7 @@ const waitTimeForBlock = n => `${n * 10} min`;
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise
  */
-function handleMempoolCommand({ from, id, reply, request }, cbk) {
+const handleMempoolCommand = ({ from, id, reply, request }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -98,4 +98,4 @@ function handleMempoolCommand({ from, id, reply, request }, cbk) {
   });
 }
 
-export default handleMempoolCommand;
+export { handleMempoolCommand };

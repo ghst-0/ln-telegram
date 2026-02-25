@@ -1,4 +1,5 @@
-import { formatTokens, icons } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const blocksAsEpoch = blocks => Date.now() + blocks * 1000 * 60 * 10;
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -89,7 +90,7 @@ const getRelativeTime = (d1, d2 = new Date()) => {
  * }
  * @returns {string[]} Pending Item
  */
-function pendingSummary({ count, htlcs, pending }) {
+const pendingSummary = ({ count, htlcs, pending }) => {
   // Pending closing and opening channels
   const channels = pending.map(node => {
     // Opening channels, waiting for confirmation
@@ -197,4 +198,4 @@ function pendingSummary({ count, htlcs, pending }) {
   }));
 }
 
-export default pendingSummary;
+export { pendingSummary };

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual } from 'node:assert/strict';
 
-import method from '../../post/consolidate_forwards.js';
+import { consolidateForwards } from '../../post/consolidate_forwards.js';
 
 const tests = [
   {
@@ -39,7 +39,7 @@ const tests = [
 
 for (const { args, description, error, expected } of tests) {
   test(description, (t, end) => {
-    const res = method(args);
+    const res = consolidateForwards(args);
 
     deepEqual(res, expected, 'Got expected result');
 

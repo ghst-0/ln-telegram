@@ -14,7 +14,7 @@ const parseMode = 'markdown';
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>}
  */
-function sendMessage({ id, key, request, text }, cbk) {
+const sendMessage = ({ id, key, request, text }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -98,4 +98,4 @@ function sendMessage({ id, key, request, text }, cbk) {
   });
 }
 
-export default sendMessage;
+export { sendMessage };

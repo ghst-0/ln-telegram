@@ -3,7 +3,8 @@ import asyncMap from 'async/map.js';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { icons, formatTokens } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const elementJoiner = ' ';
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -22,7 +23,7 @@ const {unannounced} = icons;
  * @param {function} cbk Callback function
  * @returns {Promise<{text:string}>} via cbk or Promise<text:string> text: Posted Channel Open Message
  */
-function postOpeningMessage({ from, id, lnd, opening, send }, cbk) {
+const postOpeningMessage = ({ from, id, lnd, opening, send }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -91,4 +92,4 @@ function postOpeningMessage({ from, id, lnd, opening, send }, cbk) {
   });
 }
 
-export default postOpeningMessage;
+export { postOpeningMessage };

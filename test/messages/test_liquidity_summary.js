@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { deepEqual } from 'node:assert/strict';
 
-import { liquiditySummary } from '../../messages/index.js';
+import { liquiditySummary } from '../../messages/liquidity_summary.js';
 
 const tests = [
   {

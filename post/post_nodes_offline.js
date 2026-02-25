@@ -1,7 +1,7 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
-import { icons } from '../interface/index.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
@@ -21,7 +21,7 @@ const shortId = id => id.slice(0, 8);
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise
  */
-function postNodesOffline({ bot, connected, offline }, cbk) {
+const postNodesOffline = ({ bot, connected, offline }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -70,4 +70,4 @@ function postNodesOffline({ bot, connected, offline }, cbk) {
   });
 }
 
-export default postNodesOffline;
+export { postNodesOffline };

@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { settleTradeMessage } from '../messages/index.js';
+import { settleTradeMessage } from '../messages/settle_trade_message.js';
 
 const {isArray} = Array;
 
@@ -25,7 +25,7 @@ const {isArray} = Array;
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise
  */
-function postSettledTrade(args, cbk) {
+const postSettledTrade = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -91,4 +91,4 @@ function postSettledTrade(args, cbk) {
   });
 }
 
-export default postSettledTrade;
+export { postSettledTrade };

@@ -1,7 +1,7 @@
 import test from 'node:test';
 import { rejects } from 'node:assert/strict';
 
-import { checkAccess } from '../../authentication/index.js';
+import { checkAccess } from '../../authentication/check_access.js';
 
 const makeArgs = overrides => {
   const args = {from: 1, id: 1};

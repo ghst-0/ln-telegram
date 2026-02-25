@@ -7,7 +7,7 @@ import interaction from '../interaction.json' with { type: 'json' };
  * @param {function} reply Reply to Telegram Context Function
  * @returns {*}
  */
-function handleConnectCommand({ from, id, reply }) {
+const handleConnectCommand = ({ from, id, reply }) => {
   if (id) {
     return reply(interaction.bot_is_connected);
   }
@@ -15,4 +15,4 @@ function handleConnectCommand({ from, id, reply }) {
   return reply(`🤖 Connection code is: \`${ from }\``);
 }
 
-export default handleConnectCommand;
+export { handleConnectCommand };

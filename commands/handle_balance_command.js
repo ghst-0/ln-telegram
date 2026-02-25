@@ -3,8 +3,8 @@ import asyncMap from 'async/map.js';
 import { getNodeFunds } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from '../authentication/index.js';
-import { fundsSummary } from '../messages/index.js';
+import { checkAccess } from '../authentication/check_access.js';
+import { fundsSummary } from '../messages/funds_summary.js';
 
 const {isArray} = Array;
 const markup = {parse_mode: 'MarkdownV2'};
@@ -42,7 +42,7 @@ const markup = {parse_mode: 'MarkdownV2'};
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>}
  */
-function handleBalanceCommand(args, cbk) {
+const handleBalanceCommand = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -106,4 +106,4 @@ function handleBalanceCommand(args, cbk) {
   });
 }
 
-export default handleBalanceCommand;
+export { handleBalanceCommand };

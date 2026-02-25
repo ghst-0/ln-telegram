@@ -1,8 +1,9 @@
 import test from 'node:test';
 import { equal, rejects } from 'node:assert/strict';
 
-import { listChannelsResponse, getNodeInfoResponse } from '../fixtures/index.js';
-import getRebalanceMessage from '../../post/get_rebalance_message.js';
+import { getRebalanceMessage } from '../../post/get_rebalance_message.js';
+import listChannelsResponse from '../fixtures/list_channels_response.json' with { type: 'json' };
+import getNodeInfoResponse from '../fixtures/get_node_info_response.json' with { type: 'json' };
 
 const makeArgs = overrides => {
   const args = {

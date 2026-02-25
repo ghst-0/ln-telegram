@@ -3,7 +3,8 @@ import { getChannels } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { formatTokens, icons } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const asPercent = (fee, tokens) => (fee / tokens * 100).toFixed(2);
 const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed(0);
@@ -26,7 +27,7 @@ const niceName = node => node.alias || (node.id || '').slice(0, 8);
  *   message: Rebalance Message
  * }>
  */
-function getRebalanceMessage(args, cbk) {
+const getRebalanceMessage = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -138,4 +139,4 @@ function getRebalanceMessage(args, cbk) {
   });
 }
 
-export default getRebalanceMessage;
+export { getRebalanceMessage };

@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { getPeerLiquidity } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { formatTokens } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
 
 const detailsJoiner = ' ';
 const displayTokens = tokens => formatTokens({tokens}).display;
@@ -26,7 +26,7 @@ const textJoiner = '\n';
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise<string> Channel Close Message Text
  */
-function postClosedMessage(args, cbk) {
+const postClosedMessage = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -121,4 +121,4 @@ function postClosedMessage(args, cbk) {
   });
 }
 
-export default postClosedMessage;
+export { postClosedMessage };

@@ -1,8 +1,11 @@
 import test from 'node:test';
 import { deepEqual, rejects } from 'node:assert/strict';
 
-import { chanInfoResult, getInfoResponse, nodeInfoResult, versionInfo } from '../fixtures/index.js';
-import { notifyOfForwards } from '../../index.js';
+import chanInfoResult from '../fixtures/chan_info_result.json' with { type: 'json' };
+import getInfoResponse from '../fixtures/get_info_response.json' with { type: 'json' };
+import nodeInfoResult from '../fixtures/node_info_result.json' with { type: 'json' };
+import versionInfo from '../fixtures/version_info.json' with { type: 'json' };
+import { notifyOfForwards } from '../../post/notify_of_forwards.js';
 
 const makeArgs = overrides => {
   const args = {

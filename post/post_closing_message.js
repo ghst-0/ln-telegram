@@ -3,7 +3,8 @@ import asyncMap from 'async/map.js';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { formatTokens, icons } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const channelPoint = n => `${n.transaction_id}:${n.transaction_vout}`;
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -30,7 +31,7 @@ const uniq = arr => Array.from(new Set(arr));
  * @param {function} cbk Callback function
  * @returns {Promise<string>} via cbk or Promise<string> Posted Channel Closing Message String
  */
-function postClosingMessage({ closing, from, id, lnd, nodes, send }, cbk) {
+const postClosingMessage = ({ closing, from, id, lnd, nodes, send }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -102,4 +103,4 @@ function postClosingMessage({ closing, from, id, lnd, nodes, send }, cbk) {
   });
 }
 
-export default postClosingMessage;
+export { postClosingMessage };

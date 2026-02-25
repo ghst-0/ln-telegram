@@ -3,8 +3,8 @@ import asyncMap from 'async/map.js';
 import { getWalletInfo } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from '../authentication/index.js';
-import { icons } from '../interface/index.js';
+import { checkAccess } from '../authentication/check_access.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const {isArray} = Array;
@@ -25,7 +25,7 @@ const markup = {parse_mode: 'MarkdownV2'};
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>}
  */
-function handleInfoCommand({ from, id, nodes, remove, reply }, cbk) {
+const handleInfoCommand = ({ from, id, nodes, remove, reply }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -93,4 +93,4 @@ function handleInfoCommand({ from, id, nodes, remove, reply }, cbk) {
   });
 }
 
-export default handleInfoCommand;
+export { handleInfoCommand };

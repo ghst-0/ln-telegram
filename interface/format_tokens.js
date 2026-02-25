@@ -10,7 +10,7 @@ const tokensAsBigUnit = tokens => (tokens / 1e8).toFixed(8);
  * @param {number} tokens Tokens
  * @returns {{display: string}} Formatted Tokens
  */
-function formatTokens({ none, tokens }) {
+const formatTokens = ({ none, tokens }) => {
   if (isString(none) && !tokens) {
     return { display: none };
   }
@@ -28,4 +28,4 @@ function formatTokens({ none, tokens }) {
   return { display: tokensAsBigUnit(tokens) };
 }
 
-export default formatTokens;
+export { formatTokens };

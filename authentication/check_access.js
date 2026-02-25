@@ -8,7 +8,7 @@ import { returnResult } from 'asyncjs-util';
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise
  */
-function checkAccess({ from, id }, cbk) {
+const checkAccess = ({ from, id }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -33,4 +33,4 @@ function checkAccess({ from, id }, cbk) {
   });
 }
 
-export default checkAccess;
+export { checkAccess };

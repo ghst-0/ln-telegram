@@ -6,7 +6,7 @@ import interaction from '../interaction.json' with { type: 'json' };
  * @param {function} reply Reply to Telegram Context Function
  * @returns {*}
  */
-function handleStartCommand({ id, reply }) {
+const handleStartCommand = ({ id, reply }) => {
   // Exit early when the bot is already connected
   if (id) {
     return reply(interaction.bot_is_connected);
@@ -15,4 +15,4 @@ function handleStartCommand({ id, reply }) {
   return reply(interaction.start_message);
 }
 
-export default handleStartCommand;
+export { handleStartCommand };

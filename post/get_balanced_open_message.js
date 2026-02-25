@@ -2,7 +2,8 @@ import asyncAuto from 'async/auto.js';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { icons, formatTokens } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatCapacity = tokens => formatTokens({tokens}).display;
@@ -24,7 +25,7 @@ const join = arr => arr.join('\n');
  *   message: Message
  * }>
  */
-function getBalancedOpenMessage({ capacity, from, lnd, rate }, cbk) {
+const getBalancedOpenMessage = ({ capacity, from, lnd, rate }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -68,4 +69,4 @@ function getBalancedOpenMessage({ capacity, from, lnd, rate }, cbk) {
   });
 }
 
-export default getBalancedOpenMessage;
+export { getBalancedOpenMessage };

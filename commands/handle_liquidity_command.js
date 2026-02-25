@@ -4,9 +4,9 @@ import { findKey, getLiquidity, getNodeAlias } from 'ln-sync';
 import { getChannel, getChannels } from 'ln-service';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from '../authentication/index.js';
+import { checkAccess } from '../authentication/check_access.js';
+import { liquiditySummary } from '../messages/liquidity_summary.js';
 import interaction from '../interaction.json' with { type: 'json' };
-import { liquiditySummary } from '../messages/index.js';
 
 const defaultAlias = '';
 const {isArray} = Array;
@@ -33,7 +33,7 @@ const uniq = arr => Array.from(new Set(arr));
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>}
  */
-function handleLiquidityCommand(args, cbk) {
+const handleLiquidityCommand = (args, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -265,4 +265,4 @@ function handleLiquidityCommand(args, cbk) {
   });
 }
 
-export default handleLiquidityCommand;
+export { handleLiquidityCommand };

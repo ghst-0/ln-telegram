@@ -1,7 +1,8 @@
 import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
-import { formatTokens, icons } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
 const formatAmount = tokens => formatTokens({tokens}).display;
@@ -44,7 +45,7 @@ const markup = {parse_mode: 'MarkdownV2'};
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise
  */
-function postChainTransaction({ confirmed, from, id, nodes, send, transaction }, cbk) {
+const postChainTransaction = ({ confirmed, from, id, nodes, send, transaction }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -180,4 +181,4 @@ function postChainTransaction({ confirmed, from, id, nodes, send, transaction },
   });
 }
 
-export default postChainTransaction;
+export { postChainTransaction };

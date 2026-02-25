@@ -4,7 +4,7 @@ import { getChannels, getHeight, getPendingChannels } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { checkAccess } from '../authentication/index.js';
+import { checkAccess } from '../authentication/check_access.js';
 import pendingPayments from './pending_payments.js';
 import pendingSummary from './pending_summary.js';
 
@@ -27,7 +27,7 @@ const uniq = arr => Array.from(new Set(arr));
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise
  */
-function handlePendingCommand({ from, id, nodes, reply, working }, cbk) {
+const handlePendingCommand = ({ from, id, nodes, reply, working }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -162,4 +162,4 @@ function handlePendingCommand({ from, id, nodes, reply, working }, cbk) {
   });
 }
 
-export default handlePendingCommand;
+export { handlePendingCommand };

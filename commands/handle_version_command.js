@@ -2,7 +2,7 @@ import asyncAuto from 'async/auto.js';
 import { returnResult } from 'asyncjs-util';
 
 import interaction from '../interaction.json' with { type: 'json' };
-import { checkAccess } from '../authentication/index.js';
+import { checkAccess } from '../authentication/check_access.js';
 
 const failedToGetLatestVersion = `${interaction.bot} Failed to get latest version information from NPM`;
 const currentVersion = n => `${interaction.bot} Running version: ${n}`;
@@ -21,7 +21,7 @@ const url = n => `https://registry.npmjs.org/${n}/latest`;
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise
  */
-function handleVersionCommand({ from, id, named, reply, request, version }, cbk) {
+const handleVersionCommand = ({ from, id, named, reply, request, version }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -73,4 +73,4 @@ function handleVersionCommand({ from, id, named, reply, request, version }, cbk)
   });
 }
 
-export default handleVersionCommand;
+export { handleVersionCommand };

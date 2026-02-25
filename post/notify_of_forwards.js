@@ -4,8 +4,9 @@ import { getChannel } from 'ln-service';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import consolidateForwards from './consolidate_forwards.js';
-import { formatTokens, icons } from '../interface/index.js';
+import { consolidateForwards } from './consolidate_forwards.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const asPercent = (fee, tokens) => (fee / tokens * 100).toFixed(2);
 const asPpm = (fee, tokens) => (fee / tokens * 1e6).toFixed(0);
@@ -43,7 +44,7 @@ const uniq = arr => Array.from(new Set(arr));
  *   text: Forward Notify Message Text
  * }>
  */
-function notifyOfForwards({ forwards, from, id, lnd, node, nodes, send }, cbk) {
+const notifyOfForwards = ({ forwards, from, id, lnd, node, nodes, send }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -178,4 +179,4 @@ function notifyOfForwards({ forwards, from, id, lnd, node, nodes, send }, cbk) {
   });
 }
 
-export default notifyOfForwards;
+export { notifyOfForwards };

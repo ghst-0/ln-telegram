@@ -3,7 +3,8 @@ import asyncMap from 'async/map.js';
 import { getNodeAlias } from 'ln-sync';
 import { returnResult } from 'asyncjs-util';
 
-import { icons, formatTokens } from '../interface/index.js';
+import { formatTokens } from '../interface/format_tokens.js';
+import icons from '../interface/icons.json' with { type: 'json' };
 
 const display = tokens => formatTokens({tokens}).display;
 const escape = text => text.replaceAll(/[_*[\]()~`>#+\-=|{}.!\\]/g, '\\\$&');
@@ -29,7 +30,7 @@ const niceName = node => node.alias || node.id.slice(0, 8);
  * @param {function} cbk Callback function
  * @returns {Promise<unknown>} via cbk or Promise<text>: Settled Payment Message Text
  */
-function postSettledPayment({ from, id, lnd, nodes, payment, send }, cbk) {
+const postSettledPayment = ({ from, id, lnd, nodes, payment, send }, cbk) => {
   return new Promise((resolve, reject) => {
     asyncAuto({
         // Check arguments
@@ -105,4 +106,4 @@ function postSettledPayment({ from, id, lnd, nodes, payment, send }, cbk) {
   });
 }
 
-export default postSettledPayment;
+export { postSettledPayment };
