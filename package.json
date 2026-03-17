@@ -20,7 +20,7 @@
   "description": "Lightning Network RocketChat bot commands",
   "devDependencies": {
     "ln-docker-daemons": "workspace:ln-docker-daemons",
-    "oxlint": "^1.50.0"
+    "oxlint": "^1.56.0"
   },
   "engines": {
     "node": ">=20"
